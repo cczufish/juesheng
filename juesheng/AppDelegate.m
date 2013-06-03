@@ -7,6 +7,12 @@
 //
 
 #import "AppDelegate.h"
+#import "LoginViewController.h"
+#import "Reachability.h"
+#import "MainMenuViewController.h"
+#import "NavigateViewController.h"
+#import "TableViewController.h"
+#import "EditViewController.h"
 
 @implementation AppDelegate
 
@@ -22,14 +28,140 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize SERVER_HOST,JSESSIONID;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    // Override point for customization after application launch.
+    SERVER_HOST = @"http://202.91.244.244:8088/juesheng";
+    //网络检测,
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name: kReachabilityChangedNotification
+                                               object: nil];
+    hostReach = [[Reachability reachabilityWithHostName:@"www.apple.com"] retain];
+    [hostReach startNotifier];
+    
+    //开始设置首页跳转页面
+    TTNavigator* navigator = [TTNavigator navigator];
+    navigator.persistenceMode = TTNavigatorPersistenceModeAll;
+    self.window = [[[UIWindow alloc] initWithFrame:TTScreenBounds()] autorelease];
     self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+    navigator.window = self.window;
+    
+    TTURLMap* map = navigator.URLMap;
+    
+    //页面URL集,默认URL
+    [map from:@"*" toViewController:[TTWebController class]];
+    //用户登陆页面
+    [map from:@"tt://login" toSharedViewController:[LoginViewController class]];
+    //用户登陆成功主页面
+    [map from:@"tt://main" toSharedViewController:[MainMenuViewController class]];
+    //菜单页面
+    [map from:@"tt://navigate?url=(initWithNavigatorURL:)" toSharedViewController:[NavigateViewController class]];
+    //单据列表
+    [map from:@"tt://tableView?url=(initWithURL:)" toViewController:[TableViewController class]];
+    //编辑界面
+    [map from:@"tt://editTable?url=(initWithURL:)" toViewController:[EditViewController class]];
+    
+    // Before opening the tab bar, we see if the controller history was persisted the last time
+    if (![navigator restoreViewControllers]) {
+        //进入默认登陆页面
+        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+    }
+    [self.window setRootViewController:navigator.rootViewController];
     return YES;
+}
+
+- (void)reachabilityChanged:(NSNotification *)note {
+    Reachability* curReach = [note object];
+    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    NetworkStatus status = [curReach currentReachabilityStatus];
+    UIAlertView *alert;
+    switch (status) {
+        case NotReachable:
+            alert = [[UIAlertView alloc] initWithTitle:@""
+                                               message:@"无法连接到网络,请检查网络设置"
+                                              delegate:nil
+                                     cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            break;
+        case ReachableViaWWAN:
+            alert = [[UIAlertView alloc] initWithTitle:@""
+                                               message:@"检测到您没有使用WIFI网络"
+                                              delegate:nil
+                                     cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            break;
+        case ReachableViaWiFi:  //使用WIFI网络
+            break;
+    }
+}
+
+
+//设置文本框样式   text:textField或textView组件   flag:标记某一个textField是不是作为textView的背景
+- (void)setTextStyle:(id)text isTextViewBkFlag:(BOOL)isTextViewBkFlag textViewEditable:(BOOL)textViewEditable{
+    
+    //判断text是textField还是textView
+    if ([text isKindOfClass:[UITextField class]]) {
+        //如果是文本框UITextField组件，则更改textField的样式
+        UITextField *newText = ((UITextField *)text);
+        newText.textAlignment = NSTextAlignmentLeft;//设置文本框居左
+        newText.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;//内容的垂直对齐方式
+        newText.font = [UIFont systemFontOfSize:12];//设置文本框字体及大小
+        newText.borderStyle = UITextBorderStyleRoundedRect;
+        //判断该textField是不是作为textView的背景
+        if (isTextViewBkFlag) {
+            //是textView的背景,则需要判断该textView是可以编辑，还是不可编辑
+            if (textViewEditable) {
+                //可以编辑
+                newText.textColor = [UIColor colorWithRed:((float)0.0f/255.0f) green:((float)53.0f/255.0f) blue:((float)103.0f/255.0f) alpha:1.0f];//设置字体颜色
+                newText.backgroundColor = [UIColor colorWithRed:((float)231.0f/255.0f) green:((float)226.0f/255.0f) blue:((float)208.0f/255.0f) alpha:1.0f];//设置背景颜色
+            }else{
+                //不可以编辑
+                newText.textColor = [UIColor colorWithRed:((float)119.0f/255.0f) green:((float)119.0f/255.0f) blue:((float)119.0f/255.0f) alpha:1.0f];//设置字体颜色
+                newText.backgroundColor = [UIColor colorWithRed:((float)239.0f/255.0f) green:((float)235.0f/255.0f) blue:((float)223.0f/255.0f) alpha:1.0f];//设置背景颜色
+            }
+        }else {
+            //不是作为textView的背景
+            //判断textField是否可以编辑
+            if (newText.enabled) {
+                //可以编辑
+                newText.textColor = [UIColor colorWithRed:((float)0.0f/255.0f) green:((float)53.0f/255.0f) blue:((float)103.0f/255.0f) alpha:1.0f];//设置字体颜色
+                newText.backgroundColor = [UIColor colorWithRed:((float)231.0f/255.0f) green:((float)226.0f/255.0f) blue:((float)208.0f/255.0f) alpha:1.0f];//设置背景颜色
+            }else{
+                //不可以编辑
+                newText.textColor = [UIColor colorWithRed:((float)119.0f/255.0f) green:((float)119.0f/255.0f) blue:((float)119.0f/255.0f) alpha:1.0f];//设置字体颜色
+                newText.backgroundColor = [UIColor colorWithRed:((float)239.0f/255.0f) green:((float)235.0f/255.0f) blue:((float)223.0f/255.0f) alpha:1.0f];//设置背景颜色
+            }
+        }
+    }
+    else if ([text isKindOfClass:[UITextView class]]) {
+        //如果是文本框UITextField组件，则更改textView的样式
+        UITextView *newView = ((UITextView *)text);
+        newView.backgroundColor = [UIColor clearColor];
+        //        newView.scrollEnabled = YES;
+        //        newView.textAlignment = UITextAlignmentLeft;//设置文本框居左
+        //        newView.font = [UIFont systemFontOfSize:12];//设置文本框字体及大小
+        //        newView.layer.borderWidth = 1.5;
+        //        newView.layer.cornerRadius = 3.0f;
+        //        [newView.layer setMasksToBounds:YES];
+        //判断textView是否可以编辑
+        if (newView.editable) {
+            //可以编辑
+            newView.textColor = [UIColor colorWithRed:((float)0.0f/255.0f) green:((float)53.0f/255.0f) blue:((float)103.0f/255.0f) alpha:1.0f];//设置字体颜色
+            //            newView.backgroundColor = [UIColor colorWithRed:((float)231.0f/255.0f) green:((float)226.0f/255.0f) blue:((float)208.0f/255.0f) alpha:1.0f];//设置背景颜色
+            //            //设置边框颜色
+            //            newView.layer.borderColor = [[UIColor colorWithRed:((float)150.0f/255.0f) green:((float)148.0f/255.0f) blue:((float)141.0f/255.0f) alpha:1.0f] CGColor];
+        }else{
+            //不可以编辑
+            newView.textColor = [UIColor colorWithRed:((float)119.0f/255.0f) green:((float)119.0f/255.0f) blue:((float)119.0f/255.0f) alpha:1.0f];//设置字体颜色
+            //            newView.backgroundColor = [UIColor colorWithRed:((float)239.0f/255.0f) green:((float)235.0f/255.0f) blue:((float)223.0f/255.0f) alpha:1.0f];//设置背景颜色
+            //            //设置边框颜色
+            //            newView.layer.borderColor = [[UIColor colorWithRed:((float)187.0f/255.0f) green:((float)183.0f/255.0f) blue:((float)171.0f/255.0f) alpha:1.0f] CGColor];
+        }
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
