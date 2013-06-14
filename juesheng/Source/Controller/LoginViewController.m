@@ -27,15 +27,13 @@
         self.view = _back;
         [_back release];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 300, 80)];
-        label.text = @"决盛信贷";
-        label.font = TTSTYLEVAR(font);
-        label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:label];
-        [label release];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://logo.png")];
+        imageView.frame = CGRectMake(85, 40, 150, 150);
+//        imageView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:imageView];
+        [imageView release];
         
-        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 233, 110, 24)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 233, 110, 24)];
         label.text = @"用户名:";
         label.font = TTSTYLEVAR(font);
         label.textAlignment = NSTextAlignmentRight;

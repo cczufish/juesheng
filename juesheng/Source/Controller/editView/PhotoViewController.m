@@ -103,8 +103,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         [[TTURLRequestQueue mainQueue] setMaxContentLength:0];
         for (Slave *slave in slaveArray){
             _filePath = [NSMutableString stringWithFormat:@"ftp://%@:%@@%@/%i/%i/%@",_ftpUserName,_ftpPassword,_ftpHead,_classType,_fItemId,slave.fFileName];
-            _filePath = [NSMutableString stringWithString:@"ftp://AK:sdfkn1%2540%25239b%2521@202.91.244.244/1069/200039/106920130531153049.jpg"];
-            NSLog(@"---%@",_filePath);
+//            _filePath = [NSMutableString stringWithString:@"ftp://AK:sdfkn1)(9b@202.91.244.244/1069/200039/106920130531153049.jpg"];
             mockPhoto = [[[MockPhoto alloc] initWithURL:_filePath smallURL:_filePath size:CGSizeMake(320, 480) caption:[NSString stringWithFormat:@"名称:%@  大小:%@B\n上传日期:%@",slave.fFileName,slave.fSize,slave.fDate]] autorelease];
             [photoArray addObject:mockPhoto];
         }

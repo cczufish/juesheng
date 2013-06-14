@@ -100,7 +100,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [request setHttpMethod:@"POST"];
     
     request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fItemId=%i&fBillNo=%@&fileName=%@&fileSize=%i",_classType,_fItemId,_fBillNo,_imageName,UIImageJPEGRepresentation(_saveImage,0.75f).length];
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fItemId=%i&fBillNo=%@&fileName=%@&fileSize=%i",_classType,_fItemId,_fBillNo,_imageName,UIImageJPEGRepresentation(_saveImage,0.50f).length];
     request.cachePolicy = TTURLRequestCachePolicyNoCache;
     NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
     
@@ -354,7 +354,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         // Open a stream for the file we're going to send.  We do not open this stream;
         // NSURLConnection will do it for us.
         
-        self.fileStream = [NSInputStream inputStreamWithData:UIImageJPEGRepresentation(_saveImage,0.75f)];
+        self.fileStream = [NSInputStream inputStreamWithData:UIImageJPEGRepresentation(_saveImage,0.50f)];
         assert(self.fileStream != nil);
         
         [self.fileStream open];
@@ -403,23 +403,19 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 }
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
-// An NSStream delegate callback that's called when events happen on our
-// network stream.
 {
-#pragma unused(aStream)
+    #pragma unused(aStream)
     assert(aStream == self.networkStream);
-    
     switch (eventCode) {
         case NSStreamEventOpenCompleted: {
             NSLog(@"建立FTP连接完成");
         } break;
         case NSStreamEventHasBytesAvailable: {
+            NSLog(@"NSStreamEventHasBytesAvailable!");
             assert(NO);     // should never happen for the output stream
         } break;
         case NSStreamEventHasSpaceAvailable: {
             NSLog(@"开始发送数据");
-            // If we don't have any data buffered, go read the next chunk of data.
-            
             if (self.bufferOffset == self.bufferLimit) {
                 NSInteger   bytesRead;
                 
@@ -435,8 +431,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
                 }
             }
             
-            // If we're not out of data completely, send the next chunk.
-            
             if (self.bufferOffset != self.bufferLimit) {
                 NSInteger   bytesWritten;
                 bytesWritten = [self.networkStream write:&self.buffer[self.bufferOffset] maxLength:self.bufferLimit - self.bufferOffset];
@@ -450,32 +444,23 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         } break;
         case NSStreamEventErrorOccurred: {
             CFStreamError   err;
-            
-            // -streamError does not return a useful error domain value, so we
-            // get the old school CFStreamError and check it.
-            
             err = CFWriteStreamGetError( (CFWriteStreamRef) self.networkStream );
             if (err.domain == kCFStreamErrorDomainFTP) {
-                //[self _stopSendWithStatus:[NSString stringWithFormat:@"FTP error %d", (int) err.error]];
                 if ((int)err.error == 550) {
                     NSLog(@"文件夹已经存在,不需再创建!");
                     [self _stopSendWithStatus:nil];
                 }
             } else {
-                [self _stopSendWithStatus:@"Stream open error"];
+                [self _stopSendWithStatus:@"读取文件流失败!"];
             }
-            
-//            [self _stopSendWithStatus:@"照片流打开失败!"];
-//            NSError* error = [aStream streamError];
-//            NSString* errorMessage = [NSString stringWithFormat:@"%@ (Code = %d)",
-//                                      [error localizedDescription],
-//                                      [error code]];
-//            NSLog(@"------%@",errorMessage);
         } break;
         case NSStreamEventEndEncountered: {
             // ignore
+            NSLog(@"NSStreamEventEndEncountered!");
+            [self _stopSendWithStatus:nil];
         } break;
         default: {
+            NSLog(@"default!");
             assert(NO);
         } break;
     }

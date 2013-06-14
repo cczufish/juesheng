@@ -23,7 +23,6 @@
 @property (nonatomic, retain) AutoAdaptedView *myFieldView;
 @property (nonatomic, retain) AutoAdaptedView *autoAdaptedView;      //临时中间字段,作为区分操作字段
 @property (nonatomic, retain) UITableView *alertTableView;
-@property (nonatomic, retain) UIScrollView *alertScrollView;
 @property (nonatomic, retain) UIAlertView *dataAlertView;
 @property (nonatomic, retain) NSMutableArray *alertListContent;
 @property (nonatomic, retain) UIImage *imageToSave;

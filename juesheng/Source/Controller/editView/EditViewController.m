@@ -28,7 +28,6 @@ static int UPLOADFINISH = -11;
 @synthesize autoAdaptedView=_autoAdaptedView;
 @synthesize alertListContent=_alertListContent;
 @synthesize dataAlertView=_dataAlertView;
-@synthesize alertScrollView=_alertScrollView;
 @synthesize alertTableView=_alertTableView;
 @synthesize imageToSave=_imageToSave;
 @synthesize fItemId=_fItemId;
@@ -47,6 +46,25 @@ static int UPLOADFINISH = -11;
         _tableValueDict = [query objectForKey:@"tableValueDictionary"];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+    _classType = 0;
+    _fItemId = 0;
+    [_fBillNo release];
+    [_tableFieldArray release];
+    [_tableValueDict release];
+    [_myFieldView release];
+    [_autoAdaptedView release];
+    [_alertTableView release];
+    [_dataAlertView release];
+    [_alertListContent release];
+    [_imageToSave release];
+    [_pageControl release];
+    [_myPV release];
+    [_viewArray release];
 }
 
 - (void)viewDidLoad
@@ -534,7 +552,7 @@ static int UPLOADFINISH = -11;
                             if ([subView isKindOfClass:[AutoAdaptedView class]]) {
                                 AutoAdaptedView *autoAdaptedView = (AutoAdaptedView*)subView;
                                 if (autoAdaptedView.tag == tableField.fIndex) {
-                                    if (isSubmit && (!autoAdaptedView.textField.text || [autoAdaptedView.textField.text isEqual:[NSNull null]] || autoAdaptedView.textField.text.length == 0)&&tableField.fMustInput == 1) {
+                                    if (isSubmit && (!autoAdaptedView.textField.text || [autoAdaptedView.textField.text isEqual:[NSNull null]])&&tableField.fMustInput == 1) {
                                         UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
                                         [alert show];
                                         [alert release];
@@ -629,13 +647,23 @@ static int UPLOADFINISH = -11;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NameValue *nameValue = [_alertListContent objectAtIndex:indexPath.row];
-    _autoAdaptedView.textValue = nameValue.idValue;
-    _autoAdaptedView.textField.text = nameValue.idName;
+    for (UIScrollView *view in _viewArray){
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            for (AutoAdaptedView *subView in view.subviews){
+                if ([subView isKindOfClass:[AutoAdaptedView class]]) {
+                    if (subView.tag == _autoAdaptedView.tag) {
+                        subView.textValue = [nameValue.idValue retain];
+                        subView.textField.text = [nameValue.idName retain];
+                        if (subView.tableField.fShouldUpdate == 1) {
+                            [self requestShouldUpdate];
+                        }
+                    }
+                }
+            }
+        }
+    }
     NSUInteger cancelButtonIndex = _dataAlertView.cancelButtonIndex;
     [_dataAlertView dismissWithClickedButtonIndex: cancelButtonIndex animated: YES];
-    if (_autoAdaptedView.tableField.fShouldUpdate == 1) {
-        [self requestShouldUpdate];
-    }
 }
 
 -(void)sendRequestDataList:(id)sender
@@ -924,6 +952,7 @@ static int UPLOADFINISH = -11;
 
 -(void) reloadEditView
 {
+    //照片保存之后的代理响应
     NSLog(@"reloadEditView");
 }
 

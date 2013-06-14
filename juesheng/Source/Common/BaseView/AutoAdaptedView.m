@@ -333,6 +333,9 @@ static int titleLabelWidth = 100;
     TT_RELEASE_SAFELY(_titleLabel);
     TT_RELEASE_SAFELY(_textField);
     TT_RELEASE_SAFELY(_radioLabel);
+    if (_textValue) {
+        TT_RELEASE_SAFELY(_textValue);
+    }
     //TT_RELEASE_SAFELY(_radioButton);
 }
 

@@ -33,6 +33,19 @@ static NSInteger DATATABLETAG = -5;
     return self;
 }
 
+- (void)dealloc
+{
+    [super dealloc];
+    _classType = 0;
+    [_dataAlertView release];
+    [_dataListContent release];
+    [_dataTableView release];
+    [_searchId release];
+    [_searchString release];
+    [_tableFieldArray release];
+    [_selectFieldArray release];
+}
+
 - (id)init
 {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {

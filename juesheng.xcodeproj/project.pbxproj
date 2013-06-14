@@ -12,6 +12,8 @@
 		8401C6BC175F701300DA3126 /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 8401C6B9175F701300DA3126 /* mail.png */; };
 		8401C6BD175F701300DA3126 /* middle_bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8401C6BA175F701300DA3126 /* middle_bk.jpg */; };
 		8401C6BF175F713200DA3126 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 8401C6BE175F713200DA3126 /* facebook.png */; };
+		840A8042176B728E00408898 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 840A8040176B728E00408898 /* logo.png */; };
+		840A8043176B728E00408898 /* logo@72.png in Resources */ = {isa = PBXBuildFile; fileRef = 840A8041176B728E00408898 /* logo@72.png */; };
 		84328342174CFC3D00FB7BC9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84328341174CFC3D00FB7BC9 /* UIKit.framework */; };
 		84328344174CFC3D00FB7BC9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84328343174CFC3D00FB7BC9 /* Foundation.framework */; };
 		84328346174CFC3D00FB7BC9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84328345174CFC3D00FB7BC9 /* CoreGraphics.framework */; };
@@ -320,6 +322,8 @@
 		8401C6B9175F701300DA3126 /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
 		8401C6BA175F701300DA3126 /* middle_bk.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = middle_bk.jpg; sourceTree = "<group>"; };
 		8401C6BE175F713200DA3126 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		840A8040176B728E00408898 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		840A8041176B728E00408898 /* logo@72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@72.png"; sourceTree = "<group>"; };
 		8432833E174CFC3D00FB7BC9 /* juesheng.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = juesheng.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84328341174CFC3D00FB7BC9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		84328343174CFC3D00FB7BC9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1170,6 +1174,8 @@
 		843B0BD51758F15200E880F9 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				840A8040176B728E00408898 /* logo.png */,
+				840A8041176B728E00408898 /* logo@72.png */,
 				84EB78FD1766047A00F77356 /* task_outbox_tabbar_click.png */,
 				84EB78FE1766047A00F77356 /* task_outbox_tabbar.png */,
 				84FB345E176382B60069257F /* gallerie.png */,
@@ -1592,6 +1598,8 @@
 				84EB79001766047A00F77356 /* task_outbox_tabbar.png in Resources */,
 				84FA30EA176B3737005BD81F /* Icon.png in Resources */,
 				84FA30EC176B373E005BD81F /* Icon@2x.png in Resources */,
+				840A8042176B728E00408898 /* logo.png in Resources */,
+				840A8043176B728E00408898 /* logo@72.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
