@@ -13,6 +13,8 @@
 #import "NavigateViewController.h"
 #import "TableViewController.h"
 #import "EditViewController.h"
+#import "SystemConfigViewController.h"
+#import "PhotoConfigViewController.h"
 
 @implementation AppDelegate
 
@@ -28,11 +30,15 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize networkingCount = _networkingCount;
 @synthesize SERVER_HOST,JSESSIONID;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    SERVER_HOST = @"http://202.91.244.244:8088/juesheng";
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"systemIp"]) {
+        SERVER_HOST = [[NSString stringWithFormat:@"http://%@:%@/%@",[defaults objectForKey:@"systemIp"],[defaults objectForKey:@"systemPort"],[defaults objectForKey:@"systemService"]] retain];
+    }
     //网络检测,
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
@@ -54,6 +60,8 @@
     [map from:@"*" toViewController:[TTWebController class]];
     //用户登陆页面
     [map from:@"tt://login" toSharedViewController:[LoginViewController class]];
+    //用户登陆设置页面
+    [map from:@"tt://systemConfig" toSharedViewController:[SystemConfigViewController class]];
     //用户登陆成功主页面
     [map from:@"tt://main" toSharedViewController:[MainMenuViewController class]];
     //菜单页面
@@ -62,6 +70,8 @@
     [map from:@"tt://tableView?url=(initWithURL:)" toViewController:[TableViewController class]];
     //编辑界面
     [map from:@"tt://editTable?url=(initWithURL:)" toViewController:[EditViewController class]];
+    //照片同步页面
+    [map from:@"tt://photoConfig" toSharedViewController:[PhotoConfigViewController class]];
     
     // Before opening the tab bar, we see if the controller history was persisted the last time
     if (![navigator restoreViewControllers]) {
@@ -162,6 +172,118 @@
             //            newView.layer.borderColor = [[UIColor colorWithRed:((float)187.0f/255.0f) green:((float)183.0f/255.0f) blue:((float)171.0f/255.0f) alpha:1.0f] CGColor];
         }
     }
+}
+
++ (AppDelegate *)sharedAppDelegate
+{
+    return (AppDelegate *) [UIApplication sharedApplication].delegate;
+}
+
+- (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix
+{
+    NSString *  result;
+    CFUUIDRef   uuid;
+    CFStringRef uuidStr;
+    
+    uuid = CFUUIDCreate(NULL);
+    assert(uuid != NULL);
+    
+    uuidStr = CFUUIDCreateString(NULL, uuid);
+    assert(uuidStr != NULL);
+    
+    result = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", prefix, uuidStr]];
+    assert(result != nil);
+    
+    CFRelease(uuidStr);
+    CFRelease(uuid);
+    
+    return result;
+}
+
+- (NSURL *)smartURLForString:(NSString *)str
+{
+    NSURL *     result;
+    NSString *  trimmedStr;
+    NSRange     schemeMarkerRange;
+    NSString *  scheme;
+    
+    assert(str != nil);
+    
+    result = nil;
+    
+    trimmedStr = [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ( (trimmedStr != nil) && (trimmedStr.length != 0) ) {
+        schemeMarkerRange = [trimmedStr rangeOfString:@"://"];
+        
+        if (schemeMarkerRange.location == NSNotFound) {
+            result = [NSURL URLWithString:[NSString stringWithFormat:@"ftp://%@", trimmedStr]];
+        } else {
+            scheme = [trimmedStr substringWithRange:NSMakeRange(0, schemeMarkerRange.location)];
+            assert(scheme != nil);
+            
+            if ( ([scheme compare:@"ftp"  options:NSCaseInsensitiveSearch] == NSOrderedSame) ) {
+                result = [NSURL URLWithString:trimmedStr];
+            } else {
+                // It looks like this is some unsupported URL scheme.
+            }
+        }
+    }
+    
+    return result;
+}
+
+- (BOOL)isImageURL:(NSURL *)url
+{
+    BOOL        result;
+    NSString *  path;
+    NSString *  extension;
+    
+    assert(url != nil);
+    
+    path = [url path];
+    result = NO;
+    if (path != nil) {
+        extension = [path pathExtension];
+        if (extension != nil) {
+            result = ([extension caseInsensitiveCompare:@"gif"] == NSOrderedSame)
+            || ([extension caseInsensitiveCompare:@"png"] == NSOrderedSame)
+            || ([extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame);
+        }
+    }
+    return result;
+}
+
+- (void)didStartNetworking
+{
+    self.networkingCount += 1;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+}
+
+- (void)didStopNetworking
+{
+    assert(self.networkingCount > 0);
+    self.networkingCount -= 1;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = (self.networkingCount != 0);
+}
+
+-(NSString *)escapedURLString:(NSString*)urlString
+{
+    NSMutableString *returnString = [[NSMutableString alloc] init];
+    char *src = (char *)urlString;
+    if(urlString){
+        int index = 0;
+        while (index < strlen(src)) {
+            if (src[index]<0 || (' '==src[index] || ':'==src[index] || '/'==src[index]||'%'==src[index]||'#'==src[index]||';'==src[index]||'@'==src[index])) {
+                //NSLog(@"escapedURLString:src[%d]=%d",index,src[index]);
+                [returnString appendFormat:@"%%%X",(unsigned char)src[index++]];
+            }
+            else{
+                [returnString appendFormat:@"%c",src[index++]];
+            }
+        }
+    }
+    NSLog(@"Escaped string = %@",returnString);
+    return returnString;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

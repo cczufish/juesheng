@@ -9,7 +9,7 @@
 #import "TableField.h"
 
 @implementation TableField
-@synthesize fDataField=_fDataField,fDataType=_fDataType,fEntityId=_fEntityId,fIndex=_fIndex,fInit=_fInit,fItemClassId=_fItemClassId,fKeywords=_fKeywords,fList=_fList,fMustInput=_fMustInput,fMustSave=_fMustSave,fName=_fName,fRights=_fRights,fSaveField=_fSaveField,fShouldUpdate=_fShouldUpdate;
+@synthesize fDataField=_fDataField,fDataType=_fDataType,fEntryId=_fEntryId,fIndex=_fIndex,fInit=_fInit,fItemClassId=_fItemClassId,fKeywords=_fKeywords,fList=_fList,fMustInput=_fMustInput,fMustSave=_fMustSave,fName=_fName,fRights=_fRights,fSaveField=_fSaveField,fShouldUpdate=_fShouldUpdate;
 
 -(NSMutableArray*)initWithDictionay:(NSDictionary*)dic
 {
@@ -26,11 +26,11 @@
             else {
                 self.fDataType = 0;
             }
-            if ([dics objectForKey:@"fEntityId"]&&![[dics objectForKey:@"fEntityId"] isEqual:[NSNull null]]) {
-                self.fEntityId = [[dics objectForKey:@"fEntityId"] intValue];
+            if ([dics objectForKey:@"fEntryId"]&&![[dics objectForKey:@"fEntryId"] isEqual:[NSNull null]]) {
+                self.fEntryId = [[dics objectForKey:@"fEntryId"] intValue];
             }
             else {
-                self.fEntityId = 0;
+                self.fEntryId = 0;
             }
             if ([dics objectForKey:@"fIndex"]&&![[dics objectForKey:@"fIndex"] isEqual:[NSNull null]]) {
                 self.fIndex = [[dics objectForKey:@"fIndex"] intValue];
@@ -60,7 +60,7 @@
                 self.fKeywords = 0;
             }
             if ([dics objectForKey:@"fMustInput"]&&![[dics objectForKey:@"fMustInput"] isEqual:[NSNull null]]) {
-                self.fMustInput = [[dics objectForKey:@"fMustInput"] intValue];
+                self.fMustInput = [[dics objectForKey:@"fMustInput"] boolValue];
             }
             else {
                 self.fMustInput = 0;
@@ -72,7 +72,7 @@
                 self.fMustSave = 0;
             }
             if ([dics objectForKey:@"fShouldUpdate"]&&![[dics objectForKey:@"fShouldUpdate"] isEqual:[NSNull null]]) {
-                self.fShouldUpdate = [[dics objectForKey:@"fShouldUpdate"] intValue];
+                self.fShouldUpdate = [[dics objectForKey:@"fShouldUpdate"] boolValue];
             }
             else {
                 self.fShouldUpdate = 0;

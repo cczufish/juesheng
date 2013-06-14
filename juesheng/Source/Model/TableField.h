@@ -20,7 +20,7 @@
 @property (nonatomic, assign) NSInteger fItemClassId;
 @property (nonatomic, assign) NSInteger fMustInput;
 @property (nonatomic, assign) NSInteger fMustSave;
-@property (nonatomic, assign) NSInteger fEntityId;
+@property (nonatomic, assign) NSInteger fEntryId;
 @property (nonatomic, assign) NSInteger fRights;
 @property (nonatomic, assign) NSInteger fKeywords;
 @property (nonatomic, assign) NSInteger fShouldUpdate;
