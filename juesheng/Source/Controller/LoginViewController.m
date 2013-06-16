@@ -155,6 +155,7 @@
 {
     SystemConfigViewController *systemConfigViewController = [[SystemConfigViewController alloc] init];
     [[self navigationController] pushViewController:systemConfigViewController animated:YES];
+    [systemConfigViewController release];
 }
 
 -(void)changeRemember
@@ -365,6 +366,7 @@
             request.contentType=@"application/x-www-form-urlencoded";
             NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&loginName=%@&password=%@",userName.text,passWord.text];
             NSLog(@"----postBodyString:%@",postBodyString);
+            postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             request.cachePolicy = TTURLRequestCachePolicyNoCache;
             NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
             
@@ -405,8 +407,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)requestDidFinishLoad:(TTURLRequest*)request {
     TTURLDataResponse* dataResponse = (TTURLDataResponse*)request.response;
-    NSString *json = [[NSString alloc] initWithData:dataResponse.data encoding:NSUTF8StringEncoding];
-    NSLog(@"输出:%@",json);
     NSError *error;
     NSDictionary *resultJSON = [NSJSONSerialization JSONObjectWithData:dataResponse.data options:kNilOptions error:&error];
 	request.response = nil;
@@ -457,6 +457,6 @@
     
     TTNavigator* navigator = [TTNavigator navigator];
     //切换至登录成功页面
-    [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://main"] applyAnimated:YES]];
+    [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://mainView"] applyAnimated:YES]];
 }
 @end

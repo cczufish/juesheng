@@ -1,41 +1,40 @@
 //
-//  MainMenuViewController.m
+//  MainViewController.m
 //  juesheng
 //
-//  Created by runes on 13-5-31.
+//  Created by runes on 13-6-15.
 //  Copyright (c) 2013年 heige. All rights reserved.
 //
 
-#import "MainMenuViewController.h"
+#import "MainViewController.h"
 #import "AppDelegate.h"
 #import "Navigate.h"
-#import "Cell.h"
+#import "DataBaseController.h"
 
-@interface MainMenuViewController ()
+@interface MainViewController ()
 
 @end
 
-@implementation MainMenuViewController
+@implementation MainViewController
 static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
-@synthesize table=_table,HUD=_HUD,menuArray=_menuArray,structArray=_structArray;
+@synthesize menuArray = _menuArray;
+@synthesize structArray = _structArray;
+@synthesize launcherView = _launcherView;
+@synthesize isFresh = _isFresh;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (void)dealloc
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+    [super dealloc];
+    [_menuArray release];
+    [_structArray release];
+    [_launcherView release];
+    _isFresh = NO;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _table = [[UIGridView alloc] initWithFrame:self.view.frame];
-    _table.uiGridViewDelegate = self;
-    self.view = _table;
     self.navigationController.navigationBarHidden = NO;
-    self.table.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.title = @"决盛信贷";
     [self.navigationItem setHidesBackButton:YES];
     _menuArray = [[NSMutableArray alloc] init];
@@ -65,6 +64,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     }
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    if (_isFresh) {
+        [self setLauncherBadgeValue];
+    }
+}
+
 -(void)setFTPServerInfo
 {
     AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -90,8 +96,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 #pragma mark TTURLRequestDelegate
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)requestDidStartLoad:(TTURLRequest*)request {
-	_HUD = [[MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES] retain];
-	[_HUD hide:YES];
+	
 }
 
 
@@ -112,7 +117,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     }
     bool success = [[resultJSON objectForKey:@"success"] boolValue];
     if (!success) {
-        [_HUD hide:YES];
         //创建对话框 提示用户重新输入
         UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[resultJSON objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         
@@ -123,23 +127,12 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         [alert release];
     }
     else{
-        _HUD.customView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] autorelease];
-        _HUD.mode = MBProgressHUDModeCustomView;
-        [_HUD hide:YES];
         static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
         if (request.userInfo != nil && [request.userInfo compare:@"navigate" options:comparisonOptions] == NSOrderedSame){
             _menuArray = [[Navigate alloc] initWithDictionay:[resultJSON objectForKey:@"navigateList"]];
             _structArray = [[Navigate alloc] getArray:_menuArray ByLevel:@"1"];
-            Navigate *navigate = [[[Navigate alloc] init] autorelease];
-            navigate.navigateClassType = @"-1";
-            navigate.navigateName = @"照片管理";
-            [_structArray addObject:navigate];
-            
-            navigate = [[[Navigate alloc] init] autorelease];
-            navigate.navigateClassType = @"-2";
-            navigate.navigateName = @"消息管理";
-            [_structArray addObject:navigate];
-            [self.table reloadData];
+            [self setLauncherItem];
+            _isFresh = YES;
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"ftpServer" options:comparisonOptions] == NSOrderedSame){
             NSDictionary *ftpServerInfoDict = [resultJSON objectForKey:@"ftpServerInfo"];
@@ -152,6 +145,25 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
                 [defaults synchronize];
             }
         }
+        else if (request.userInfo != nil && [request.userInfo compare:@"message" options:comparisonOptions] == NSOrderedSame){
+            int messageCount = 0;
+            if ([resultJSON objectForKey:@"classMsgCount"] && ![[resultJSON objectForKey:@"classMsgCount"] isEqual:[NSNull null]]) {
+                messageCount = [[resultJSON objectForKey:@"classMsgCount"] intValue];
+            }
+            if ([_launcherView.pages count]>0) {
+                NSArray *launcherItemArray = [_launcherView.pages objectAtIndex:0];
+                for (TTLauncherItem *launcherItem in launcherItemArray){
+                    if ([launcherItem.URL isEqualToString:@"fb://navigate100"]) {
+                        DataBaseController *dbc = [[DataBaseController alloc] init];
+                        NSMutableArray * photoArray = [dbc selectObject:@"TPhotoConfig"];
+                        launcherItem.badgeValue = [NSString stringWithFormat:@"%i",photoArray.count];
+                    }
+                    else if ([launcherItem.URL isEqualToString:@"fb://navigate101"]) {
+                        launcherItem.badgeValue = [NSString stringWithFormat:@"%i",messageCount];
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -159,7 +171,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
     //[loginButton setTitle:@"Failed to load, try again." forState:UIControlStateNormal];
-    [_HUD hide:YES];
     UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"获取http请求失败!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
     
     //将这个UIAlerView 显示出来
@@ -169,77 +180,81 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [alert release];
 }
 
-#pragma mark -
-#pragma mark MBProgressHUDDelegate methods
-
-- (void)hudWasHidden:(MBProgressHUD *)hud {
-    // Remove HUD from screen when the HUD was hidded
-    [_HUD removeFromSuperview];
-    [_HUD release];
-	_HUD = nil;
-}
-
-
-- (CGFloat) gridView:(UIGridView *)grid widthForColumnAt:(int)columnIndex
+- (void) setLauncherItem
 {
-	return 72;
-}
-
-- (CGFloat) gridView:(UIGridView *)grid heightForRowAt:(int)rowIndex
-{
-	return 85;
-}
-
-- (NSInteger) numberOfColumnsOfGridView:(UIGridView *) grid
-{
-	return 4;
-}
-
-
-- (NSInteger) numberOfCellsOfGridView:(UIGridView *) grid
-{
-	return [_structArray count];
-}
-
-- (UIGridViewCell *) gridView:(UIGridView *)grid cellForRowAt:(int)rowIndex AndColumnAt:(int)columnIndex
-{
-	Cell *cell = (Cell *)[grid dequeueReusableCell];
-	if (cell == nil) {
-		cell = [[[Cell alloc] init] autorelease];
-	}
-	Navigate *navigate = [_structArray objectAtIndex:rowIndex*4+columnIndex];
-	cell.label.text = [NSString stringWithFormat:@"%@", navigate.navigateName];
-//    [cell.thumbnail addSubview:[[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://facebook.png")]];
-    if (navigate.navigateClassType.intValue == -1) {
-        cell.thumbnail.image = TTIMAGE(@"bundle://web.png");
+    _launcherView = [[TTLauncherView alloc] initWithFrame:self.view.bounds];
+    _launcherView.backgroundColor = [UIColor clearColor];
+    _launcherView.delegate = self;
+    _launcherView.columnCount = 4;
+    _launcherView.frame = CGRectMake(10, 10, 300, self.view.bounds.size.height-100);
+    _launcherView.persistenceMode = TTLauncherPersistenceModeAll;
+    
+    TTLauncherItem* menuItem;
+    int i=0;
+    for (Navigate *navigate in _structArray){
+        i++;
+        if (i > 6) {
+            i = 1;
+        }
+        menuItem = [[[TTLauncherItem alloc] initWithTitle:navigate.navigateName image:[NSString stringWithFormat:@"bundle://navigate%i.png",i] URL:[NSString stringWithFormat:@"fb://navigate%@",navigate.navigateId] canDelete:NO] autorelease];
+        [_launcherView endEditing];
+        [_launcherView addItem:menuItem animated:YES];
     }
-    else {
-        cell.thumbnail.image = TTIMAGE(@"bundle://logo@72.png");
-    }
-	return cell;
+    
+    menuItem = [[[TTLauncherItem alloc] initWithTitle:@"照片同步" image:@"bundle://synconfig.png" URL:@"fb://navigate100" canDelete:NO] autorelease];
+    [_launcherView endEditing];
+    [_launcherView addItem:menuItem animated:YES];
+    
+    menuItem = [[[TTLauncherItem alloc] initWithTitle:@"个人消息" image:@"bundle://message.png" URL:@"fb://navigate101" canDelete:NO] autorelease];
+    [_launcherView endEditing];
+    [_launcherView addItem:menuItem animated:YES];
+    
+    [self.view addSubview:_launcherView];
+    [self setLauncherBadgeValue];
 }
 
-- (void) gridView:(UIGridView *)grid didSelectRowAt:(int)rowIndex AndColumnAt:(int)colIndex
-{
-    Navigate *navigate = [_structArray objectAtIndex:rowIndex*4+colIndex];
+- (void)launcherView:(TTLauncherView*)launcher didSelectItem:(TTLauncherItem*)item {
     TTURLAction *action;
-    if (navigate.navigateClassType.intValue == -1) {
+    if ([item.URL isEqualToString:@"fb://navigate100"]) {
         action =  [[TTURLAction actionWithURLPath:@"tt://photoConfig"] applyAnimated:YES];
+        [[TTNavigator navigator] openURLAction:action];
     }
-    else if (navigate.navigateClassType.intValue == -2) {
+    else if ([item.URL isEqualToString:@"fb://navigate101"]) {
         action =  [[TTURLAction actionWithURLPath:@"tt://messageManage"] applyAnimated:YES];
+        [[TTNavigator navigator] openURLAction:action];
     }
-    else {
-        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-        [dictionary setObject:navigate forKey:@"parentNavigate"];
-        [dictionary setObject:[[Navigate alloc] getArray:_menuArray ByParentId:navigate.navigateId] forKey:@"navigateList"];
-        action =  [[[TTURLAction actionWithURLPath:@"tt://navigate"]
-                                 applyQuery:dictionary]
-                                applyAnimated:YES];
-        [dictionary release];
+    else{
+        for (Navigate *navigate in _structArray){
+            if ([item.URL isEqualToString:[NSString stringWithFormat:@"fb://navigate%@",navigate.navigateId]]) {
+                action =  [[[TTURLAction actionWithURLPath:@"tt://navigate"]
+                            applyQuery:[NSDictionary dictionaryWithObjectsAndKeys:navigate, @"parentNavigate", [[Navigate alloc] getArray:_menuArray ByParentId:navigate.navigateId],@"navigateList", nil]]
+                           applyAnimated:YES];
+                [[TTNavigator navigator] openURLAction:action];
+            }
+        }
     }
-    [[TTNavigator navigator] openURLAction:action];
 }
 
+-(void) setLauncherBadgeValue
+{
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSString *server_base = [NSString stringWithFormat:@"%@/classType!getClassMsgCount.action", delegate.SERVER_HOST];
+    
+    TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+    [request setHttpMethod:@"POST"];
+    
+    request.contentType=@"application/x-www-form-urlencoded";
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true"];
+    request.cachePolicy = TTURLRequestCachePolicyNoCache;
+    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+    
+    [request setHttpBody:postData];
+    
+    [request send];
+    
+    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    request.userInfo = @"message";
+    
+}
 
 @end

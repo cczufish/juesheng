@@ -36,14 +36,27 @@ static int UPLOADFINISH = -11;
 @synthesize pageControl=_pageControl;
 @synthesize myPV=_myPV;
 @synthesize viewArray=_viewArray;
+@synthesize fId=_fId;
 - (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query
 {
     self = [super init];
     if (self) {
         _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
         _isEdit = [((NSNumber*)[query objectForKey:@"isEdit"]) boolValue];
-        _tableFieldArray = [query objectForKey:@"tableFieldArray"];
+        _tableFieldArray = [[query objectForKey:@"tableFieldArray"] copy];
         _tableValueDict = [query objectForKey:@"tableValueDictionary"];
+    }
+    return self;
+}
+
+- (id)initWithURLNeedSelect:(NSURL *)URL query:(NSDictionary *)query
+{
+    self = [super init];
+    if (self) {
+        _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
+        _isEdit = [((NSNumber*)[query objectForKey:@"isEdit"]) boolValue];
+        _fId = [((NSNumber*)[query objectForKey:@"fId"]) intValue];
+        [self queryTableInfoValue];
     }
     return self;
 }
@@ -67,13 +80,34 @@ static int UPLOADFINISH = -11;
     [_viewArray release];
 }
 
+- (void)queryTableInfoValue
+{
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSString *server_base = [NSString stringWithFormat:@"%@/classType!getTableSigleValueMap.action", delegate.SERVER_HOST];
+    TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+    [request setHttpMethod:@"POST"];
+    
+    request.contentType=@"application/x-www-form-urlencoded";
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i",_classType,_fId];
+    NSLog(@"postBodyString:%@",postBodyString);
+    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    request.cachePolicy = TTURLRequestCachePolicyNoCache;
+    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+    
+    [request setHttpBody:postData];
+    [request send];
+    request.userInfo = @"queryTable";
+    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+}
+
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+    
     _pageControl = [[TTPageControl alloc] initWithFrame:CGRectMake(0,0, self.view.frame.size.width, 20)];
     _pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _pageControl.backgroundColor = [UIColor colorWithRed:((float)237.0f/255.0f) green:((float)169.0f/255.0f) blue:((float)108.0f/255.0f) alpha:1.0f];
     _pageControl.currentPage = 0;
-    _pageControl.numberOfPages = [self getEntryNums];
     if (_pageControl.numberOfPages == 1) {
         _pageControl.alpha=0; //设置pageController 不可见
     }
@@ -85,36 +119,15 @@ static int UPLOADFINISH = -11;
     if (_pageControl.alpha == 1) {
         //设置背景图片
         _myPV.backgroundColor=[UIColor colorWithPatternImage:TTIMAGE(@"bundle://main_bk.jpg")];
-    }else {
+    }
+    else {
         //设置self.view的背景
         self.view.backgroundColor=[UIColor colorWithPatternImage:TTIMAGE(@"bundle://main_bk.jpg")];
     }
     [self.view addSubview:_myPV];
     
-    [super viewDidLoad];
-    NSMutableArray *barButtonItems = [[NSMutableArray alloc] init];
-	if ([_tableValueDict objectForKey:@"menu_button"]) {
-        [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"附件" style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
-    }
-	if ([_tableValueDict objectForKey:@"unaudit_button"]) {
-        [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"反审" style:UIBarButtonItemStyleBordered target:self action:@selector(unauditTable)]];
-    }
-	if ([_tableValueDict objectForKey:@"audit_button"]) {
-        [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"审核" style:UIBarButtonItemStyleBordered target:self action:@selector(auditTable)]];
-    }
-	if ([_tableValueDict objectForKey:@"save_button"] || !_isEdit) {
-        [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleBordered target:self action:@selector(saveTable)]];
-    }
-    if (barButtonItems.count > 0) {
-        self.navigationItem.rightBarButtonItems = barButtonItems;
-    }
+    [self setTable];
     
-    //设置表格
-    [self setTableView];
-    
-    //加载界面
-    [_myPV reloadData];
-    _myPV.currentPageIndex = 0;
     self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     
     _alertTableView = [[UITableView alloc] initWithFrame: CGRectMake(15, 50, 255, 225)];
@@ -125,6 +138,24 @@ static int UPLOADFINISH = -11;
                                               delegate: nil
                                      cancelButtonTitle: @"取消"
                                      otherButtonTitles: nil];
+}
+
+- (void)setTable
+{
+    if (_tableFieldArray && (!_tableValueDict || [_tableValueDict count]==0)) {
+        _isEdit = NO;
+    }
+    _pageControl.numberOfPages = [self getEntryNums];
+    //设置按钮
+    [self setMyNavigateBarItem];
+    
+    //设置表格
+    [self setTableView];
+    
+    //加载界面
+    [_myPV reloadData];
+    _myPV.currentPageIndex = 0;
+    
     if (!_isEdit) {
         AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
         NSString *server_base = [NSString stringWithFormat:@"%@/classType!getInitInfoList.action", delegate.SERVER_HOST];
@@ -144,7 +175,14 @@ static int UPLOADFINISH = -11;
         request.response = [[[TTURLDataResponse alloc] init] autorelease];
     }
     else {
-        //给fItemId等赋值
+        [self setkeyWordFieldValue];
+    }
+}
+
+- (void)setkeyWordFieldValue
+{
+    //给fItemId等赋值
+    if (_tableValueDict) {
         for (TableField *tableField in _tableFieldArray){
             if (tableField.fKeywords == 1) {
                 _fItemId = [[_tableValueDict objectForKey:tableField.fDataField] intValue];
@@ -152,6 +190,32 @@ static int UPLOADFINISH = -11;
         }
         _fBillNo = [_tableValueDict objectForKey:@"FBillNo"];
     }
+}
+
+- (void)setMyNavigateBarItem
+{
+    NSMutableArray *barButtonItems = [[NSMutableArray alloc] init];
+    if (_tableValueDict) {
+        if ([_tableValueDict objectForKey:@"menu_button"]) {
+            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"附件" style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+        }
+        if ([_tableValueDict objectForKey:@"unaudit_button"]) {
+            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"反审" style:UIBarButtonItemStyleBordered target:self action:@selector(unauditTable)]];
+        }
+        if ([_tableValueDict objectForKey:@"audit_button"]) {
+            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"审核" style:UIBarButtonItemStyleBordered target:self action:@selector(auditTable)]];
+        }
+        if ([_tableValueDict objectForKey:@"save_button"]) {
+            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleBordered target:self action:@selector(saveTable)]];
+        }
+    }
+    if (barButtonItems.count == 0 && !_isEdit) {
+        [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleBordered target:self action:@selector(saveTable)]];
+    }
+    if (barButtonItems.count > 0) {
+        self.navigationItem.rightBarButtonItems = barButtonItems;
+    }
+    [barButtonItems release];
 }
 
 - (NSInteger)getEntryNums
@@ -246,33 +310,64 @@ static int UPLOADFINISH = -11;
 
 - (void)setTableView
 {
-    _viewArray = [[NSMutableArray alloc] init];
-    UIScrollView *scrollView;
-    int _X = 5,_P = 10,_height = 30,y = 30;
-    int entryNums = _pageControl.numberOfPages;
-    if (entryNums > 1) {
-        for (int i=0; i<entryNums; i++) {
-            _X = 5,_P = 10,_height = 30,y = 30;
+    if (_tableFieldArray) {
+        _viewArray = [[NSMutableArray alloc] init];
+        UIScrollView *scrollView;
+        int _X = 5,_P = 10,_height = 30,y = 30;
+        int entryNums = _pageControl.numberOfPages;
+        if (entryNums > 1) {
+            for (int i=0; i<entryNums; i++) {
+                _X = 5,_P = 10,_height = 30,y = 30;
+                scrollView = [[[UIScrollView alloc] initWithFrame:self.view.frame] autorelease];
+                [scrollView setScrollEnabled:YES];
+                scrollView.showsVerticalScrollIndicator = NO;
+                scrollView.tag = i;
+                if (i == 0) {
+                    for (int i=0; i<_tableFieldArray.count; i++) {
+                        TableField *tableField = [_tableFieldArray objectAtIndex:i];
+                        if (tableField.fKeywords) {
+                            _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                            _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
+                            _myFieldView.tag = tableField.fIndex;
+                            _myFieldView.hidden = true;
+                            [scrollView addSubview:_myFieldView];
+                            //y = y + _myFieldView.frame.size.height + 2*_P;
+                        }
+                    }
+                }
+                for (int j=0; j<_tableFieldArray.count; j++) {
+                    TableField *tableField = [_tableFieldArray objectAtIndex:j];
+                    if (tableField.fRights > 0 && tableField.fEntryId == i+1) {
+                        _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                        _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
+                        _myFieldView.tag = tableField.fIndex;
+                        _myFieldView.textField.delegate = self;
+                        _myFieldView.textView.delegate = self;
+                        [scrollView addSubview:_myFieldView];
+                        y = y + _myFieldView.frame.size.height + 2*_P;
+                    }
+                }
+                scrollView.showsVerticalScrollIndicator = TRUE;
+                scrollView.contentSize = CGSizeMake(self.view.frame.size.width, y);
+                
+                UIControl *_back = [[UIControl alloc] initWithFrame:self.view.frame];
+                [(UIControl *)_back addTarget:self action:@selector(backgroundTap:) forControlEvents:UIControlEventTouchDown];
+                [scrollView addSubview:_back];
+                _back.frame = CGRectMake(0, 0, self.view.frame.size.width, y);
+                [_back release];
+                [scrollView sendSubviewToBack:_back];
+                [_viewArray addObject:scrollView];
+            }
+        }
+        else{
+            _X = 5,_P = 10,_height = 30,y = 10;
             scrollView = [[[UIScrollView alloc] initWithFrame:self.view.frame] autorelease];
             [scrollView setScrollEnabled:YES];
             scrollView.showsVerticalScrollIndicator = NO;
-            scrollView.tag = i;
-            if (i == 0) {
-                for (int i=0; i<_tableFieldArray.count; i++) {
-                    TableField *tableField = [_tableFieldArray objectAtIndex:i];
-                    if (tableField.fKeywords) {
-                        _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
-                        _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
-                        _myFieldView.tag = tableField.fIndex;
-                        _myFieldView.hidden = true;
-                        [scrollView addSubview:_myFieldView];
-                        //y = y + _myFieldView.frame.size.height + 2*_P;
-                    }
-                }
-            }
-            for (int j=0; j<_tableFieldArray.count; j++) {
-                TableField *tableField = [_tableFieldArray objectAtIndex:j];
-                if (tableField.fRights > 0 && tableField.fEntryId == i+1) {
+            scrollView.tag = entryNums-1;
+            for (int i=0; i<_tableFieldArray.count; i++) {
+                TableField *tableField = [_tableFieldArray objectAtIndex:i];
+                if (tableField.fRights > 0 && tableField.fEntryId == entryNums) {
                     _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                     _myFieldView.tag = tableField.fIndex;
@@ -291,48 +386,19 @@ static int UPLOADFINISH = -11;
             _back.frame = CGRectMake(0, 0, self.view.frame.size.width, y);
             [_back release];
             [scrollView sendSubviewToBack:_back];
+            for (int i=0; i<_tableFieldArray.count; i++) {
+                TableField *tableField = [_tableFieldArray objectAtIndex:i];
+                if (tableField.fKeywords) {
+                    _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                    _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
+                    _myFieldView.tag = tableField.fIndex;
+                    _myFieldView.hidden = true;
+                    [scrollView addSubview:_myFieldView];
+                    //y = y + _myFieldView.frame.size.height + 2*_P;
+                }
+            }
             [_viewArray addObject:scrollView];
         }
-    }
-    else{
-        _X = 5,_P = 10,_height = 30,y = 10;
-        scrollView = [[[UIScrollView alloc] initWithFrame:self.view.frame] autorelease];
-        [scrollView setScrollEnabled:YES];
-        scrollView.showsVerticalScrollIndicator = NO;
-        scrollView.tag = entryNums-1;
-        for (int i=0; i<_tableFieldArray.count; i++) {
-            TableField *tableField = [_tableFieldArray objectAtIndex:i];
-            if (tableField.fRights > 0 && tableField.fEntryId == entryNums) {
-                _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
-                _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
-                _myFieldView.tag = tableField.fIndex;
-                _myFieldView.textField.delegate = self;
-                _myFieldView.textView.delegate = self;
-                [scrollView addSubview:_myFieldView];
-                y = y + _myFieldView.frame.size.height + 2*_P;
-            }
-        }
-        scrollView.showsVerticalScrollIndicator = TRUE;
-        scrollView.contentSize = CGSizeMake(self.view.frame.size.width, y);
-        
-        UIControl *_back = [[UIControl alloc] initWithFrame:self.view.frame];
-        [(UIControl *)_back addTarget:self action:@selector(backgroundTap:) forControlEvents:UIControlEventTouchDown];
-        [scrollView addSubview:_back];
-        _back.frame = CGRectMake(0, 0, self.view.frame.size.width, y);
-        [_back release];
-        [scrollView sendSubviewToBack:_back];
-        for (int i=0; i<_tableFieldArray.count; i++) {
-            TableField *tableField = [_tableFieldArray objectAtIndex:i];
-            if (tableField.fKeywords) {
-                _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
-                _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
-                _myFieldView.tag = tableField.fIndex;
-                _myFieldView.hidden = true;
-                [scrollView addSubview:_myFieldView];
-                //y = y + _myFieldView.frame.size.height + 2*_P;
-            }
-        }
-        [_viewArray addObject:scrollView];
     }
 }
 
@@ -488,7 +554,9 @@ static int UPLOADFINISH = -11;
     NSMutableString *submitString = [[NSMutableString alloc] init];
     for (TableField *tableField in _tableFieldArray){
         if (tableField.fKeywords == 1 && _tableValueDict) {
-            [submitString appendFormat:@"%@:'%@'",tableField.fSaveField,[_tableValueDict objectForKey:tableField.fDataField]];
+            if ([_tableValueDict objectForKey:tableField.fDataField] && ![[_tableValueDict objectForKey:tableField.fDataField] isEqual:[NSNull null]]) {
+                [submitString appendFormat:@"%@:'%@'",tableField.fSaveField,[_tableValueDict objectForKey:tableField.fDataField]];
+            }
         }
     }
     if (submitString.length == 0) {
@@ -530,11 +598,24 @@ static int UPLOADFINISH = -11;
                             if ([subView isKindOfClass:[AutoAdaptedView class]]) {
                                 AutoAdaptedView *autoAdaptedView = (AutoAdaptedView*)subView;
                                 if (autoAdaptedView.tag == tableField.fIndex) {
-                                    if (isSubmit && (!autoAdaptedView.textView.text || [autoAdaptedView.textView.text isEqual:[NSNull null]] || autoAdaptedView.textView.text.length == 0)&&tableField.fMustInput == 1) {
-                                        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                                        [alert show];
-                                        [alert release];
-                                        return nil;
+                                    if (isSubmit&&tableField.fMustInput == 1) {
+                                        if (!autoAdaptedView.textView.text || [autoAdaptedView.textView.text isEqual:[NSNull null]]) {
+                                            UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                                            [alert show];
+                                            [alert release];
+                                            return nil;
+                                        }
+                                        else{
+                                            if (autoAdaptedView.textView.text.length==0) {
+                                                UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                                                [alert show];
+                                                [alert release];
+                                                return nil;
+                                            }
+                                            else{
+                                                [submitString appendFormat:@",%@:'%@'",tableField.fSaveField,autoAdaptedView.textView.text];
+                                            }
+                                        }
                                     }
                                     else{
                                         [submitString appendFormat:@",%@:'%@'",tableField.fSaveField,autoAdaptedView.textView.text];
@@ -552,11 +633,24 @@ static int UPLOADFINISH = -11;
                             if ([subView isKindOfClass:[AutoAdaptedView class]]) {
                                 AutoAdaptedView *autoAdaptedView = (AutoAdaptedView*)subView;
                                 if (autoAdaptedView.tag == tableField.fIndex) {
-                                    if (isSubmit && (!autoAdaptedView.textField.text || [autoAdaptedView.textField.text isEqual:[NSNull null]])&&tableField.fMustInput == 1) {
-                                        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
-                                        [alert show];
-                                        [alert release];
-                                        return nil;
+                                    if (isSubmit&&tableField.fMustInput == 1) {
+                                        if (!autoAdaptedView.textField.text || [autoAdaptedView.textField.text isEqual:[NSNull null]]) {
+                                            UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                                            [alert show];
+                                            [alert release];
+                                            return nil;
+                                        }
+                                        else{
+                                            if (autoAdaptedView.textField.text.length==0) {
+                                                UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@不能为空",tableField.fName] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+                                                [alert show];
+                                                [alert release];
+                                                return nil;
+                                            }
+                                            else{
+                                                [submitString appendFormat:@",%@:'%@'",tableField.fSaveField,autoAdaptedView.textField.text];
+                                            }
+                                        }
                                     }
                                     else{
                                         [submitString appendFormat:@",%@:'%@'",tableField.fSaveField,autoAdaptedView.textField.text];
@@ -590,6 +684,7 @@ static int UPLOADFINISH = -11;
                 if ([subView isKindOfClass:[AutoAdaptedView class]]) {
                     AutoAdaptedView *aav = (AutoAdaptedView*)subView;
                     [aav.textField resignFirstResponder];
+                    [aav.textView resignFirstResponder];
                 }
             }
         }
@@ -761,6 +856,12 @@ static int UPLOADFINISH = -11;
             [alert show];
             [alert release];
         }
+        else if (request.userInfo != nil && [request.userInfo compare:@"queryTable" options:comparisonOptions] == NSOrderedSame) {
+            //查询该单据信息完毕
+            _tableFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"fieldList"]];
+            _tableValueDict = [[jsonDic objectForKey:@"fieldValueMap"] copy];
+            [self setTable];
+        }
     }
 }
 
@@ -823,6 +924,7 @@ static int UPLOADFINISH = -11;
     }else if(buttonIndex ==2){
         PhotoViewController *photoViewController = [[PhotoViewController alloc] initWithClassType:_classType itemId:_fItemId];
         [[self navigationController] pushViewController:photoViewController animated:YES];
+        [photoViewController release];
     }
     [actionSheet release];
 }

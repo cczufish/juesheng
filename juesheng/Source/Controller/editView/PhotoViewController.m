@@ -109,6 +109,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         }
         [slaveArray release];
         self.photoSource = [[[MockPhotoSource alloc] initWithType:MockPhotoSourceNormal title:@"附件浏览" photos:photoArray photos2:nil] autorelease];
+        [photoArray release];
     }
 }
 

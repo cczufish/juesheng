@@ -88,6 +88,7 @@
     
     TableViewController *tableViewController = [[TableViewController alloc] initWithURL:[NSDictionary dictionaryWithObject:myTableTextItem.myDistObject forKey:@"navigate"]];
     [[self navigationController] pushViewController:tableViewController animated:YES];
+    [tableViewController release];
 }
 
 @end

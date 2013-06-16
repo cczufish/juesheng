@@ -154,7 +154,6 @@
     [_hud hide];
     [[AppDelegate sharedAppDelegate] didStopNetworking];
     if (statusString == nil) {
-        statusString = @"Put succeeded";
         if (_isDictionary) {
             _isDictionary = !_isDictionary;
             [self _startSend:[NSString stringWithFormat:@"%@%@",_ftpHead,_ftpDictionary] filePath:_filePath];

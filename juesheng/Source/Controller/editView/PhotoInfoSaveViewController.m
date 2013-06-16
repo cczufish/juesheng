@@ -71,6 +71,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:label];
+    [label release];
     
     _mySwitch = [[ UISwitch alloc]initWithFrame:CGRectMake(170,10,100.0,30.0)];
     [_mySwitch setOn:true];

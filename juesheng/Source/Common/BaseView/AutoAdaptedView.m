@@ -54,6 +54,7 @@ static int titleLabelWidth = 100;
                         _textValue = nameValue.idValue;
                     }
                 }
+                [nameValueArray release];
             }
             if (tableField.fRights == 1) {
                 _textField.userInteractionEnabled = NO;
@@ -297,6 +298,7 @@ static int titleLabelWidth = 100;
             mustInputView.textColor = [UIColor redColor];
             [self addSubview:mustInputView];
             [self bringSubviewToFront:mustInputView];
+            [mustInputView release];
         }
     }
     return self;

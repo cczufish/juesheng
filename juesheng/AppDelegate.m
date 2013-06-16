@@ -10,11 +10,13 @@
 #import "LoginViewController.h"
 #import "Reachability.h"
 #import "MainMenuViewController.h"
+#import "MainViewController.h"
 #import "NavigateViewController.h"
 #import "TableViewController.h"
 #import "EditViewController.h"
 #import "SystemConfigViewController.h"
 #import "PhotoConfigViewController.h"
+#import "MessageViewController.h"
 
 @implementation AppDelegate
 
@@ -64,6 +66,8 @@
     [map from:@"tt://systemConfig" toSharedViewController:[SystemConfigViewController class]];
     //用户登陆成功主页面
     [map from:@"tt://main" toSharedViewController:[MainMenuViewController class]];
+    //用户登陆成功主页面(new)
+    [map from:@"tt://mainView" toSharedViewController:[MainViewController class]];
     //菜单页面
     [map from:@"tt://navigate?url=(initWithNavigatorURL:)" toSharedViewController:[NavigateViewController class]];
     //单据列表
@@ -72,6 +76,8 @@
     [map from:@"tt://editTable?url=(initWithURL:)" toViewController:[EditViewController class]];
     //照片同步页面
     [map from:@"tt://photoConfig" toSharedViewController:[PhotoConfigViewController class]];
+    //消息列表
+    [map from:@"tt://messageManage?url=(initWithURL:)" toViewController:[MessageViewController class]];
     
     // Before opening the tab bar, we see if the controller history was persisted the last time
     if (![navigator restoreViewControllers]) {

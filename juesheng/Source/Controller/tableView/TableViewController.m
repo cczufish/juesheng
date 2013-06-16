@@ -79,7 +79,7 @@ static NSInteger DATATABLETAG = -5;
 
 - (void)refreshListView
 {
-    [self reload];
+//    [self reload];
 }
 
 /**
@@ -87,12 +87,6 @@ static NSInteger DATATABLETAG = -5;
  */
 - (void)loadView {
     [super loadView];
-    
-//    self.navigationItem.leftBarButtonItem =
-//    [[[UIBarButtonItem alloc] initWithTitle:@"返回主页面" style:UIBarButtonItemStyleBordered
-//                                     target:@"tt://main"
-//                                     action:@selector(openURLFromButton:)] autorelease];
-    
     _dataAlertView = [[UIAlertView alloc] initWithTitle: @"请选择"
                                                 message: @"\n\n\n\n\n\n\n\n\n\n\n"
                                                delegate: nil
@@ -127,13 +121,11 @@ static NSInteger DATATABLETAG = -5;
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
         [dictionary setObject:[NSNumber numberWithInt:_classType] forKey:@"classType"];
         [dictionary setObject:[NSNumber numberWithBool:YES] forKey:@"isEdit"];
-        [dictionary setObject:_tableFieldArray forKey:@"tableFieldArray"];
+        [dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
         [dictionary setObject:[object userInfo] forKey:@"tableValueDictionary"];
         EditViewController *editViewController = [[EditViewController alloc] initWithURL:nil query:dictionary];
         editViewController.delegate = self;
         [self.navigationController pushViewController:editViewController animated:YES];
-//        TTURLAction *action =  [[[TTURLAction actionWithURLPath:@"tt://editTable"] applyQuery:dictionary] applyAnimated:YES];
-//        [[TTNavigator navigator] openURLAction:action];
         TT_RELEASE_SAFELY(dictionary);
     }
 }
@@ -210,11 +202,11 @@ static NSInteger DATATABLETAG = -5;
                     }
                 }
             }
-            [self.dataSource search:searchString];
         }
         else {
             searchString = [NSString stringWithFormat:@"&classType=%i&jsonTableData=%@",_classType,searchText];
         }
+        [self.dataSource search:searchString];
     }
     else{
         [self.dataSource search:[NSString stringWithFormat:@"&classType=%i",_classType]];
@@ -230,7 +222,7 @@ static NSInteger DATATABLETAG = -5;
     self.searchDisplayController.searchResultsDataSource = self.dataSource;
     [self.searchDisplayController.searchResultsTableView reloadData];
     TableModel *tableModel = (TableModel*)model;
-    _tableFieldArray = tableModel.tableFieldArray;
+    _tableFieldArray = [tableModel.tableFieldArray copy];
     if (tableModel && tableModel.insertButtonState) {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"新建" style:UIBarButtonItemStyleBordered target:self action:@selector(createNewTable)] autorelease];
     }
@@ -241,9 +233,10 @@ static NSInteger DATATABLETAG = -5;
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setObject:[NSNumber numberWithInt:_classType] forKey:@"classType"];
     [dictionary setObject:[NSNumber numberWithBool:NO] forKey:@"isEdit"];
-    [dictionary setObject:_tableFieldArray forKey:@"tableFieldArray"];
-    TTURLAction *action =  [[[TTURLAction actionWithURLPath:@"tt://editTable"] applyQuery:dictionary] applyAnimated:YES];
-    [[TTNavigator navigator] openURLAction:action];
+    [dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
+    EditViewController *editViewController = [[EditViewController alloc] initWithURL:nil query:dictionary];
+    editViewController.delegate = self;
+    [self.navigationController pushViewController:editViewController animated:YES];
     TT_RELEASE_SAFELY(dictionary);
 }
 

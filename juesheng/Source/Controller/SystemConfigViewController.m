@@ -92,7 +92,6 @@
     _systemService.delegate = self;
     _systemService.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _systemService.text = [defaults objectForKey:@"systemService"];
-    _systemService.returnKeyType= UIReturnKeyDone;
     _systemService.placeholder = @"请输入服务名";
     _systemService.background = TTIMAGE(@"bundle://login-input.png");
     _systemService.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;

@@ -30,5 +30,7 @@
 @property (nonatomic, retain) TTPageControl* pageControl;
 @property (nonatomic, retain) ATPagingView* myPV;
 @property (nonatomic, retain) NSMutableArray *viewArray;
+@property (nonatomic, assign) NSInteger fId;
 - (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query;
+- (id)initWithURLNeedSelect:(NSURL *)URL query:(NSDictionary *)query;
 @end

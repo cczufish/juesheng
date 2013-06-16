@@ -109,7 +109,7 @@
 	int numCols = [uiGridViewDelegate numberOfColumnsOfGridView:self];
 	int count = [uiGridViewDelegate numberOfCellsOfGridView:self];
 	
-	CGFloat x = 10.0;
+	CGFloat x = 5.0;
 	CGFloat height = [uiGridViewDelegate gridView:self heightForRowAt:indexPath.row];
 	
 	for (int i=0;i<numCols;i++) {
@@ -146,7 +146,7 @@
 		
 		CGFloat thisWidth = [uiGridViewDelegate gridView:self widthForColumnAt:i];
 		cell.frame = CGRectMake(x, 5, thisWidth, height);
-		x += thisWidth;
+		x += thisWidth+5;
 	}
 	
 	row.frame = CGRectMake(row.frame.origin.x,
