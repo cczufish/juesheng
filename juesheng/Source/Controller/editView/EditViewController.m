@@ -323,8 +323,8 @@ static int UPLOADFINISH = -11;
                 scrollView.showsVerticalScrollIndicator = NO;
                 scrollView.tag = i;
                 if (i == 0) {
-                    for (int i=0; i<_tableFieldArray.count; i++) {
-                        TableField *tableField = [_tableFieldArray objectAtIndex:i];
+                    for (int m=0; m<_tableFieldArray.count; m++) {
+                        TableField *tableField = [_tableFieldArray objectAtIndex:m];
                         if (tableField.fKeywords) {
                             _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                             _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);

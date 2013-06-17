@@ -115,7 +115,6 @@
 		843B0BA21758DCB900E880F9 /* UIGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0B9C1758DCB900E880F9 /* UIGridView.m */; };
 		843B0BA31758DCB900E880F9 /* UIGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0B9E1758DCB900E880F9 /* UIGridViewCell.m */; };
 		843B0BA41758DCB900E880F9 /* UIGridViewRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BA11758DCB900E880F9 /* UIGridViewRow.m */; };
-		843B0BAF1758E03B00E880F9 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BAE1758E03B00E880F9 /* MainMenuViewController.m */; };
 		843B0BB31758E08A00E880F9 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BB21758E08A00E880F9 /* MBProgressHUD.m */; };
 		843B0BCE1758E79800E880F9 /* Navigate.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BCD1758E79800E880F9 /* Navigate.m */; };
 		843B0BD31758E9E100E880F9 /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BD11758E9E100E880F9 /* Cell.m */; };
@@ -496,8 +495,6 @@
 		843B0B9F1758DCB900E880F9 /* UIGridViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewDelegate.h; sourceTree = "<group>"; };
 		843B0BA01758DCB900E880F9 /* UIGridViewRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewRow.h; sourceTree = "<group>"; };
 		843B0BA11758DCB900E880F9 /* UIGridViewRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewRow.m; sourceTree = "<group>"; };
-		843B0BAD1758E03B00E880F9 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
-		843B0BAE1758E03B00E880F9 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
 		843B0BB11758E08A00E880F9 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		843B0BB21758E08A00E880F9 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		843B0BCC1758E79800E880F9 /* Navigate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Navigate.h; sourceTree = "<group>"; };
@@ -1184,8 +1181,6 @@
 		843B0BAC1758E01500E880F9 /* main */ = {
 			isa = PBXGroup;
 			children = (
-				843B0BAD1758E03B00E880F9 /* MainMenuViewController.h */,
-				843B0BAE1758E03B00E880F9 /* MainMenuViewController.m */,
 				84DD67A6175A3BE2006068E2 /* NavigateViewController.h */,
 				84DD67A7175A3BE2006068E2 /* NavigateViewController.m */,
 				84E4BB57175B922400BA2D9A /* MyTableTextItem.h */,
@@ -1720,7 +1715,6 @@
 				843B0BA21758DCB900E880F9 /* UIGridView.m in Sources */,
 				843B0BA31758DCB900E880F9 /* UIGridViewCell.m in Sources */,
 				843B0BA41758DCB900E880F9 /* UIGridViewRow.m in Sources */,
-				843B0BAF1758E03B00E880F9 /* MainMenuViewController.m in Sources */,
 				843B0BB31758E08A00E880F9 /* MBProgressHUD.m in Sources */,
 				843B0BCE1758E79800E880F9 /* Navigate.m in Sources */,
 				843B0BD31758E9E100E880F9 /* Cell.m in Sources */,
@@ -1870,8 +1864,8 @@
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				CLANG_WARN_INT_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "juesheng/juesheng-Prefix.pch";
 				INFOPLIST_FILE = "juesheng/juesheng-Info.plist";
@@ -1882,8 +1876,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/../../three20 $(BUILT_PRODUCTS_DIR)/../three20";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1897,8 +1891,8 @@
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				CLANG_WARN_INT_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "juesheng/juesheng-Prefix.pch";
 				INFOPLIST_FILE = "juesheng/juesheng-Info.plist";
@@ -1909,8 +1903,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/../../three20 $(BUILT_PRODUCTS_DIR)/../three20";
 				WRAPPER_EXTENSION = app;
 			};

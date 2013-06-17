@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "Reachability.h"
-#import "MainMenuViewController.h"
 #import "MainViewController.h"
 #import "NavigateViewController.h"
 #import "TableViewController.h"
@@ -65,8 +64,6 @@
     //用户登陆设置页面
     [map from:@"tt://systemConfig" toSharedViewController:[SystemConfigViewController class]];
     //用户登陆成功主页面
-    [map from:@"tt://main" toSharedViewController:[MainMenuViewController class]];
-    //用户登陆成功主页面(new)
     [map from:@"tt://mainView" toSharedViewController:[MainViewController class]];
     //菜单页面
     [map from:@"tt://navigate?url=(initWithNavigatorURL:)" toSharedViewController:[NavigateViewController class]];
