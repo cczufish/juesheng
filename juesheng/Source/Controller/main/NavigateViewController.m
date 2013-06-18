@@ -70,7 +70,7 @@
     [itemsRow release];
     
     
-    self.dataSource = [[TTSectionedDataSource alloc] initWithItems:items sections:sections];
+    self.dataSource = [[[TTSectionedDataSource alloc] initWithItems:items sections:sections] autorelease];
     
     // Cleanup
     [items release];

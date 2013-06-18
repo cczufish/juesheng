@@ -269,26 +269,6 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = (self.networkingCount != 0);
 }
 
--(NSString *)escapedURLString:(NSString*)urlString
-{
-    NSMutableString *returnString = [[NSMutableString alloc] init];
-    char *src = (char *)urlString;
-    if(urlString){
-        int index = 0;
-        while (index < strlen(src)) {
-            if (src[index]<0 || (' '==src[index] || ':'==src[index] || '/'==src[index]||'%'==src[index]||'#'==src[index]||';'==src[index]||'@'==src[index])) {
-                //NSLog(@"escapedURLString:src[%d]=%d",index,src[index]);
-                [returnString appendFormat:@"%%%X",(unsigned char)src[index++]];
-            }
-            else{
-                [returnString appendFormat:@"%c",src[index++]];
-            }
-        }
-    }
-    NSLog(@"Escaped string = %@",returnString);
-    return returnString;
-}
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

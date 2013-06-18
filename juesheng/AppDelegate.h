@@ -34,5 +34,4 @@
 - (void)didStartNetworking;
 - (void)didStopNetworking;
 - (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix;
--(NSString *)escapedURLString:(NSString*)urlString;
 @end

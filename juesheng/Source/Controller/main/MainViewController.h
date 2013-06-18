@@ -8,7 +8,7 @@
 
 #import "Three20/Three20.h"
 
-@interface MainViewController : TTViewController<TTLauncherViewDelegate>
+@interface MainViewController : TTViewController<TTLauncherViewDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, retain) NSMutableArray *menuArray;
 @property (nonatomic, retain) NSMutableArray *structArray;

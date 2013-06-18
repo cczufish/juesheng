@@ -34,7 +34,7 @@ static int titleLabelWidth = 100;
         [self addSubview:_titleLabel];
         if (tableValueDictionary &&
             [tableValueDictionary objectForKey:[NSString stringWithFormat:@"%@_value",[_tableField fDataField]]]) {
-            _textValue = [tableValueDictionary objectForKey:[NSString stringWithFormat:@"%@_value",[_tableField fDataField]]];
+            _textValue = [[tableValueDictionary objectForKey:[NSString stringWithFormat:@"%@_value",[_tableField fDataField]]] copy];
         }
         if (_tableField.fDataType && _tableField.fDataType == 4) {
             _textField = [[UITextField alloc] initWithFrame:CGRectMake(titleLabelWidth+3, 0, frame.size.width-titleLabelWidth-35, _viewHeight)];
@@ -51,7 +51,7 @@ static int titleLabelWidth = 100;
                 for (NameValue *nameValue in nameValueArray) {
                     if ([nameValue.idValue compare:_textField.text] == NSOrderedSame) {
                         _textField.text = nameValue.idName;
-                        _textValue = nameValue.idValue;
+                        _textValue = [nameValue.idValue copy];
                     }
                 }
                 [nameValueArray release];
@@ -342,7 +342,7 @@ static int titleLabelWidth = 100;
 }
 
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId inValue:(NSString *)groupValue{
-    _textValue = groupValue;
+    _textValue = [groupValue copy];
 }
 /*
  // Only override drawRect: if you perform custom drawing.

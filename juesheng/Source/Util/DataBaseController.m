@@ -65,7 +65,7 @@
 		// Handle the error.
 	}
 	[request release];
-    return mutableFetchResults;
+    return [mutableFetchResults autorelease];
 }
 
 //删除指定数据对象

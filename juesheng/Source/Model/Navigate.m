@@ -48,7 +48,7 @@
             }
         }
     }
-    return navigateDic;
+    return [navigateDic autorelease];
 }
 
 -(NSMutableArray*)getArray:(NSMutableArray*)array ByParentId:(NSString*)parentId
@@ -61,6 +61,6 @@
             }
         }
     }
-    return navigateDic;
+    return [navigateDic autorelease];
 }
 @end

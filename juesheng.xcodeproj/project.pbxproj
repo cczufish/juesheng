@@ -112,9 +112,6 @@
 		8435738E175842A000389557 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8435738D175842A000389557 /* CoreLocation.framework */; };
 		84357392175842C400389557 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84357391175842C400389557 /* Security.framework */; };
 		84357394175842DA00389557 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84357393175842DA00389557 /* SystemConfiguration.framework */; };
-		843B0BA21758DCB900E880F9 /* UIGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0B9C1758DCB900E880F9 /* UIGridView.m */; };
-		843B0BA31758DCB900E880F9 /* UIGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0B9E1758DCB900E880F9 /* UIGridViewCell.m */; };
-		843B0BA41758DCB900E880F9 /* UIGridViewRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BA11758DCB900E880F9 /* UIGridViewRow.m */; };
 		843B0BB31758E08A00E880F9 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BB21758E08A00E880F9 /* MBProgressHUD.m */; };
 		843B0BCE1758E79800E880F9 /* Navigate.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BCD1758E79800E880F9 /* Navigate.m */; };
 		843B0BD31758E9E100E880F9 /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 843B0BD11758E9E100E880F9 /* Cell.m */; };
@@ -138,6 +135,9 @@
 		84531560175F78E5006D2B2F /* login-remenber-checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84531556175F78E5006D2B2F /* login-remenber-checked@2x.png */; };
 		84531561175F78E5006D2B2F /* login-remenber.png in Resources */ = {isa = PBXBuildFile; fileRef = 84531557175F78E5006D2B2F /* login-remenber.png */; };
 		84531562175F78E5006D2B2F /* login-remenber@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84531558175F78E5006D2B2F /* login-remenber@2x.png */; };
+		8454BA1B17708DF700E85B4B /* UIGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1517708DF700E85B4B /* UIGridView.m */; };
+		8454BA1C17708DF700E85B4B /* UIGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1717708DF700E85B4B /* UIGridViewCell.m */; };
+		8454BA1D17708DF700E85B4B /* UIGridViewRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1A17708DF700E85B4B /* UIGridViewRow.m */; };
 		84B6AE9B1766B5590036768C /* CFFTPSample.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B6AE9A1766B5590036768C /* CFFTPSample.c */; };
 		84B6AEA3176751610036768C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8435738F175842AF00389557 /* MobileCoreServices.framework */; };
 		84CA26D9176BFD4A004B5456 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CA26D8176BFD4A004B5456 /* Message.m */; };
@@ -488,13 +488,6 @@
 		8435738F175842AF00389557 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		84357391175842C400389557 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		84357393175842DA00389557 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		843B0B9B1758DCB900E880F9 /* UIGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridView.h; sourceTree = "<group>"; };
-		843B0B9C1758DCB900E880F9 /* UIGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridView.m; sourceTree = "<group>"; };
-		843B0B9D1758DCB900E880F9 /* UIGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewCell.h; sourceTree = "<group>"; };
-		843B0B9E1758DCB900E880F9 /* UIGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewCell.m; sourceTree = "<group>"; };
-		843B0B9F1758DCB900E880F9 /* UIGridViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewDelegate.h; sourceTree = "<group>"; };
-		843B0BA01758DCB900E880F9 /* UIGridViewRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewRow.h; sourceTree = "<group>"; };
-		843B0BA11758DCB900E880F9 /* UIGridViewRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewRow.m; sourceTree = "<group>"; };
 		843B0BB11758E08A00E880F9 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		843B0BB21758E08A00E880F9 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		843B0BCC1758E79800E880F9 /* Navigate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Navigate.h; sourceTree = "<group>"; };
@@ -522,6 +515,13 @@
 		84531556175F78E5006D2B2F /* login-remenber-checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-remenber-checked@2x.png"; sourceTree = "<group>"; };
 		84531557175F78E5006D2B2F /* login-remenber.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-remenber.png"; sourceTree = "<group>"; };
 		84531558175F78E5006D2B2F /* login-remenber@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-remenber@2x.png"; sourceTree = "<group>"; };
+		8454BA1417708DF700E85B4B /* UIGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridView.h; sourceTree = "<group>"; };
+		8454BA1517708DF700E85B4B /* UIGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridView.m; sourceTree = "<group>"; };
+		8454BA1617708DF700E85B4B /* UIGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewCell.h; sourceTree = "<group>"; };
+		8454BA1717708DF700E85B4B /* UIGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewCell.m; sourceTree = "<group>"; };
+		8454BA1817708DF700E85B4B /* UIGridViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewDelegate.h; sourceTree = "<group>"; };
+		8454BA1917708DF700E85B4B /* UIGridViewRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewRow.h; sourceTree = "<group>"; };
+		8454BA1A17708DF700E85B4B /* UIGridViewRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewRow.m; sourceTree = "<group>"; };
 		84B6AE9A1766B5590036768C /* CFFTPSample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CFFTPSample.c; sourceTree = "<group>"; };
 		84CA26D7176BFD4A004B5456 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		84CA26D8176BFD4A004B5456 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
@@ -710,8 +710,8 @@
 		84328453174D00FB00FB7BC9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				8454BA1317708DF700E85B4B /* UIGridView */,
 				843B0BB01758E08A00E880F9 /* MBProgressHUD */,
-				843B0B9A1758DCB900E880F9 /* UIGridView */,
 				84328454174D00FB00FB7BC9 /* AlertView */,
 				84328457174D00FB00FB7BC9 /* ATMHud */,
 				84328465174D00FB00FB7BC9 /* ATPagingView */,
@@ -1164,20 +1164,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		843B0B9A1758DCB900E880F9 /* UIGridView */ = {
-			isa = PBXGroup;
-			children = (
-				843B0B9B1758DCB900E880F9 /* UIGridView.h */,
-				843B0B9C1758DCB900E880F9 /* UIGridView.m */,
-				843B0B9D1758DCB900E880F9 /* UIGridViewCell.h */,
-				843B0B9E1758DCB900E880F9 /* UIGridViewCell.m */,
-				843B0B9F1758DCB900E880F9 /* UIGridViewDelegate.h */,
-				843B0BA01758DCB900E880F9 /* UIGridViewRow.h */,
-				843B0BA11758DCB900E880F9 /* UIGridViewRow.m */,
-			);
-			path = UIGridView;
-			sourceTree = "<group>";
-		};
 		843B0BAC1758E01500E880F9 /* main */ = {
 			isa = PBXGroup;
 			children = (
@@ -1261,6 +1247,20 @@
 				843B0BDD1758F15200E880F9 /* Placeholder.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		8454BA1317708DF700E85B4B /* UIGridView */ = {
+			isa = PBXGroup;
+			children = (
+				8454BA1417708DF700E85B4B /* UIGridView.h */,
+				8454BA1517708DF700E85B4B /* UIGridView.m */,
+				8454BA1617708DF700E85B4B /* UIGridViewCell.h */,
+				8454BA1717708DF700E85B4B /* UIGridViewCell.m */,
+				8454BA1817708DF700E85B4B /* UIGridViewDelegate.h */,
+				8454BA1917708DF700E85B4B /* UIGridViewRow.h */,
+				8454BA1A17708DF700E85B4B /* UIGridViewRow.m */,
+			);
+			path = UIGridView;
 			sourceTree = "<group>";
 		};
 		84CA26E1176BFEBD004B5456 /* message */ = {
@@ -1712,9 +1712,6 @@
 				8432857E174D00FC00FB7BC9 /* JCGridMenuRow.m in Sources */,
 				8432857F174D00FC00FB7BC9 /* JCGridMenuView.m in Sources */,
 				84328580174D00FC00FB7BC9 /* LoginViewController.m in Sources */,
-				843B0BA21758DCB900E880F9 /* UIGridView.m in Sources */,
-				843B0BA31758DCB900E880F9 /* UIGridViewCell.m in Sources */,
-				843B0BA41758DCB900E880F9 /* UIGridViewRow.m in Sources */,
 				843B0BB31758E08A00E880F9 /* MBProgressHUD.m in Sources */,
 				843B0BCE1758E79800E880F9 /* Navigate.m in Sources */,
 				843B0BD31758E9E100E880F9 /* Cell.m in Sources */,
@@ -1741,6 +1738,9 @@
 				84CA26E7176BFF0D004B5456 /* MessageDataSource.m in Sources */,
 				84CA26EA176BFF28004B5456 /* MessageModel.m in Sources */,
 				8404A79C176CAA6B000A5414 /* MainViewController.m in Sources */,
+				8454BA1B17708DF700E85B4B /* UIGridView.m in Sources */,
+				8454BA1C17708DF700E85B4B /* UIGridViewCell.m in Sources */,
+				8454BA1D17708DF700E85B4B /* UIGridViewRow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1864,8 +1864,8 @@
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				CLANG_WARN_INT_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
+				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "juesheng/juesheng-Prefix.pch";
 				INFOPLIST_FILE = "juesheng/juesheng-Info.plist";
@@ -1876,8 +1876,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/../../three20 $(BUILT_PRODUCTS_DIR)/../three20";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1891,8 +1891,8 @@
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				CLANG_WARN_INT_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
+				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "juesheng/juesheng-Prefix.pch";
 				INFOPLIST_FILE = "juesheng/juesheng-Info.plist";
@@ -1903,8 +1903,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/../../three20 $(BUILT_PRODUCTS_DIR)/../three20";
 				WRAPPER_EXTENSION = app;
 			};

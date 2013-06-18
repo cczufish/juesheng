@@ -152,7 +152,7 @@
     }
     else{
         AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
-        delegate.SERVER_HOST = [[NSString stringWithFormat:@"http://%@:%@/%@",_systemIp.text,_systemPort.text,_systemService.text] retain];
+        delegate.SERVER_HOST = [[[NSString stringWithFormat:@"http://%@:%@/%@",_systemIp.text,_systemPort.text,_systemService.text] retain] autorelease];
         NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
         [defaults setObject:_systemIp.text forKey:@"systemIp"];
         [defaults setObject:_systemPort.text forKey:@"systemPort"];

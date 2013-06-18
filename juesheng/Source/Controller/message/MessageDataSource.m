@@ -92,7 +92,7 @@
 - (void)search:(NSString*)searchString  {
     _messageModel.pageSize = 10;
     _messageModel.pageNo = 1;
-    _messageModel.searchString = [[NSMutableString stringWithString:searchString] retain];
+    _messageModel.searchString = [[[NSMutableString stringWithString:searchString] retain] autorelease];
     [self.model load:TTURLRequestCachePolicyDefault more:YES];
 }
 @end

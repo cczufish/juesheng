@@ -79,7 +79,7 @@ static NSInteger DATATABLETAG = -5;
 
 - (void)refreshListView
 {
-//    [self reload];
+    [self reload];
 }
 
 /**
@@ -127,6 +127,13 @@ static NSInteger DATATABLETAG = -5;
         editViewController.delegate = self;
         [self.navigationController pushViewController:editViewController animated:YES];
         TT_RELEASE_SAFELY(dictionary);
+    }
+}
+
+-(void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
+{
+    if (_searchString && _searchString.length > 0) {
+        _searchController.searchBar.text = _searchString;
     }
 }
 
@@ -249,7 +256,10 @@ static NSInteger DATATABLETAG = -5;
 {
     _searchId = nil;
     // Return YES to cause the search result table view to be reloaded.
-    _searchString = [[NSMutableString stringWithFormat:@"%@",searchString] retain];
+    if (_searchString && [_searchString isEqualToString:searchString]) {
+        return YES;
+    }
+    _searchString = [[NSMutableString stringWithFormat:@"%@",searchString] copy];
     for (TableField *tableField in _selectFieldArray){
         if([[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]] isEqualToString:tableField.fName])
         {

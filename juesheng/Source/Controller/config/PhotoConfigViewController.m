@@ -69,9 +69,10 @@
 
 - (void)setData
 {
-    NSMutableArray * photoArray = [_dbc selectObject:@"TPhotoConfig"];
+    NSMutableArray * photoArray = [[_dbc selectObject:@"TPhotoConfig"] copy];
     _rowCount = [photoArray count];
     _inCount = 0;
+    [photoArray release];
     [self uploadPhoto];
 //    for (TPhotoConfig *photoConfig in photoArray){
 //        NSString *filePath = [[self documentFolderPath] stringByAppendingPathComponent:photoConfig.photoName];
@@ -84,7 +85,7 @@
 
 -(void)uploadPhoto
 {
-    NSMutableArray * photoArray = [_dbc selectObject:@"TPhotoConfig"];
+    NSMutableArray * photoArray = [[_dbc selectObject:@"TPhotoConfig"] copy];
     if ([photoArray count]>0) {
         _inCount ++;
         _photoConfig = [photoArray objectAtIndex:0];
@@ -92,6 +93,7 @@
         _ftpDictionary = [[NSString stringWithFormat:@"%@/%@",_photoConfig.classType,_photoConfig.fItemId] copy];
         [self _startCreate:_ftpHead dictionary:_ftpDictionary];
     }
+    [photoArray release];
     if (0 == _rowCount || _rowCount == _inCount) {
         _photoProgressLabel.text = [NSString stringWithFormat:@"完成%i/%i",_inCount,_rowCount];
     }

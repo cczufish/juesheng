@@ -551,7 +551,7 @@ static int UPLOADFINISH = -11;
 //拼接保存的表单结果字符串
 -(NSMutableString*)getSubmitString:(BOOL)isSubmit
 {
-    NSMutableString *submitString = [[NSMutableString alloc] init];
+    NSMutableString *submitString = [[[NSMutableString alloc] init] autorelease];
     for (TableField *tableField in _tableFieldArray){
         if (tableField.fKeywords == 1 && _tableValueDict) {
             if ([_tableValueDict objectForKey:tableField.fDataField] && ![[_tableValueDict objectForKey:tableField.fDataField] isEqual:[NSNull null]]) {
@@ -798,6 +798,7 @@ static int UPLOADFINISH = -11;
         //创建对话框 提示用户重新输入
         UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         alert.tag = LOGINTAG;   //通过该标志让用户返回登陆界面
+        alert.delegate = self;
         [alert show];
         [alert release];
         return;

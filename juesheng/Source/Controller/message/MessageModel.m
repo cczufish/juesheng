@@ -79,6 +79,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         //创建对话框 提示用户重新输入
         UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         alert.tag = LOGINTAG;   //通过该标志让用户返回登陆界面
+        alert.delegate = self;
         [alert show];
         [alert release];
         return;

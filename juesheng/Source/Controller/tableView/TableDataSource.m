@@ -84,7 +84,7 @@
 - (void)search:(NSString*)searchString  {
     _tableModel.pageSize = 10;
     _tableModel.pageNo = 1;
-    _tableModel.searchString = [[NSMutableString stringWithString:searchString] retain];
+    _tableModel.searchString = [[[NSMutableString stringWithString:searchString] retain] autorelease];
     [self.model load:TTURLRequestCachePolicyDefault more:YES];
 }
 
