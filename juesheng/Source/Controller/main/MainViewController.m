@@ -236,7 +236,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         for (Navigate *navigate in _structArray){
             if ([item.URL isEqualToString:[NSString stringWithFormat:@"fb://navigate%@",navigate.navigateId]]) {
                 action =  [[[TTURLAction actionWithURLPath:@"tt://navigate"]
-                            applyQuery:[NSDictionary dictionaryWithObjectsAndKeys:navigate, @"parentNavigate", [[[Navigate alloc] getArray:_menuArray ByParentId:navigate.navigateId] copy],@"navigateList", nil]]
+                            applyQuery:[NSDictionary dictionaryWithObjectsAndKeys:navigate, @"parentNavigate", [[[[Navigate alloc] getArray:_menuArray ByParentId:navigate.navigateId] copy] autorelease],@"navigateList", nil]]
                            applyAnimated:YES];
                 [[TTNavigator navigator] openURLAction:action];
             }

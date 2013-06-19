@@ -10,13 +10,16 @@
 #import "MessageDataSource.h"
 #import "Message.h"
 #import "EditViewController.h"
+#import "AppDelegate.h"
+#import "MessageModel.h"
 
 @interface MessageViewController ()
 
 @end
 
 @implementation MessageViewController
-@synthesize searchString=_searchString;
+static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
+@synthesize searchString= _searchString;
 - (id)initWithURL:(NSDictionary*)query {
     if (self = [self init]) {
         self.title = @"个人消息中心";
@@ -47,7 +50,7 @@
     self.searchViewController = self;
     
     _searchController.pausesBeforeSearching = YES;
-    _searchController.searchBar.placeholder = NSLocalizedString(@"输入关键字进行查询", @"");
+    _searchController.searchBar.placeholder = NSLocalizedString(@"输入消息内容模糊查询", @"");
     //self.searchDisplayController.searchBar.showsSearchResultsButton = YES;
     
     _searchController.searchResultsTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth  | UIViewAutoresizingFlexibleHeight;
@@ -76,7 +79,7 @@
 
 -(void)createModel
 {
-    self.dataSource = [[MessageDataSource alloc] initWithURLQuery:@""];
+    self.dataSource = [[[MessageDataSource alloc] initWithURLQuery:@""] autorelease];
 }
 
 
@@ -94,6 +97,9 @@
 {
     if ([object userInfo]) {
         Message *message = (Message*)[object userInfo];
+        if ([message.fStatus intValue] == 0) {
+            [self updateMessageReadStatus:message.fMsgId];
+        }
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
         [dictionary setObject:message.fClassType forKey:@"classType"];
         [dictionary setObject:[NSNumber numberWithBool:YES] forKey:@"isEdit"];
@@ -102,6 +108,13 @@
         editViewController.delegate = self;
         [self.navigationController pushViewController:editViewController animated:YES];
         TT_RELEASE_SAFELY(dictionary);
+    }
+}
+
+-(void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
+{
+    if (_searchString && _searchString.length > 0) {
+        _searchController.searchBar.text = _searchString;
     }
 }
 
@@ -185,6 +198,80 @@
             [button setTitle:@"确定" forState:UIControlStateNormal];
         }
     }
+}
+
+- (void)updateMessageReadStatus:(NSString*)fMsgId {
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSString *server_base = [NSString stringWithFormat:@"%@/classType!updateClassMsgStatusReaded.action", delegate.SERVER_HOST];
+    TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+    [request setHttpMethod:@"POST"];
+    
+    request.contentType=@"application/x-www-form-urlencoded";
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fMsgId=%@",fMsgId];
+    NSLog(@"postBodyString:%@",postBodyString);
+    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    request.cachePolicy = TTURLRequestCachePolicyNoCache;
+    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+    
+    [request setHttpBody:postData];
+    
+    [request send];
+    
+    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)requestDidStartLoad:(TTURLRequest*)request {
+    //加入请求开始的一些进度条
+//    [super requestDidStartLoad:request];
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)requestDidFinishLoad:(TTURLRequest*)request {
+    TTURLDataResponse* dataResponse = (TTURLDataResponse*)request.response;
+    NSError *error;
+    NSDictionary *jsonDic = [NSJSONSerialization JSONObjectWithData:dataResponse.data options:kNilOptions error:&error];
+	request.response = nil;
+    bool loginfailure = [[jsonDic objectForKey:@"loginfailure"] boolValue];
+    if (loginfailure) {
+        //创建对话框 提示用户重新输入
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        alert.tag = LOGINTAG;   //通过该标志让用户返回登陆界面
+        alert.delegate = self;
+        [alert show];
+        [alert release];
+        return;
+    }
+    bool success = [[jsonDic objectForKey:@"success"] boolValue];
+    if (!success) {
+        //创建对话框 提示用户获取请求数据失败
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+        return;
+    }
+    else{
+        
+    }
+}
+
+-(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(theAlert.tag == LOGINTAG){
+        TTNavigator* navigator = [TTNavigator navigator];
+        //切换至登录成功页面
+        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
+    UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"获取http请求失败!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+    //将这个UIAlerView 显示出来
+    [alert show];
+    //释放
+    [alert release];
 }
 
 @end

@@ -101,7 +101,7 @@ static NSInteger DATATABLETAG = -5;
 
 -(void)createModel
 {
-    self.dataSource = [[TableDataSource alloc] initWithURLQuery:[NSString stringWithFormat:@"&classType=%i",_classType]];
+    self.dataSource = [[[TableDataSource alloc] initWithURLQuery:[NSString stringWithFormat:@"&classType=%i",_classType]] autorelease];
 }
 
 

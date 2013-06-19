@@ -12,8 +12,8 @@
 
 - (UIButton *)initWithImageTextLeft:(CGRect)frame image:(NSString *)image selected:(NSString *)selected text:(NSString *)text;
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button addSubview:[[UILabel alloc] buttonText:text withFrame:CGRectMake(30, 0, frame.size.width-34, frame.size.height)]];
+    UIButton *button = [[UIButton buttonWithType:UIButtonTypeCustom] autorelease];
+    [button addSubview:[[[UILabel alloc] buttonText:text withFrame:CGRectMake(30, 0, frame.size.width-34, frame.size.height)] autorelease]];
     [button setShowsTouchWhenHighlighted:YES];
     [button setFrame:frame];
     [button setImageEdgeInsets:UIEdgeInsetsMake(0, (-frame.size.width)+32, 0, 0)];

@@ -21,7 +21,7 @@
 {
     self = [self init];
     if (self) {
-        _navigateArray = [query objectForKey:@"navigateList"];
+        _navigateArray = [[query objectForKey:@"navigateList"] copy];
         _parentNavigate = [query objectForKey:@"parentNavigate"];
         self.title = _parentNavigate.navigateName;
     }

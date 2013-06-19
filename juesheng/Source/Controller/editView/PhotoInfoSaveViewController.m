@@ -164,7 +164,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
                 NSLog(@"insert AssetsType error ");
                 
             }
-            [managedObjectContext release];
+//            [managedObjectContext release];
             UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"上传成功" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
             alert.tag = -2;
             [alert show];

@@ -11,7 +11,7 @@
 
 - (UILabel *)buttonText:(NSString *)text withFrame:(CGRect)frame
 {
-    UILabel *label = [[UILabel alloc] initWithFrame:frame];
+    UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
     [label setNumberOfLines:1];
     [label setValue:text forKey:@"text"];
     [label setTextColor:[UIColor colorWithWhite:1.0 alpha:0.9]];
@@ -25,7 +25,7 @@
 
 - (UILabel *)demoTitle:(NSString *)text frame:(CGRect)frame
 {
-    UILabel *label = [[UILabel alloc] initWithFrame:frame];
+    UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
     [label setNumberOfLines:1000];
     [label setValue:text forKey:@"text"];
     [label setTextColor:[UIColor colorWithWhite:0.0 alpha:0.9]];
@@ -40,7 +40,7 @@
 
 - (UILabel *)demoText:(NSString *)text frame:(CGRect)frame
 {
-    UILabel *label = [[UILabel alloc] initWithFrame:frame];
+    UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
     [label setNumberOfLines:1000];
     [label setValue:text forKey:@"text"];
     [label setTextColor:[UIColor colorWithWhite:0.0 alpha:0.7]];

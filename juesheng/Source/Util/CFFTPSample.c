@@ -490,7 +490,7 @@ MyUploadCallBack(CFWriteStreamRef writeStream, CFStreamEventType type, void * cl
                 }
                 bytesAvailable = bytesRead;
             }
-            bytesWritten = 0;
+//            bytesWritten = 0;
             
             if (bytesAvailable == 0) {
                 /* We've hit the end of the file being uploaded.  Shut everything down. 

@@ -77,6 +77,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     bool loginfailure = [[jsonDic objectForKey:@"loginfailure"] boolValue];
     if (loginfailure) {
         //创建对话框 提示用户重新输入
+        [super requestDidCancelLoad:request];
         UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         alert.tag = LOGINTAG;   //通过该标志让用户返回登陆界面
         alert.delegate = self;
@@ -87,9 +88,11 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     bool success = [[jsonDic objectForKey:@"success"] boolValue];
     if (!success) {
         //创建对话框 提示用户获取请求数据失败
+        [super requestDidCancelLoad:request];
         UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
         [alert show];
         [alert release];
+        return;
     }
     else{
         _messageArray = [[Message alloc] initWithDict:[jsonDic objectForKey:@"classMsgList"]];
@@ -108,7 +111,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
-    //[loginButton setTitle:@"Failed to load, try again." forState:UIControlStateNormal];
+    [super requestDidCancelLoad:request];
     UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"获取http请求失败!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
     //将这个UIAlerView 显示出来
     [alert show];

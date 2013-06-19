@@ -30,7 +30,7 @@
         _rowsReset = [[NSMutableArray alloc] initWithArray:initRows];
         frame.size.height = frame.size.height +44;
         frame.origin.y = frame.origin.y -22;
-        [self setView:[[JCUIViewTransparent alloc] initWithFrame:frame]];
+        [self setView:[[[JCUIViewTransparent alloc] initWithFrame:frame] autorelease]];
         [self.view setClipsToBounds:YES];
     }
     

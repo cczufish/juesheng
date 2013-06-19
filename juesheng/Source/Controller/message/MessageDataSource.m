@@ -51,7 +51,7 @@
             [dateFormatter release];
             
             TTTableMessageItem *item;
-            if (message.fStatus && message.fStatus.intValue == 0) {
+            if (message.fStatus && message.fStatus.intValue == 2) {
                 item = [TTTableMessageItem itemWithTitle:message.fBiller caption:nil text:message.fMsg timestamp:yourDate imageURL:@"bundle://bullet_white.png" URL:nil];
             }
             else{
