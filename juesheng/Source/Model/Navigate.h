@@ -16,6 +16,6 @@
 @property (nonatomic, retain) NSString* navigateId;
 @property (nonatomic, retain) NSString* navigateParentId;
 -(NSMutableArray*)initWithDictionay:(NSDictionary*)dic;
--(NSMutableArray*)getArray:(NSMutableArray*)array ByLevel:(NSString*)level;
--(NSMutableArray*)getArray:(NSMutableArray*)array ByParentId:(NSString*)parentId;
+-(NSMutableArray*)initArray:(NSMutableArray*)array ByLevel:(NSString*)level;
+-(NSMutableArray*)initArray:(NSMutableArray*)array ByParentId:(NSString*)parentId;
 @end

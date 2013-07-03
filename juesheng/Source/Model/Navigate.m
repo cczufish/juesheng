@@ -38,7 +38,7 @@
     return navigateDic;
 }
 
--(NSMutableArray*)getArray:(NSMutableArray*)array ByLevel:(NSString*)level
+-(NSMutableArray*)initArray:(NSMutableArray*)array ByLevel:(NSString*)level
 {
     NSMutableArray *navigateDic = [[NSMutableArray alloc] init];
     if (array) {
@@ -48,10 +48,10 @@
             }
         }
     }
-    return [navigateDic autorelease];
+    return navigateDic;
 }
 
--(NSMutableArray*)getArray:(NSMutableArray*)array ByParentId:(NSString*)parentId
+-(NSMutableArray*)initArray:(NSMutableArray*)array ByParentId:(NSString*)parentId
 {
     NSMutableArray *navigateDic = [[NSMutableArray alloc] init];
     if (array) {
@@ -61,6 +61,6 @@
             }
         }
     }
-    return [navigateDic autorelease];
+    return navigateDic;
 }
 @end
