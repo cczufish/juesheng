@@ -12,7 +12,7 @@
 
 @implementation TableModel
 static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
-@synthesize searchString=_searchString,pageSize=_pageSize,pageNo=_pageNo,tableFieldArray=_tableFieldArray,insertButtonState=_insertButtonState,totalCount=_totalCount,tableValueArray=_tableValueArray,moduleType=_moduleType;
+@synthesize searchString=_searchString,pageSize=_pageSize,pageNo=_pageNo,tableFieldArray=_tableFieldArray,insertButtonState=_insertButtonState,totalCount=_totalCount,tableValueArray=_tableValueArray,moduleType=_moduleType,selectFieldArray=_selectFieldArray;
 
 - (id)initWithURLQuery:(NSString*)query {
     if (self = [super init]) {
@@ -39,6 +39,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 - (void) dealloc {
     TT_RELEASE_SAFELY(_tableValueArray);
     TT_RELEASE_SAFELY(_tableFieldArray);
+    TT_RELEASE_SAFELY(_selectFieldArray);
     _insertButtonState = 0;
     _totalCount = 0;
     [super dealloc];
@@ -101,6 +102,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     else{
         _tableFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"fieldList"]];
         _tableValueArray = [jsonDic objectForKey:@"fieldValueList"];
+        _selectFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"selectFieldList"]];
         if ([jsonDic objectForKey:@"insertButtonState"]&&![[jsonDic objectForKey:@"insertButtonState"] isEqual:[NSNull null]]) {
             _insertButtonState = [[jsonDic objectForKey:@"insertButtonState"] intValue];
         }
@@ -126,6 +128,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == LOGINTAG){
         TTNavigator* navigator = [TTNavigator navigator];
+        [[TTURLCache sharedCache] removeAll:YES]; 
         //切换至登录成功页面
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
     }

@@ -15,6 +15,7 @@
 @property (nonatomic, assign) NSInteger pageNo;
 @property (nonatomic, retain) NSMutableArray *tableFieldArray;
 @property (nonatomic, retain) NSMutableArray *tableValueArray;
+@property (nonatomic, retain) NSMutableArray *selectFieldArray;
 @property (nonatomic, assign) NSInteger insertButtonState;
 @property (nonatomic, assign) NSInteger totalCount;
 @property (nonatomic, assign) NSInteger moduleType;

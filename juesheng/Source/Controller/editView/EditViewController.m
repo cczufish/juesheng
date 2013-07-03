@@ -67,17 +67,18 @@ static int UPLOADFINISH = -11;
     _classType = 0;
     _fItemId = 0;
     [_fBillNo release];
-    [_tableFieldArray release];
-    [_tableValueDict release];
-    [_myFieldView release];
-    [_autoAdaptedView release];
-    [_alertTableView release];
-    [_dataAlertView release];
-    [_alertListContent release];
-    [_imageToSave release];
-    [_pageControl release];
-    [_myPV release];
-    [_viewArray release];
+    TT_RELEASE_SAFELY(_fBillNo);
+    TT_RELEASE_SAFELY(_tableFieldArray);
+    TT_RELEASE_SAFELY(_tableValueDict);
+    TT_RELEASE_SAFELY(_myFieldView);
+    TT_RELEASE_SAFELY(_autoAdaptedView);
+    TT_RELEASE_SAFELY(_alertTableView);
+    TT_RELEASE_SAFELY(_dataAlertView);
+    TT_RELEASE_SAFELY(_alertListContent);
+    TT_RELEASE_SAFELY(_imageToSave);
+    TT_RELEASE_SAFELY(_pageControl);
+    TT_RELEASE_SAFELY(_myPV);
+    TT_RELEASE_SAFELY(_viewArray);
 }
 
 - (void)queryTableInfoValue
@@ -894,6 +895,7 @@ static int UPLOADFINISH = -11;
     if(theAlert.tag == LOGINTAG){
         TTNavigator* navigator = [TTNavigator navigator];
         //切换至登录成功页面
+        [[TTURLCache sharedCache] removeAll:YES]; 
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
     }
     else if(theAlert.tag == EDITFINISH){

@@ -439,6 +439,7 @@ static NSInteger DATATABLETAG = -5;
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == -1){
         TTNavigator* navigator = [TTNavigator navigator];
+        [[TTURLCache sharedCache] removeAll:YES]; 
         //切换至登录成功页面
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
     }

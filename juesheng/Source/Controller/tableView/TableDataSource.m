@@ -38,12 +38,12 @@
         for (int i = 0; i < count; i++)
         {
             NSDictionary *tableValueDictionary = [_tableModel.tableValueArray objectAtIndex:i];
-            TableField *tableField1 = [_tableModel.tableFieldArray objectAtIndex:0];
-            TableField *tableField2 = [_tableModel.tableFieldArray objectAtIndex:1];
-            TableField *tableField3 = [_tableModel.tableFieldArray objectAtIndex:2];
+            TableField *tableField1 = [_tableModel.selectFieldArray objectAtIndex:0];
+            TableField *tableField2 = [_tableModel.selectFieldArray objectAtIndex:1];
+            TableField *tableField3 = [_tableModel.selectFieldArray objectAtIndex:2];
             TTTableSubtitleItem * item;
             if (_tableModel.moduleType == 1) {
-                item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@  %@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField],tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField3.fName,[tableValueDictionary objectForKey:tableField3.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@  %@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField],tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField3.fName,[tableValueDictionary objectForKey:tableField3.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
             }
             else {
                 item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];

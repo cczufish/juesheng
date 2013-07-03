@@ -328,6 +328,7 @@
 //点击登录按钮时
 - (void)ButtonPressed
 {
+    [[TTURLCache sharedCache] removeAll:YES]; 
     //判断用户名与密码长度是否大于0
     if(userName.text.length == 0 || passWord.text.length == 0)
     {

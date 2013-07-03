@@ -131,7 +131,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
         if (request.userInfo != nil && [request.userInfo compare:@"navigate" options:comparisonOptions] == NSOrderedSame){
             _menuArray = [[Navigate alloc] initWithDictionay:[resultJSON objectForKey:@"navigateList"]];
-            _structArray = [[[Navigate alloc] getArray:_menuArray ByLevel:@"1"] copy];
+            _structArray = [[Navigate alloc] initArray:_menuArray ByLevel:@"1"];
             [self setLauncherItem];
             _isFresh = YES;
         }
@@ -185,6 +185,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     if(theAlert.tag == LOGINTAG){
         TTNavigator* navigator = [TTNavigator navigator];
         //切换至登录成功页面
+        [[TTURLCache sharedCache] removeAll:YES]; 
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
     }
 }
@@ -236,7 +237,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         for (Navigate *navigate in _structArray){
             if ([item.URL isEqualToString:[NSString stringWithFormat:@"fb://navigate%@",navigate.navigateId]]) {
                 action =  [[[TTURLAction actionWithURLPath:@"tt://navigate"]
-                            applyQuery:[NSDictionary dictionaryWithObjectsAndKeys:navigate, @"parentNavigate", [[[[Navigate alloc] getArray:_menuArray ByParentId:navigate.navigateId] copy] autorelease],@"navigateList", nil]]
+                            applyQuery:[NSDictionary dictionaryWithObjectsAndKeys:navigate, @"parentNavigate", [[[Navigate alloc] initArray:_menuArray ByParentId:navigate.navigateId] autorelease],@"navigateList", nil]]
                            applyAnimated:YES];
                 [[TTNavigator navigator] openURLAction:action];
             }
