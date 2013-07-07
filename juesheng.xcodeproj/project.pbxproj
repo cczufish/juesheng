@@ -1864,8 +1864,8 @@
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				CLANG_WARN_INT_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: zheng jun (JP7P57DW2Z)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: zheng jun (JP7P57DW2Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "juesheng/juesheng-Prefix.pch";
 				INFOPLIST_FILE = "juesheng/juesheng-Info.plist";
@@ -1876,8 +1876,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/../../three20 $(BUILT_PRODUCTS_DIR)/../three20";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1891,8 +1891,8 @@
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
 				CLANG_WARN_ENUM_CONVERSION = NO;
 				CLANG_WARN_INT_CONVERSION = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: zheng jun (JP7P57DW2Z)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: zheng jun (JP7P57DW2Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "juesheng/juesheng-Prefix.pch";
 				INFOPLIST_FILE = "juesheng/juesheng-Info.plist";
@@ -1903,8 +1903,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/../../three20 $(BUILT_PRODUCTS_DIR)/../three20";
 				WRAPPER_EXTENSION = app;
 			};

@@ -173,6 +173,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     }
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"PhotoInfoSaveViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
+}
+
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == LOGINTAG){
         TTNavigator* navigator = [TTNavigator navigator];

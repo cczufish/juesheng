@@ -21,7 +21,7 @@ static int titleLabelWidth = 100;
     _tableValueDictionary = tableValueDictionary;
     AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
     _viewHeight = 30;
-    self = [[super initWithFrame:frame] autorelease];
+    self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 0, titleLabelWidth, _viewHeight)];

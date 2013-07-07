@@ -47,6 +47,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    NSLog(@"navigateViewMemoryWarning");
     // Dispose of any resources that can be recreated.
 }
 

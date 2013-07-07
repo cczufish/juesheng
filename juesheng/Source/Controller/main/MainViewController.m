@@ -64,6 +64,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     }
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"MainViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
+}
+
 -(void)viewDidAppear:(BOOL)animated
 {
     if (_isFresh) {

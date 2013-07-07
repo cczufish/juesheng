@@ -66,16 +66,15 @@ static int UPLOADFINISH = -11;
     [super dealloc];
     _classType = 0;
     _fItemId = 0;
-    [_fBillNo release];
-    TT_RELEASE_SAFELY(_fBillNo);
+//    TT_RELEASE_SAFELY(_fBillNo);
     TT_RELEASE_SAFELY(_tableFieldArray);
-    TT_RELEASE_SAFELY(_tableValueDict);
+//    TT_RELEASE_SAFELY(_tableValueDict);
     TT_RELEASE_SAFELY(_myFieldView);
-    TT_RELEASE_SAFELY(_autoAdaptedView);
+//    TT_RELEASE_SAFELY(_autoAdaptedView);
     TT_RELEASE_SAFELY(_alertTableView);
     TT_RELEASE_SAFELY(_dataAlertView);
     TT_RELEASE_SAFELY(_alertListContent);
-    TT_RELEASE_SAFELY(_imageToSave);
+//    TT_RELEASE_SAFELY(_imageToSave);
     TT_RELEASE_SAFELY(_pageControl);
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_viewArray);
@@ -139,6 +138,13 @@ static int UPLOADFINISH = -11;
                                               delegate: nil
                                      cancelButtonTitle: @"取消"
                                      otherButtonTitles: nil];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"EditViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
 }
 
 - (void)setTable

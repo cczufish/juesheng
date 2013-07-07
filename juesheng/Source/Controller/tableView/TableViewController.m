@@ -37,13 +37,13 @@ static NSInteger DATATABLETAG = -5;
 {
     [super dealloc];
     _classType = 0;
-    [_dataAlertView release];
-    [_dataListContent release];
-    [_dataTableView release];
-    [_searchId release];
-    [_searchString release];
-    [_tableFieldArray release];
-    [_selectFieldArray release];
+    TT_RELEASE_SAFELY(_dataAlertView);
+    TT_RELEASE_SAFELY(_dataListContent);
+    TT_RELEASE_SAFELY(_dataTableView);
+    TT_RELEASE_SAFELY(_searchId);
+    TT_RELEASE_SAFELY(_searchString);
+    TT_RELEASE_SAFELY(_tableFieldArray);
+    TT_RELEASE_SAFELY(_selectFieldArray);
 }
 
 - (id)init
@@ -75,6 +75,13 @@ static NSInteger DATATABLETAG = -5;
     [super viewDidLoad];
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
 	// Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"TableViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
 }
 
 - (void)refreshListView
@@ -127,6 +134,7 @@ static NSInteger DATATABLETAG = -5;
         editViewController.delegate = self;
         [self.navigationController pushViewController:editViewController animated:YES];
         TT_RELEASE_SAFELY(dictionary);
+        [editViewController release];
     }
 }
 
@@ -245,6 +253,7 @@ static NSInteger DATATABLETAG = -5;
     editViewController.delegate = self;
     [self.navigationController pushViewController:editViewController animated:YES];
     TT_RELEASE_SAFELY(dictionary);
+    [editViewController release];
 }
 
 #pragma mark -

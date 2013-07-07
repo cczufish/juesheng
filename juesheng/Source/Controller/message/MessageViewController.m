@@ -113,7 +113,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 -(void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
 {
-    if (_searchString && _searchString.length > 0) {
+    if (_searchString && ![_searchString isEqual:[NSNull null]] && _searchString.length > 0) {
         _searchController.searchBar.text = _searchString;
     }
 }
@@ -255,6 +255,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     else{
         
     }
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"MessageViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
 }
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {

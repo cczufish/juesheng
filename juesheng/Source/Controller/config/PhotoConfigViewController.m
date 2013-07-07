@@ -120,6 +120,13 @@
     [alert release];
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"PhotoConfigViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
+}
+
 
 #pragma mark * Status management
 

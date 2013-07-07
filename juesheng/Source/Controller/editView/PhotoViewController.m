@@ -25,15 +25,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 @synthesize ftpPassword = _ftpPassword;
 @synthesize filePath = _filePath;
 
--(void)dealloc
-{
-    [super dealloc];
-    TT_RELEASE_SAFELY(_ftpHead);
-    TT_RELEASE_SAFELY(_ftpUserName);
-    TT_RELEASE_SAFELY(_ftpPassword);
-    TT_RELEASE_SAFELY(_filePath);
-}
-
 - (id)initWithClassType:(NSInteger)classType itemId:(NSInteger)fItemId
 {
     self = [super init];
@@ -54,6 +45,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 {
     [super viewDidLoad];
     [self getPhotoInfo];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"PhotoViewMemoryWarning");
+    // Dispose of any resources that can be recreated.
 }
 
 - (void) getPhotoInfo
