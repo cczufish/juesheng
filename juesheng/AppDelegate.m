@@ -60,19 +60,19 @@
     //页面URL集,默认URL
     [map from:@"*" toViewController:[TTWebController class]];
     //用户登陆页面
-    [map from:@"tt://login" toSharedViewController:[LoginViewController class]];
+    [map from:@"tt://login" toViewController:[LoginViewController class]];
     //用户登陆设置页面
-    [map from:@"tt://systemConfig" toSharedViewController:[SystemConfigViewController class]];
+    [map from:@"tt://systemConfig" toViewController:[SystemConfigViewController class]];
     //用户登陆成功主页面
-    [map from:@"tt://mainView" toSharedViewController:[MainViewController class]];
+    [map from:@"tt://mainView" toViewController:[MainViewController class]];
     //菜单页面
-    [map from:@"tt://navigate?url=(initWithNavigatorURL:)" toSharedViewController:[NavigateViewController class]];
+    [map from:@"tt://navigate?url=(initWithNavigatorURL:)" toViewController:[NavigateViewController class]];
     //单据列表
     [map from:@"tt://tableView?url=(initWithURL:)" toViewController:[TableViewController class]];
     //编辑界面
     [map from:@"tt://editTable?url=(initWithURL:)" toViewController:[EditViewController class]];
     //照片同步页面
-    [map from:@"tt://photoConfig" toSharedViewController:[PhotoConfigViewController class]];
+    [map from:@"tt://photoConfig" toViewController:[PhotoConfigViewController class]];
     //消息列表
     [map from:@"tt://messageManage?url=(initWithURL:)" toViewController:[MessageViewController class]];
     

@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "juesheng/Source/Controller/editView/PhotoInfoSaveViewController.m"
-         timestampString = "394559045.76962"
+         timestampString = "394878591.086696"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "349"
-         endingLineNumber = "349"
+         startingLineNumber = "345"
+         endingLineNumber = "345"
          landmarkName = "-_startSend:ftpHead:ftpDictionay:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -21,7 +21,7 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "juesheng/Source/Controller/editView/PhotoInfoSaveViewController.m"
-         timestampString = "394559045.76962"
+         timestampString = "394878598.02894"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "244"

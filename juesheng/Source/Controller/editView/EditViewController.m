@@ -322,13 +322,14 @@ static int UPLOADFINISH = -11;
         UIScrollView *scrollView;
         int _X = 5,_P = 10,_height = 30,y = 30;
         int entryNums = _pageControl.numberOfPages;
+        bool isShow = false;
         if (entryNums > 1) {
             for (int i=0; i<entryNums; i++) {
+                isShow = false;
                 _X = 5,_P = 10,_height = 30,y = 30;
                 scrollView = [[[UIScrollView alloc] initWithFrame:self.view.frame] autorelease];
                 [scrollView setScrollEnabled:YES];
                 scrollView.showsVerticalScrollIndicator = NO;
-                scrollView.tag = i;
                 if (i == 0) {
                     for (int m=0; m<_tableFieldArray.count; m++) {
                         TableField *tableField = [_tableFieldArray objectAtIndex:m];
@@ -345,6 +346,7 @@ static int UPLOADFINISH = -11;
                 for (int j=0; j<_tableFieldArray.count; j++) {
                     TableField *tableField = [_tableFieldArray objectAtIndex:j];
                     if (tableField.fRights > 0 && tableField.fEntryId == i+1) {
+                        isShow = true;
                         _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                         _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                         _myFieldView.tag = tableField.fIndex;
@@ -354,17 +356,21 @@ static int UPLOADFINISH = -11;
                         y = y + _myFieldView.frame.size.height + 2*_P;
                     }
                 }
-                scrollView.showsVerticalScrollIndicator = TRUE;
-                scrollView.contentSize = CGSizeMake(self.view.frame.size.width, y);
-                
-                UIControl *_back = [[UIControl alloc] initWithFrame:self.view.frame];
-                [(UIControl *)_back addTarget:self action:@selector(backgroundTap:) forControlEvents:UIControlEventTouchDown];
-                [scrollView addSubview:_back];
-                _back.frame = CGRectMake(0, 0, self.view.frame.size.width, y);
-                [_back release];
-                [scrollView sendSubviewToBack:_back];
-                [_viewArray addObject:scrollView];
+                if (isShow) {
+                    scrollView.showsVerticalScrollIndicator = TRUE;
+                    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, y);
+                    
+                    UIControl *_back = [[UIControl alloc] initWithFrame:self.view.frame];
+                    [(UIControl *)_back addTarget:self action:@selector(backgroundTap:) forControlEvents:UIControlEventTouchDown];
+                    [scrollView addSubview:_back];
+                    _back.frame = CGRectMake(0, 0, self.view.frame.size.width, y);
+                    [_back release];
+                    [scrollView sendSubviewToBack:_back];
+                    scrollView.tag = _viewArray.count;
+                    [_viewArray addObject:scrollView];
+                }
             }
+            _pageControl.numberOfPages = _viewArray.count;
         }
         else{
             _X = 5,_P = 10,_height = 30,y = 10;
@@ -578,7 +584,7 @@ static int UPLOADFINISH = -11;
                             if ([subView isKindOfClass:[AutoAdaptedView class]]) {
                                 AutoAdaptedView *autoAdaptedView = (AutoAdaptedView*)subView;
                                 if (autoAdaptedView.tag == tableField.fIndex) {
-                                    if (autoAdaptedView.textValue && ![autoAdaptedView.textValue isEqual:[NSNull null]]) {
+                                    if (autoAdaptedView.textValue && ![autoAdaptedView.textValue isEqual:[NSNull null]] && autoAdaptedView.textValue.length>0) {
                                         [submitString appendFormat:@",%@:'%@'",tableField.fSaveField,autoAdaptedView.textValue];
                                     }
                                     else{
@@ -777,7 +783,7 @@ static int UPLOADFINISH = -11;
     [request setHttpMethod:@"POST"];
     
     request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i",autoAdaptedView.tableField.fItemClassId];
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i",autoAdaptedView.tableField.fItemClassId,autoAdaptedView.tableField.fDataField,_classType];
     NSLog(@"postBodyString:%@",postBodyString);
     postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     request.cachePolicy = TTURLRequestCachePolicyNoCache;
