@@ -358,7 +358,7 @@ static NSInteger DATATABLETAG = -5;
     [request setHttpMethod:@"POST"];
     
     request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i",tableField.fItemClassId];
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i",tableField.fItemClassId,tableField.fDataField,_classType];
     NSLog(@"postBodyString:%@",postBodyString);
     postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     request.cachePolicy = TTURLRequestCachePolicyNoCache;
