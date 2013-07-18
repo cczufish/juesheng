@@ -30,4 +30,5 @@
     int prewTag;
     int prewMoveY;
 }
+- (id)initWithNavigatorURL:(NSURL*)URL query:(NSDictionary*)query;
 @end

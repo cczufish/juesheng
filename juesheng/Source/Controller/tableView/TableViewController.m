@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "TableField.h"
 #import "EditViewController.h"
+#import "LoginViewController.h"
 
 @interface TableViewController ()
 
@@ -21,12 +22,13 @@
 
 @implementation TableViewController
 static NSInteger DATATABLETAG = -5;
-@synthesize classType=_classType,searchId=_searchId,searchString=_searchString,dataAlertView=_dataAlertView,dataListContent=_dataListContent,dataTableView=_dataTableView,tableFieldArray=_tableFieldArray,selectFieldArray=_selectFieldArray;
+@synthesize classType=_classType,searchId=_searchId,searchString=_searchString,dataAlertView=_dataAlertView,dataListContent=_dataListContent,dataTableView=_dataTableView,tableFieldArray=_tableFieldArray,selectFieldArray=_selectFieldArray,menuItemId=_menuItemId;
 
 - (id)initWithURL:(NSDictionary*)query {
     if (self = [self init]) {
         Navigate *navigate = [query objectForKey:@"navigate"];
         _classType = navigate.navigateClassType.intValue;
+        _menuItemId = navigate.navigateId.intValue;
         self.title = navigate.navigateName;
         [self loadSelectField];
     }
@@ -37,6 +39,7 @@ static NSInteger DATATABLETAG = -5;
 {
     [super dealloc];
     _classType = 0;
+    _menuItemId = 0;
     TT_RELEASE_SAFELY(_dataAlertView);
     TT_RELEASE_SAFELY(_dataListContent);
     TT_RELEASE_SAFELY(_dataTableView);
@@ -108,7 +111,7 @@ static NSInteger DATATABLETAG = -5;
 
 -(void)createModel
 {
-    self.dataSource = [[[TableDataSource alloc] initWithURLQuery:[NSString stringWithFormat:@"&classType=%i",_classType]] autorelease];
+    self.dataSource = [[[TableDataSource alloc] initWithURLQuery:[NSString stringWithFormat:@"&classType=%i&menuItemId=%i",_classType,_menuItemId]] autorelease];
 }
 
 
@@ -210,21 +213,21 @@ static NSInteger DATATABLETAG = -5;
             for (TableField *tableField in _selectFieldArray){
                 if([scope isEqualToString:tableField.fName]){
                     if (tableField.fDataType == 4 || tableField.fDataType == 5) {
-                        searchString = [NSString stringWithFormat:@"&classType=%i&jsonTableData={'%@':'%@'}",_classType,tableField.fDataField,_searchId];
+                        searchString = [NSString stringWithFormat:@"&classType=%i&menuItemId=%i&jsonTableData={'%@':'%@'}",_classType,_menuItemId,tableField.fDataField,_searchId];
                     }
                     else{
-                        searchString = [NSString stringWithFormat:@"&classType=%i&jsonTableData={'%@':'%@'}",_classType,tableField.fDataField,searchText];
+                        searchString = [NSString stringWithFormat:@"&classType=%i&menuItemId=%i&jsonTableData={'%@':'%@'}",_classType,_menuItemId,tableField.fDataField,searchText];
                     }
                 }
             }
         }
         else {
-            searchString = [NSString stringWithFormat:@"&classType=%i&jsonTableData=%@",_classType,searchText];
+            searchString = [NSString stringWithFormat:@"&classType=%i&menuItemId=%i&jsonTableData=%@",_classType,_menuItemId,searchText];
         }
         [self.dataSource search:searchString];
     }
     else{
-        [self.dataSource search:[NSString stringWithFormat:@"&classType=%i",_classType]];
+        [self.dataSource search:[NSString stringWithFormat:@"&classType=%i&menuItemId=%i",_classType,_menuItemId]];
     }
 }
 
@@ -447,10 +450,13 @@ static NSInteger DATATABLETAG = -5;
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == -1){
-        TTNavigator* navigator = [TTNavigator navigator];
-        [[TTURLCache sharedCache] removeAll:YES]; 
-        //切换至登录成功页面
-        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+//        TTNavigator* navigator = [TTNavigator navigator];
+//        [[TTURLCache sharedCache] removeAll:YES]; 
+//        //切换至登录成功页面
+//        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
+        [self.navigationController pushViewController:loginViewComtroller animated:YES];
+        [loginViewComtroller release];
     }
 }
 

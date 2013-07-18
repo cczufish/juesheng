@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "TPhotoConfig.h"
 #import "ATMHud.h"
+#import "LoginViewController.h"
 
 @interface PhotoInfoSaveViewController ()
 
@@ -182,10 +183,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == LOGINTAG){
-        TTNavigator* navigator = [TTNavigator navigator];
-        //切换至登录成功页面
-        [[TTURLCache sharedCache] removeAll:YES]; 
-        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+//        TTNavigator* navigator = [TTNavigator navigator];
+//        //切换至登录成功页面
+//        [[TTURLCache sharedCache] removeAll:YES]; 
+//        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
+        [self.navigationController pushViewController:loginViewComtroller animated:YES];
+        [loginViewComtroller release];
     }
     else if(theAlert.tag == -2){    //保存上传信息成功,未上传照片
         [_delegate reloadEditView];

@@ -147,6 +147,7 @@
         [self.view addSubview:systemConfig];
         
         self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
+        
     }
     return self;
 }
@@ -328,7 +329,7 @@
 //点击登录按钮时
 - (void)ButtonPressed
 {
-    [[TTURLCache sharedCache] removeAll:YES]; 
+    [self clearCacheAction];
     //判断用户名与密码长度是否大于0
     if(userName.text.length == 0 || passWord.text.length == 0)
     {
@@ -355,11 +356,14 @@
         }
         NSLog(@"----用户名:%@,密码:%@",[defaults objectForKey:@"userName"],[defaults objectForKey:@"passWord"]);
         
-        //地址的方法
-        AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
-        if (delegate.SERVER_HOST) {
+        NSString *SERVER_HOST = nil;
+        if ([defaults objectForKey:@"systemIp"]) {
+            SERVER_HOST = [[NSString stringWithFormat:@"http://%@:%@/%@",[defaults objectForKey:@"systemIp"],[defaults objectForKey:@"systemPort"],[defaults objectForKey:@"systemService"]] retain];
+        }
+        
+        if (SERVER_HOST) {
             
-            NSString *server_base = [NSString stringWithFormat:@"%@/login!login.action", delegate.SERVER_HOST];
+            NSString *server_base = [NSString stringWithFormat:@"%@/login!login.action", SERVER_HOST];
             
             TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
             [request setHttpMethod:@"POST"];

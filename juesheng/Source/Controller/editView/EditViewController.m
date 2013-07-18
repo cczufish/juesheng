@@ -11,6 +11,7 @@
 #import "NameValue.h"
 #import "AppDelegate.h"
 #import "PhotoViewController.h"
+#import "LoginViewController.h"
 
 @interface EditViewController ()
 
@@ -268,17 +269,20 @@ static int UPLOADFINISH = -11;
     TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
     [request setHttpMethod:@"POST"];
     
-    request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i&auditMsg=%@",_classType,_fItemId,@""];
-    NSLog(@"postBodyString:%@",postBodyString);
-    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    request.cachePolicy = TTURLRequestCachePolicyNoCache;
-    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
-    
-    [request setHttpBody:postData];
-    [request send];
-    request.userInfo = @"auditTable";
-    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    NSString *submitString = [self getSubmitString:true];
+    if (submitString) {
+        request.contentType=@"application/x-www-form-urlencoded";
+        NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i&auditMsg=%@&jsonTableData={%@}",_classType,_fItemId,@"",submitString];
+        NSLog(@"postBodyString:%@",postBodyString);
+        postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        request.cachePolicy = TTURLRequestCachePolicyNoCache;
+        NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+        
+        [request setHttpBody:postData];
+        [request send];
+        request.userInfo = @"auditTable";
+        request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    }
 }
 
 //反审
@@ -289,17 +293,20 @@ static int UPLOADFINISH = -11;
     TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
     [request setHttpMethod:@"POST"];
     
-    request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i",_classType,_fItemId];
-    NSLog(@"postBodyString:%@",postBodyString);
-    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    request.cachePolicy = TTURLRequestCachePolicyNoCache;
-    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+    NSString *submitString = [self getSubmitString:true];
+    if (submitString) {
+        request.contentType=@"application/x-www-form-urlencoded";
+        NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i&jsonTableData={%@}",_classType,_fItemId,submitString];
+        NSLog(@"postBodyString:%@",postBodyString);
+        postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        request.cachePolicy = TTURLRequestCachePolicyNoCache;
+        NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
     
-    [request setHttpBody:postData];
-    [request send];
-    request.userInfo = @"unauditTable";
-    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+        [request setHttpBody:postData];
+        [request send];
+        request.userInfo = @"unauditTable";
+        request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    }
 }
 
 //附件
@@ -905,10 +912,13 @@ static int UPLOADFINISH = -11;
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == LOGINTAG){
-        TTNavigator* navigator = [TTNavigator navigator];
-        //切换至登录成功页面
-        [[TTURLCache sharedCache] removeAll:YES]; 
-        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+//        TTNavigator* navigator = [TTNavigator navigator];
+//        //切换至登录成功页面
+//        [[TTURLCache sharedCache] removeAll:YES]; 
+//        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
+        [self.navigationController pushViewController:loginViewComtroller animated:YES];
+        [loginViewComtroller release];
     }
     else if(theAlert.tag == EDITFINISH){
         [_delegate refreshListView];

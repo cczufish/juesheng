@@ -107,6 +107,9 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         //切换至登录成功页面
         [[TTURLCache sharedCache] removeAll:YES]; 
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+//        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
+//        [self.navigationController pushViewController:loginViewComtroller animated:YES];
+//        [loginViewComtroller release];
     }
 }
 

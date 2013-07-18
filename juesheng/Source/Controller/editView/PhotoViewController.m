@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "Slave.h"
 #include <CFNetwork/CFNetwork.h>
+#import "LoginViewController.h"
 
 @interface PhotoViewController ()
 
@@ -123,10 +124,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == LOGINTAG){
-        TTNavigator* navigator = [TTNavigator navigator];
-        //切换至登录成功页面
-        [[TTURLCache sharedCache] removeAll:YES]; 
-        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+//        TTNavigator* navigator = [TTNavigator navigator];
+//        //切换至登录成功页面
+//        [[TTURLCache sharedCache] removeAll:YES]; 
+//        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
+        [self.navigationController pushViewController:loginViewComtroller animated:YES];
+        [loginViewComtroller release];
     }
 }
 
