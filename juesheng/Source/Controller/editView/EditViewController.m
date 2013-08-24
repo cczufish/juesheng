@@ -44,8 +44,7 @@ static int UPLOADFINISH = -11;
     if (self) {
         _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
         _isEdit = [((NSNumber*)[query objectForKey:@"isEdit"]) boolValue];
-        _tableFieldArray = [[query objectForKey:@"tableFieldArray"] copy];
-        _tableValueDict = [query objectForKey:@"tableValueDictionary"];
+        [self queryTableField];
     }
     return self;
 }
@@ -69,7 +68,7 @@ static int UPLOADFINISH = -11;
     _fItemId = 0;
 //    TT_RELEASE_SAFELY(_fBillNo);
     TT_RELEASE_SAFELY(_tableFieldArray);
-//    TT_RELEASE_SAFELY(_tableValueDict);
+    TT_RELEASE_SAFELY(_tableValueDict);
     TT_RELEASE_SAFELY(_myFieldView);
 //    TT_RELEASE_SAFELY(_autoAdaptedView);
     TT_RELEASE_SAFELY(_alertTableView);
@@ -79,6 +78,45 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_pageControl);
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_viewArray);
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"EditViewMemoryWarning");
+    TT_RELEASE_SAFELY(_pageControl);
+    TT_RELEASE_SAFELY(_myPV);
+    TT_RELEASE_SAFELY(_alertTableView);
+    TT_RELEASE_SAFELY(_dataAlertView);
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    TT_RELEASE_SAFELY(_pageControl);
+    TT_RELEASE_SAFELY(_myPV);
+    TT_RELEASE_SAFELY(_alertTableView);
+    TT_RELEASE_SAFELY(_dataAlertView);
+}
+
+- (void)queryTableField
+{
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSString *server_base = [NSString stringWithFormat:@"%@/classType!getTableFieldList.action", delegate.SERVER_HOST];
+    TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+    [request setHttpMethod:@"POST"];
+    
+    request.contentType=@"application/x-www-form-urlencoded";
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i",_classType];
+    NSLog(@"postBodyString:%@",postBodyString);
+    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    request.cachePolicy = TTURLRequestCachePolicyNoCache;
+    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+    
+    [request setHttpBody:postData];
+    [request send];
+    request.userInfo = @"queryTableField";
+    request.response = [[[TTURLDataResponse alloc] init] autorelease];
 }
 
 - (void)queryTableInfoValue
@@ -141,13 +179,6 @@ static int UPLOADFINISH = -11;
                                      otherButtonTitles: nil];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    NSLog(@"EditViewMemoryWarning");
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)setTable
 {
     if (_tableFieldArray && (!_tableValueDict || [_tableValueDict count]==0)) {
@@ -204,17 +235,28 @@ static int UPLOADFINISH = -11;
 {
     NSMutableArray *barButtonItems = [[NSMutableArray alloc] init];
     if (_tableValueDict) {
-        if ([_tableValueDict objectForKey:@"menu_button"]) {
-            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"附件" style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
-        }
-        if ([_tableValueDict objectForKey:@"unaudit_button"]) {
-            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"反审" style:UIBarButtonItemStyleBordered target:self action:@selector(unauditTable)]];
-        }
-        if ([_tableValueDict objectForKey:@"audit_button"]) {
-            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"审核" style:UIBarButtonItemStyleBordered target:self action:@selector(auditTable)]];
-        }
-        if ([_tableValueDict objectForKey:@"save_button"]) {
-            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleBordered target:self action:@selector(saveTable)]];
+//        if ([_tableValueDict objectForKey:@"menu_button"]) {
+//            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"附件" style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+//        }
+//        if ([_tableValueDict objectForKey:@"unaudit_button"]) {
+//            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"反审" style:UIBarButtonItemStyleBordered target:self action:@selector(unauditTable)]];
+//        }
+//        if ([_tableValueDict objectForKey:@"audit_button"]) {
+//            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"审核" style:UIBarButtonItemStyleBordered target:self action:@selector(auditTable)]];
+//        }
+//        if ([_tableValueDict objectForKey:@"save_button"]) {
+//            [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleBordered target:self action:@selector(saveTable)]];
+//        }
+        
+        NSDictionary *dict = [_tableValueDict objectForKey:@"buttonList"];
+        static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+        for (NSDictionary *dictionary in dict){
+            if ([dictionary objectForKey:@"fName"] && [[dictionary objectForKey:@"fName"] compare:@"附件" options:comparisonOptions] == NSOrderedSame) {
+                [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"附件" style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+            }
+            else{
+                [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(toolbarProcess:)]];
+            }
         }
     }
     if (barButtonItems.count == 0 && !_isEdit) {
@@ -235,6 +277,39 @@ static int UPLOADFINISH = -11;
         }
     }
     return entryNums;
+}
+
+//通用按钮操作
+- (void)toolbarProcess:(id)sender
+{
+    UIBarButtonItem *barButtonItem = (UIBarButtonItem*)sender;
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSString *server_base = [NSString stringWithFormat:@"%@/classType!buttonJsonClassTable.action", delegate.SERVER_HOST];
+    TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+    [request setHttpMethod:@"POST"];
+    
+    static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+    NSString * submitString;
+    NSLog(@"----------%@",barButtonItem.title);
+    if ([barButtonItem.title compare:@"保存" options:comparisonOptions] == NSOrderedSame) {
+        submitString = [self getSubmitString:true];
+    }
+    else{
+        submitString = [self getSubmitString:false];
+    }
+    if (submitString) {
+        request.contentType=@"application/x-www-form-urlencoded";
+        NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&jsonTableData={%@}&buttonName=%@&fId=%i",_classType,submitString,barButtonItem.title,_fId];
+        NSLog(@"postBodyString:%@",postBodyString);
+        postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        request.cachePolicy = TTURLRequestCachePolicyNoCache;
+        NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+        
+        [request setHttpBody:postData];
+        [request send];
+        request.userInfo = @"toolbarProcess";
+        request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    }
 }
 
 //保存
@@ -269,7 +344,7 @@ static int UPLOADFINISH = -11;
     TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
     [request setHttpMethod:@"POST"];
     
-    NSString *submitString = [self getSubmitString:true];
+    NSString *submitString = [self getSubmitString:false];
     if (submitString) {
         request.contentType=@"application/x-www-form-urlencoded";
         NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i&auditMsg=%@&jsonTableData={%@}",_classType,_fItemId,@"",submitString];
@@ -293,7 +368,7 @@ static int UPLOADFINISH = -11;
     TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
     [request setHttpMethod:@"POST"];
     
-    NSString *submitString = [self getSubmitString:true];
+    NSString *submitString = [self getSubmitString:false];
     if (submitString) {
         request.contentType=@"application/x-www-form-urlencoded";
         NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i&jsonTableData={%@}",_classType,_fItemId,submitString];
@@ -850,6 +925,12 @@ static int UPLOADFINISH = -11;
                 [self setShouldUpdate:updateDict];
             }
         }
+        else if (request.userInfo != nil && [request.userInfo compare:@"toolbarProcess" options:comparisonOptions] == NSOrderedSame) {
+            UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"操作成功!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+            alert.tag = EDITFINISH;
+            [alert show];
+            [alert release];
+        }
         else if (request.userInfo != nil && [request.userInfo compare:@"saveTable" options:comparisonOptions] == NSOrderedSame) {
             //保存成功
             UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"保存成功!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
@@ -876,6 +957,11 @@ static int UPLOADFINISH = -11;
             UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"附件上传成功!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
             [alert show];
             [alert release];
+        }
+        else if (request.userInfo != nil && [request.userInfo compare:@"queryTableField" options:comparisonOptions] == NSOrderedSame) {
+            //查询该单据信息完毕
+            _tableFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"fieldList"]];
+            [self setTable];
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"queryTable" options:comparisonOptions] == NSOrderedSame) {
             //查询该单据信息完毕

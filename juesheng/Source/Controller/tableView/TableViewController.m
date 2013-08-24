@@ -15,6 +15,7 @@
 #import "TableField.h"
 #import "EditViewController.h"
 #import "LoginViewController.h"
+#import "RequestData.h"
 
 @interface TableViewController ()
 
@@ -25,12 +26,11 @@ static NSInteger DATATABLETAG = -5;
 @synthesize classType=_classType,searchId=_searchId,searchString=_searchString,dataAlertView=_dataAlertView,dataListContent=_dataListContent,dataTableView=_dataTableView,tableFieldArray=_tableFieldArray,selectFieldArray=_selectFieldArray,menuItemId=_menuItemId;
 
 - (id)initWithURL:(NSDictionary*)query {
-    if (self = [self init]) {
+    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         Navigate *navigate = [query objectForKey:@"navigate"];
         _classType = navigate.navigateClassType.intValue;
         _menuItemId = navigate.navigateId.intValue;
         self.title = navigate.navigateName;
-        [self loadSelectField];
     }
     return self;
 }
@@ -49,54 +49,26 @@ static NSInteger DATATABLETAG = -5;
     TT_RELEASE_SAFELY(_selectFieldArray);
 }
 
-- (id)init
-{
-    if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.tableView.backgroundView.alpha = 0;
-        self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
-        //设置查询框及临时查询列表
-        self.searchViewController = self;
-        
-        _searchController.pausesBeforeSearching = YES;
-        _searchController.searchBar.placeholder = NSLocalizedString(@"输入关键字进行查询", @"");
-        //self.searchDisplayController.searchBar.showsSearchResultsButton = YES;
-        
-        _searchController.searchResultsTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth  | UIViewAutoresizingFlexibleHeight;
-        _searchController.searchResultsTableView.delegate = self;
-        self.tableView.tableHeaderView = _searchController.searchBar;
-        
-        //设置代理
-        _searchController.searchBar.delegate = self;
-        _searchController.delegate = self;
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundView.alpha = 0;
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    NSLog(@"TableViewMemoryWarning");
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)refreshListView
-{
-    [self reload];
-}
-
-/**
- * 加载视图时的响应
- */
-- (void)loadView {
-    [super loadView];
+    //设置查询框及临时查询列表
+    self.searchViewController = self;
+    
+    _searchController.pausesBeforeSearching = YES;
+    _searchController.searchBar.placeholder = NSLocalizedString(@"输入关键字进行查询", @"");
+    //self.searchDisplayController.searchBar.showsSearchResultsButton = YES;
+    
+    _searchController.searchResultsTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth  | UIViewAutoresizingFlexibleHeight;
+    _searchController.searchResultsTableView.delegate = self;
+    self.tableView.tableHeaderView = _searchController.searchBar;
+    
+    //设置代理
+    _searchController.searchBar.delegate = self;
+    _searchController.delegate = self;
+    self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     _dataAlertView = [[UIAlertView alloc] initWithTitle: @"请选择"
                                                 message: @"\n\n\n\n\n\n\n\n\n\n\n"
                                                delegate: nil
@@ -106,8 +78,49 @@ static NSInteger DATATABLETAG = -5;
     _dataTableView.delegate = self;
     _dataTableView.dataSource = self;
     _dataTableView.tag = DATATABLETAG;
+    [self loadSelectField];
+    [super viewDidLoad];
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"TableViewMemoryWarning");
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 6.0) {
+        if (self.isViewLoaded && !self.view.window)// 是否是正在使用的视图
+        {
+            _dataAlertView = nil;
+            _dataListContent = nil;
+            _dataTableView = nil;
+            _searchId = nil;
+            _searchString = nil;
+            _tableFieldArray = nil;
+            _selectFieldArray = nil;
+            self.dataSource = nil;
+            self.tableView = nil;// 目的是再次进入时能够重新加载调用viewDidLoad函数。
+            self.view = nil;
+        }
+    }
+}
+
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    _dataAlertView = nil;
+    _dataListContent = nil;
+    _dataTableView = nil;
+    _searchId = nil;
+    _searchString = nil;
+    _tableFieldArray = nil;
+    _selectFieldArray = nil;
+    self.dataSource = nil;
+    self.tableView = nil;// 目的是再次进入时能够重新加载调用viewDidLoad函数。
+    self.view = nil;
+}
+
+- (void)refreshListView
+{
+    [self reload];
+}
 
 -(void)createModel
 {
@@ -128,12 +141,23 @@ static NSInteger DATATABLETAG = -5;
 - (void) didSelectObject:(id)object atIndexPath:(NSIndexPath *)indexPath
 {
     if ([object userInfo]) {
+//        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+//        [dictionary setObject:[NSNumber numberWithInt:_classType] forKey:@"classType"];
+//        [dictionary setObject:[NSNumber numberWithBool:YES] forKey:@"isEdit"];
+//        [dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
+//        [dictionary setObject:[object userInfo] forKey:@"tableValueDictionary"];
+//        EditViewController *editViewController = [[EditViewController alloc] initWithURL:nil query:dictionary];
+//        editViewController.delegate = self;
+//        [self.navigationController pushViewController:editViewController animated:YES];
+//        TT_RELEASE_SAFELY(dictionary);
+//        [editViewController release];
+        
+        
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
         [dictionary setObject:[NSNumber numberWithInt:_classType] forKey:@"classType"];
         [dictionary setObject:[NSNumber numberWithBool:YES] forKey:@"isEdit"];
-        [dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
-        [dictionary setObject:[object userInfo] forKey:@"tableValueDictionary"];
-        EditViewController *editViewController = [[EditViewController alloc] initWithURL:nil query:dictionary];
+        [dictionary setObject:[object userInfo] forKey:@"fId"];
+        EditViewController *editViewController = [[EditViewController alloc] initWithURLNeedSelect:nil query:dictionary];
         editViewController.delegate = self;
         [self.navigationController pushViewController:editViewController animated:YES];
         TT_RELEASE_SAFELY(dictionary);
@@ -240,8 +264,8 @@ static NSInteger DATATABLETAG = -5;
     self.searchDisplayController.searchResultsDataSource = self.dataSource;
     [self.searchDisplayController.searchResultsTableView reloadData];
     TableModel *tableModel = (TableModel*)model;
-    _tableFieldArray = [tableModel.tableFieldArray copy];
-    if (tableModel && tableModel.insertButtonState) {
+    _tableFieldArray = [[TableField alloc] initWithDictionay:tableModel.requestData.tableFieldArray];
+    if (tableModel && tableModel.requestData.insertButtonState && tableModel.requestData.insertButtonState.intValue == 1) {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"新建" style:UIBarButtonItemStyleBordered target:self action:@selector(createNewTable)] autorelease];
     }
 }
@@ -251,7 +275,7 @@ static NSInteger DATATABLETAG = -5;
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [dictionary setObject:[NSNumber numberWithInt:_classType] forKey:@"classType"];
     [dictionary setObject:[NSNumber numberWithBool:NO] forKey:@"isEdit"];
-    [dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
+    //[dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
     EditViewController *editViewController = [[EditViewController alloc] initWithURL:nil query:dictionary];
     editViewController.delegate = self;
     [self.navigationController pushViewController:editViewController animated:YES];

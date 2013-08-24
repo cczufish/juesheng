@@ -10,9 +10,10 @@
 #import "TableModel.h"
 #import "TableField.h"
 #import "TableCustomSubtitleItem.h"
+#import "RequestData.h"
 
 @implementation TableDataSource
-@synthesize tableModel=_tableModel;
+@synthesize tableModel=_tableModel,tableFieldArray=_tableFieldArray,insertButtonState=_insertButtonState,totalCount=_totalCount,tableValueArray=_tableValueArray,moduleType=_moduleType,selectFieldArray=_selectFieldArray;
 -(id)initWithURLQuery:(NSString*)query{
     if(self=[super init]){
         _tableModel=[[TableModel alloc] initWithURLQuery:query];
@@ -22,6 +23,11 @@
 
 - (void)dealloc {
     TT_RELEASE_SAFELY(_tableModel);
+    TT_RELEASE_SAFELY(_tableValueArray);
+    TT_RELEASE_SAFELY(_tableFieldArray);
+    TT_RELEASE_SAFELY(_selectFieldArray);
+    _insertButtonState = 0;
+    _totalCount = 0;
     [super dealloc];
 }
 
@@ -29,31 +35,41 @@
     return _tableModel;
 }
 
+- (void)initRequestData:(RequestData*)requestData {
+    _tableFieldArray = [[TableField alloc] initWithDictionay:requestData.tableFieldArray];
+    _tableValueArray = (NSMutableArray*)requestData.tableValueArray;
+    _selectFieldArray = [[TableField alloc] initWithDictionay:requestData.selectFieldArray];
+    _insertButtonState = requestData.insertButtonState.intValue;
+    _totalCount = requestData.totalCount.intValue;
+    _moduleType = requestData.moduleType.intValue;
+}
+
 - (void)tableViewDidLoadModel:(UITableView*)tableView {
     [super tableViewDidLoadModel:tableView];
+    [self initRequestData:_tableModel.requestData];
     NSMutableArray* items = [[[NSMutableArray alloc] init]autorelease];
-    int count = _tableModel.tableValueArray.count;
+    int count = _tableValueArray.count;
     UIImage* defaultPerson = TTIMAGE(@"bundle://defaultPerson.png");
     if (count) {
         for (int i = 0; i < count; i++)
         {
-            NSDictionary *tableValueDictionary = [_tableModel.tableValueArray objectAtIndex:i];
-            TableField *tableField1 = [_tableModel.selectFieldArray objectAtIndex:0];
-            TableField *tableField2 = [_tableModel.selectFieldArray objectAtIndex:1];
-            TableField *tableField3 = [_tableModel.selectFieldArray objectAtIndex:2];
+            NSDictionary *tableValueDictionary = [_tableValueArray objectAtIndex:i];
+            TableField *tableField1 = [_tableFieldArray objectAtIndex:0];
+            TableField *tableField2 = [_tableFieldArray objectAtIndex:1];
+            TableField *tableField3 = [_tableFieldArray objectAtIndex:2];
             TTTableSubtitleItem * item;
-            if (_tableModel.moduleType == 1) {
+            if (_moduleType == 1) {
                 item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@  %@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField],tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField3.fName,[tableValueDictionary objectForKey:tableField3.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
             }
             else {
                 item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
             }
-            item.userInfo = tableValueDictionary;
+            //item.userInfo = tableValueDictionary;
+            item.userInfo = ((NSNumber*)[tableValueDictionary objectForKey:@"FID"]);
             [items addObject: item];
-            //TT_RELEASE_SAFELY(item);
         }
         //判断是否有页厂倍数的余数,如果有则加载TableMoreButton;
-        if(_tableModel.pageNo * _tableModel.pageSize < _tableModel.totalCount){
+        if(_tableModel.pageNo * _tableModel.pageSize < _totalCount){
             [items addObject:[TTTableMoreButton itemWithText:@"加载更多..."]];
         }
     }
@@ -61,10 +77,8 @@
         TTTableImageItem *item = [TTTableImageItem itemWithText: @"没有查询到该记录" imageURL:@""];
         item.userInfo = nil;
         [items addObject: item];
-        //TT_RELEASE_SAFELY(item);
     }
     self.items = items;
-    //TT_RELEASE_SAFELY(items);
 }
 
 - (void)tableView:(UITableView*)tableView cell:(UITableViewCell*)cell willAppearAtIndexPath:(NSIndexPath*)indexPath {

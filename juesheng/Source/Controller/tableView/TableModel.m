@@ -10,10 +10,11 @@
 #import "AppDelegate.h"
 #import "TableField.h"
 #import "LoginViewController.h"
+#import "RequestData.h"
 
 @implementation TableModel
 static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
-@synthesize searchString=_searchString,pageSize=_pageSize,pageNo=_pageNo,tableFieldArray=_tableFieldArray,insertButtonState=_insertButtonState,totalCount=_totalCount,tableValueArray=_tableValueArray,moduleType=_moduleType,selectFieldArray=_selectFieldArray;
+@synthesize searchString=_searchString,pageSize=_pageSize,pageNo=_pageNo,requestData=_requestData;
 
 - (id)initWithURLQuery:(NSString*)query {
     if (self = [super init]) {
@@ -25,24 +26,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     return self;
 }
 
-- (id)init
-{
-    if (self = [super init]) {
-        _tableValueArray = [[NSMutableArray alloc] init];
-        _tableFieldArray = [[NSMutableArray alloc] init];
-        _insertButtonState = 0;
-        _totalCount = 0;
-    }
-    
-    return self;
-}
-
 - (void) dealloc {
-    TT_RELEASE_SAFELY(_tableValueArray);
-    TT_RELEASE_SAFELY(_tableFieldArray);
-    TT_RELEASE_SAFELY(_selectFieldArray);
-    _insertButtonState = 0;
-    _totalCount = 0;
+    TT_RELEASE_SAFELY(_requestData);
     [super dealloc];
 }
 
@@ -101,27 +86,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         return;
     }
     else{
-        _tableFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"fieldList"]];
-        _tableValueArray = [jsonDic objectForKey:@"fieldValueList"];
-        _selectFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"selectFieldList"]];
-        if ([jsonDic objectForKey:@"insertButtonState"]&&![[jsonDic objectForKey:@"insertButtonState"] isEqual:[NSNull null]]) {
-            _insertButtonState = [[jsonDic objectForKey:@"insertButtonState"] intValue];
-        }
-        else {
-            _insertButtonState = 0;
-        }
-        if ([jsonDic objectForKey:@"totalCount"]&&![[jsonDic objectForKey:@"totalCount"] isEqual:[NSNull null]]) {
-            _totalCount = [[jsonDic objectForKey:@"totalCount"] intValue];
-        }
-        else {
-            _totalCount = 0;
-        }
-        if ([jsonDic objectForKey:@"moduleType"]&&![[jsonDic objectForKey:@"moduleType"] isEqual:[NSNull null]]) {
-            _moduleType = [[jsonDic objectForKey:@"moduleType"] intValue];
-        }
-        else {
-            _moduleType = 1;
-        }
+        _requestData = [[RequestData alloc] initWithDict:jsonDic];
     }
     [super requestDidFinishLoad:request];
 }

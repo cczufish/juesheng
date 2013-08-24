@@ -10,7 +10,7 @@
 #import "Three20/Three20.h"
 #import "AppDelegate.h"
 
-@interface LoginViewController : UIViewController<UITextFieldDelegate>
+@interface LoginViewController : TTViewController<UITextFieldDelegate>
 {
     //输入用户名
     UITextField* userName;

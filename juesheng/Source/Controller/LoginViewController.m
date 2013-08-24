@@ -20,133 +20,6 @@
     if (self = [super init]) {
         //设置TabView的风格
         //self.tableViewStyle = UITableViewStyleGrouped;
-        [TTStyleSheet setGlobalStyleSheet:[[[MyStyleSheet alloc] init] autorelease]];
-        //增加背景点击响应事件
-        UIControl *_back = [[UIControl alloc] initWithFrame:self.view.frame];
-        [(UIControl *)_back addTarget:self action:@selector(backgroundTap:) forControlEvents:UIControlEventTouchDown];
-        self.view = _back;
-        [_back release];
-        
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://logo.png")];
-        imageView.frame = CGRectMake(85, 40, 150, 150);
-//        imageView.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:imageView];
-        [imageView release];
-        
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 233, 110, 24)];
-        label.text = @"用户名:";
-        label.font = TTSTYLEVAR(font);
-        label.textAlignment = NSTextAlignmentRight;
-        label.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:label];
-        [label release];
-        
-        //用户名输入框
-        userName = [[[UITextField alloc] init]autorelease];
-        
-        userName.frame = CGRectMake(125, 233, 120, 24);
-        
-        userName.background = TTIMAGE(@"bundle://login-input.png");
-        
-        //这里设置它的代理在本类中
-        userName.delegate = self;
-        
-        //默认灰色的文字，写入后会消失
-        userName.placeholder = @"请输入用户名";
-        
-        //这里设置为true表示
-        //当IOS软键盘抬起后，输入框中若没有输入内容，右下角按钮将呈灰色状态
-        userName.enablesReturnKeyAutomatically = true;
-        
-        //在这里设置IOS软键盘右下角文字显示内容为完成，这里还有很多选项。
-        userName.returnKeyType= UIReturnKeyDone;
-        
-        //设置字体
-        userName.font = TTSTYLEVAR(font);
-        //userName.font = [UIFont systemFontOfSize:11];
-        
-        //输入的内容居中
-        userName.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter; 
-        
-        //设置IOS软键盘抬起后首字母不大写
-        userName.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        
-        label = [[UILabel alloc] initWithFrame:CGRectMake(10, 265, 110, 24)];
-        label.text = @"密码:";
-        label.font = TTSTYLEVAR(font);
-        label.textAlignment = NSTextAlignmentRight;
-        label.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:label];
-        [label release];
-        //密码输入框
-        passWord = [[[UITextField alloc] init]autorelease];
-        
-        passWord.frame = CGRectMake(125, 265, 120, 24);
-        
-        passWord.background = TTIMAGE(@"bundle://login-input.png");
-        
-        //这里设置它的代理在本类中
-        passWord.delegate = self;
-        
-        //默认灰色的文字，写入后会消失
-        passWord.placeholder = @"请输入密码";
-        
-        //在密码输入框中右侧添加整体清除按钮
-        passWord.clearButtonMode = UITextFieldViewModeWhileEditing;
-        
-        //在这里设置IOS软键盘右下角文字显示内容为完成，这里还有很多选项。
-        passWord.returnKeyType = UIReturnKeyDone;
-        
-        //设置字体
-        passWord.font = TTSTYLEVAR(font);
-        
-        //输入的内容居中
-        passWord.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-        
-        //当IOS软键盘抬起后，输入框中若没有输入内容，右下角按钮将呈灰色状态
-        passWord.enablesReturnKeyAutomatically = true;
-        
-        //输入后字符串显示为*符号
-        passWord.secureTextEntry =YES;
-        
-        NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-        //NSLog(@"用户名:%@,密码:%@",[defaults objectForKey:@"userName"],[defaults objectForKey:@"passWord"]);
-        [userName setText:[defaults objectForKey:@"userName"]];
-        [passWord setText:[defaults objectForKey:@"passWord"]];
-        
-        [self.view addSubview:userName];
-        [self.view addSubview:passWord];
-        
-        //UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 300, 40)];
-        //label.text = @"记住密码:";
-        //[self.view addSubview:label];
-        
-        mySwitch = [[ UISwitch alloc]initWithFrame:CGRectMake(180,217,0.0,0.0)];
-        [mySwitch setOn:true];
-        //将按钮加入视图中
-        //[self.view addSubview:mySwitch];
-        rememberDone = [[UIButton alloc] initWithFrame:CGRectMake(150, 290, 94, 20)];
-        [rememberDone setImage:TTIMAGE(@"bundle://login-remenber-checked.png") forState:UIControlStateNormal];
-        [rememberDone addTarget:self action:@selector(changeRemember) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:rememberDone];
-        
-        //在这里创建一个按钮，点击按钮后开始登录
-        keyDone = [UIButton buttonWithType:UIBarStyleBlack] ;
-        //[keyDone setImage:TTIMAGE(@"bundle://login-btn.png") forState:UIControlStateNormal];
-        keyDone.frame = CGRectMake(90, 320, 60, 28);
-        [keyDone setTitle:@"登录" forState:UIControlStateNormal];
-        [keyDone addTarget:self action:@selector(ButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        //将按钮加入视图中
-        [self.view addSubview:keyDone];
-        
-        UIButton *systemConfig = [UIButton buttonWithType:UIBarStyleBlack] ;
-        systemConfig.frame = CGRectMake(180, 320, 60, 28);
-        [systemConfig setTitle:@"设置" forState:UIControlStateNormal];
-        [systemConfig addTarget:self action:@selector(buttonConfig) forControlEvents:UIControlEventTouchUpInside];
-        //将按钮加入视图中
-        [self.view addSubview:systemConfig];
-        
-        self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
         
     }
     return self;
@@ -184,6 +57,133 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [TTStyleSheet setGlobalStyleSheet:[[[MyStyleSheet alloc] init] autorelease]];
+    //增加背景点击响应事件
+    UIControl *_back = [[UIControl alloc] initWithFrame:self.view.frame];
+    [(UIControl *)_back addTarget:self action:@selector(backgroundTap:) forControlEvents:UIControlEventTouchDown];
+    self.view = _back;
+    [_back release];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:TTIMAGE(@"bundle://logo.png")];
+    imageView.frame = CGRectMake(85, 40, 150, 150);
+    //        imageView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:imageView];
+    [imageView release];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 233, 110, 24)];
+    label.text = @"用户名:";
+    label.font = TTSTYLEVAR(font);
+    label.textAlignment = NSTextAlignmentRight;
+    label.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:label];
+    [label release];
+    
+    //用户名输入框
+    userName = [[[UITextField alloc] init]autorelease];
+    
+    userName.frame = CGRectMake(125, 233, 120, 24);
+    
+    userName.background = TTIMAGE(@"bundle://login-input.png");
+    
+    //这里设置它的代理在本类中
+    userName.delegate = self;
+    
+    //默认灰色的文字，写入后会消失
+    userName.placeholder = @"请输入用户名";
+    
+    //这里设置为true表示
+    //当IOS软键盘抬起后，输入框中若没有输入内容，右下角按钮将呈灰色状态
+    userName.enablesReturnKeyAutomatically = true;
+    
+    //在这里设置IOS软键盘右下角文字显示内容为完成，这里还有很多选项。
+    userName.returnKeyType= UIReturnKeyDone;
+    
+    //设置字体
+    userName.font = TTSTYLEVAR(font);
+    //userName.font = [UIFont systemFontOfSize:11];
+    
+    //输入的内容居中
+    userName.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
+    //设置IOS软键盘抬起后首字母不大写
+    userName.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    
+    label = [[UILabel alloc] initWithFrame:CGRectMake(10, 265, 110, 24)];
+    label.text = @"密码:";
+    label.font = TTSTYLEVAR(font);
+    label.textAlignment = NSTextAlignmentRight;
+    label.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:label];
+    [label release];
+    //密码输入框
+    passWord = [[[UITextField alloc] init]autorelease];
+    
+    passWord.frame = CGRectMake(125, 265, 120, 24);
+    
+    passWord.background = TTIMAGE(@"bundle://login-input.png");
+    
+    //这里设置它的代理在本类中
+    passWord.delegate = self;
+    
+    //默认灰色的文字，写入后会消失
+    passWord.placeholder = @"请输入密码";
+    
+    //在密码输入框中右侧添加整体清除按钮
+    passWord.clearButtonMode = UITextFieldViewModeWhileEditing;
+    
+    //在这里设置IOS软键盘右下角文字显示内容为完成，这里还有很多选项。
+    passWord.returnKeyType = UIReturnKeyDone;
+    
+    //设置字体
+    passWord.font = TTSTYLEVAR(font);
+    
+    //输入的内容居中
+    passWord.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
+    //当IOS软键盘抬起后，输入框中若没有输入内容，右下角按钮将呈灰色状态
+    passWord.enablesReturnKeyAutomatically = true;
+    
+    //输入后字符串显示为*符号
+    passWord.secureTextEntry =YES;
+    
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    //NSLog(@"用户名:%@,密码:%@",[defaults objectForKey:@"userName"],[defaults objectForKey:@"passWord"]);
+    [userName setText:[defaults objectForKey:@"userName"]];
+    [passWord setText:[defaults objectForKey:@"passWord"]];
+    
+    [self.view addSubview:userName];
+    [self.view addSubview:passWord];
+    
+    //UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 100, 300, 40)];
+    //label.text = @"记住密码:";
+    //[self.view addSubview:label];
+    
+    mySwitch = [[ UISwitch alloc]initWithFrame:CGRectMake(180,217,0.0,0.0)];
+    [mySwitch setOn:true];
+    //将按钮加入视图中
+    //[self.view addSubview:mySwitch];
+    rememberDone = [[UIButton alloc] initWithFrame:CGRectMake(150, 290, 94, 20)];
+    [rememberDone setImage:TTIMAGE(@"bundle://login-remenber-checked.png") forState:UIControlStateNormal];
+    [rememberDone addTarget:self action:@selector(changeRemember) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:rememberDone];
+    
+    //在这里创建一个按钮，点击按钮后开始登录
+    keyDone = [UIButton buttonWithType:UIBarStyleBlack] ;
+    //[keyDone setImage:TTIMAGE(@"bundle://login-btn.png") forState:UIControlStateNormal];
+    keyDone.frame = CGRectMake(90, 320, 60, 28);
+    [keyDone setTitle:@"登录" forState:UIControlStateNormal];
+    [keyDone addTarget:self action:@selector(ButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    //将按钮加入视图中
+    [self.view addSubview:keyDone];
+    
+    UIButton *systemConfig = [UIButton buttonWithType:UIBarStyleBlack] ;
+    systemConfig.frame = CGRectMake(180, 320, 60, 28);
+    [systemConfig setTitle:@"设置" forState:UIControlStateNormal];
+    [systemConfig addTarget:self action:@selector(buttonConfig) forControlEvents:UIControlEventTouchUpInside];
+    //将按钮加入视图中
+    [self.view addSubview:systemConfig];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
 }
 
 
@@ -228,7 +228,7 @@
 }
 
 #pragma mark 触摸背景来关闭虚拟键盘
--(IBAction)backgroundTap:(id)sender
+-(void)backgroundTap:(id)sender
 {
     // When the user presses return, take focus away from the text field so that the keyboard is dismissed.
     NSTimeInterval animationDuration = 0.30f;
