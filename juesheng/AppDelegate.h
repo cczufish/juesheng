@@ -24,6 +24,7 @@
 @property (nonatomic, assign) NSInteger             networkingCount;
 @property (nonatomic,retain) NSString *SERVER_HOST;
 @property (nonatomic,retain) NSString *JSESSIONID;
+@property (nonatomic, assign) BOOL isWifi;
 
 + (AppDelegate *)sharedAppDelegate;
 - (void)saveContext;

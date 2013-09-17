@@ -38,6 +38,8 @@ static int UPLOADFINISH = -11;
 @synthesize myPV=_myPV;
 @synthesize viewArray=_viewArray;
 @synthesize fId=_fId;
+@synthesize lonNumber=_lonNumber;
+@synthesize latNumber=_latNumber;
 - (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query
 {
     self = [super init];
@@ -78,6 +80,16 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_pageControl);
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_viewArray);
+    TT_RELEASE_SAFELY(_locationManage);
+    _lonNumber = 0;
+    _latNumber = 0;
+}
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    _lonNumber = [[NSNumber numberWithFloat:[newLocation coordinate].longitude] retain];
+    _latNumber = [[NSNumber numberWithFloat:[newLocation coordinate].latitude] retain];
+    //NSLog(@"位置信息正在获取");
 }
 
 - (void)didReceiveMemoryWarning
@@ -139,10 +151,48 @@ static int UPLOADFINISH = -11;
     request.response = [[[TTURLDataResponse alloc] init] autorelease];
 }
 
+
+-(void)uploadSelfLocation
+{
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (_lonNumber && _lonNumber.floatValue > 0) {
+        NSString *server_base = [NSString stringWithFormat:@"%@/classType!saveLocationInfo.action", delegate.SERVER_HOST];
+        TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+        [request setHttpMethod:@"POST"];
+        
+        request.contentType=@"application/x-www-form-urlencoded";
+        NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fId=%i&fx=%f&fy=%f",_classType,_fId,_lonNumber.floatValue,_latNumber.floatValue];
+        postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        request.cachePolicy = TTURLRequestCachePolicyNoCache;
+        NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+        
+        [request setHttpBody:postData];
+        
+        request.userInfo = @"uploadSelfLocation";
+        
+        [request send];
+        
+        request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    }
+}
+
 - (void)viewDidLoad
 {
+    _locationManage = [[CLLocationManager alloc] init];
+    if ([CLLocationManager locationServicesEnabled]) {
+        _locationManage = [[CLLocationManager alloc] init];
+        [_locationManage setDelegate:self];
+        [_locationManage setDistanceFilter:kCLDistanceFilterNone];
+        [_locationManage setDesiredAccuracy:kCLLocationAccuracyBest];
+        [_locationManage startUpdatingLocation];
+    }
+    else{
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"位置服务必须开启,请先开启位置服务!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+    }
     [super viewDidLoad];
-    
+//    self.title = @"";
     _pageControl = [[TTPageControl alloc] initWithFrame:CGRectMake(0,0, self.view.frame.size.width, 20)];
     _pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _pageControl.backgroundColor = [UIColor colorWithRed:((float)237.0f/255.0f) green:((float)169.0f/255.0f) blue:((float)108.0f/255.0f) alpha:1.0f];
@@ -252,7 +302,10 @@ static int UPLOADFINISH = -11;
         static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
         for (NSDictionary *dictionary in dict){
             if ([dictionary objectForKey:@"fName"] && [[dictionary objectForKey:@"fName"] compare:@"附件" options:comparisonOptions] == NSOrderedSame) {
-                [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:@"附件" style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+                [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+            }
+            else if([dictionary objectForKey:@"fName"] && [[dictionary objectForKey:@"fName"] compare:@"面签" options:comparisonOptions] == NSOrderedSame) {
+                [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(uploadSelfLocation)]];
             }
             else{
                 [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(toolbarProcess:)]];
@@ -395,6 +448,12 @@ static int UPLOADFINISH = -11;
                            otherButtonTitles:@"拍照",@"从相册上传",@"查看附件照片",nil];
     menu.actionSheetStyle =UIActionSheetStyleBlackTranslucent;
     [menu showInView:self.navigationController.view];
+}
+
+- (void)faceTable
+{
+    TTURLAction *action =  [[TTURLAction actionWithURLPath:@"tt://roomManage"] applyAnimated:YES];
+    [[TTNavigator navigator] openURLAction:action];
 }
 
 - (void)setTableView
@@ -962,6 +1021,10 @@ static int UPLOADFINISH = -11;
             //查询该单据信息完毕
             _tableFieldArray = [[TableField alloc] initWithDictionay:[jsonDic objectForKey:@"fieldList"]];
             [self setTable];
+        }
+        else if (request.userInfo != nil && [request.userInfo compare:@"uploadSelfLocation" options:comparisonOptions] == NSOrderedSame) {
+            //上传个人位置信息
+            [self faceTable];
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"queryTable" options:comparisonOptions] == NSOrderedSame) {
             //查询该单据信息完毕

@@ -12,8 +12,12 @@
 #import "PhotoInfoSaveViewController.h"
 #import "EditViewDelegate.h"
 #import "ATPagingView.h"
-@interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate>
-
+#import <CoreLocation/CoreLocation.h>
+@interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate>
+{
+    CLLocationManager *_locationManage;
+    
+}
 @property (nonatomic, assign) NSInteger classType;
 @property (nonatomic, assign) NSInteger fItemId;
 @property (nonatomic, retain) NSString *fBillNo;
@@ -31,6 +35,8 @@
 @property (nonatomic, retain) ATPagingView* myPV;
 @property (nonatomic, retain) NSMutableArray *viewArray;
 @property (nonatomic, assign) NSInteger fId;
+@property (nonatomic,retain) NSNumber *lonNumber;
+@property (nonatomic,retain) NSNumber *latNumber;
 - (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query;
 - (id)initWithURLNeedSelect:(NSURL *)URL query:(NSDictionary *)query;
 @end

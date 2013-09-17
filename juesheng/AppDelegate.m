@@ -16,6 +16,7 @@
 #import "SystemConfigViewController.h"
 #import "PhotoConfigViewController.h"
 #import "MessageViewController.h"
+#import "RoomViewController.h"
 
 @implementation AppDelegate
 
@@ -32,7 +33,7 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize networkingCount = _networkingCount;
-@synthesize SERVER_HOST,JSESSIONID;
+@synthesize SERVER_HOST,JSESSIONID,isWifi;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -40,6 +41,7 @@
     if ([defaults objectForKey:@"systemIp"]) {
         SERVER_HOST = [[NSString stringWithFormat:@"http://%@:%@/%@",[defaults objectForKey:@"systemIp"],[defaults objectForKey:@"systemPort"],[defaults objectForKey:@"systemService"]] retain];
     }
+    isWifi = true;
     //网络检测,
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
@@ -75,6 +77,9 @@
     [map from:@"tt://photoConfig" toViewController:[PhotoConfigViewController class]];
     //消息列表
     [map from:@"tt://messageManage?url=(initWithURL:)" toViewController:[MessageViewController class]];
+    //视频聊天
+    [map from:@"tt://roomManage?url=(initWithNibName:)" toViewController:[RoomViewController class]];
+//    [map from:@"tt://anychat?url=(init)" toViewController:[AnyChatViewController class]];
     
     // Before opening the tab bar, we see if the controller history was persisted the last time
     if (![navigator restoreViewControllers]) {
@@ -92,6 +97,7 @@
     UIAlertView *alert;
     switch (status) {
         case NotReachable:
+            isWifi = false;
             alert = [[UIAlertView alloc] initWithTitle:@""
                                                message:@"无法连接到网络,请检查网络设置"
                                               delegate:nil
@@ -100,6 +106,7 @@
             [alert release];
             break;
         case ReachableViaWWAN:
+            isWifi = false;
             alert = [[UIAlertView alloc] initWithTitle:@""
                                                message:@"检测到您没有使用WIFI网络"
                                               delegate:nil
@@ -273,22 +280,26 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    [AnyChatPlatform SetSDKOptionInt:BRAC_SO_CORESDK_ACTIVESTATE :0];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [AnyChatPlatform SetSDKOptionInt:BRAC_SO_CORESDK_ACTIVESTATE :0];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [AnyChatPlatform SetSDKOptionInt:BRAC_SO_CORESDK_ACTIVESTATE :0];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [AnyChatPlatform SetSDKOptionInt:BRAC_SO_CORESDK_ACTIVESTATE :0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

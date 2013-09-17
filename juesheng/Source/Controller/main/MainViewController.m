@@ -11,6 +11,8 @@
 #import "Navigate.h"
 #import "DataBaseController.h"
 #import "LoginViewController.h"
+#import "AnyChatPlatform.h"
+#import "RoomViewController.h"
 
 @interface MainViewController ()
 
@@ -191,13 +193,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(theAlert.tag == LOGINTAG){
-//        TTNavigator* navigator = [TTNavigator navigator];
-//        //切换至登录成功页面
-//        [[TTURLCache sharedCache] removeAll:YES]; 
-//        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
-        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
-        [self.navigationController pushViewController:loginViewComtroller animated:YES];
-        [loginViewComtroller release];
+        TTNavigator* navigator = [TTNavigator navigator];
+        //切换至登录成功页面
+        [[TTURLCache sharedCache] removeAll:YES]; 
+        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+//        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
+//        [self.navigationController pushViewController:loginViewComtroller animated:YES];
+//        [loginViewComtroller release];
     }
 }
 
@@ -230,6 +232,10 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [_launcherView endEditing];
     [_launcherView addItem:menuItem animated:YES];
     
+    menuItem = [[[TTLauncherItem alloc] initWithTitle:@"视频面签" image:@"bundle://users.png" URL:@"fb://navigate102" canDelete:NO] autorelease];
+    [_launcherView endEditing];
+    [_launcherView addItem:menuItem animated:YES];
+    
     [self.view addSubview:_launcherView];
     [self setLauncherBadgeValue];
 }
@@ -242,6 +248,15 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     }
     else if ([item.URL isEqualToString:@"fb://navigate101"]) {
         action =  [[TTURLAction actionWithURLPath:@"tt://messageManage"] applyAnimated:YES];
+        [[TTNavigator navigator] openURLAction:action];
+    }
+    else if ([item.URL isEqualToString:@"fb://navigate102"]) {
+//        NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+        //        [AnyChatPlatform Connect:@"202.91.248.244" : 8906];
+//        [AnyChatPlatform Connect:@"demo.anychat.cn" : 8906];
+//        [AnyChatPlatform Login:[defaults objectForKey:@"userName"] : [defaults objectForKey:@"passWord"]];
+//        action =  [[TTURLAction actionWithURLPath:@"tt://anychat"] applyAnimated:YES];
+        action =  [[TTURLAction actionWithURLPath:@"tt://roomManage"] applyAnimated:YES];
         [[TTNavigator navigator] openURLAction:action];
     }
     else{
@@ -277,5 +292,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     request.userInfo = @"message";
     
 }
+
+
 
 @end
