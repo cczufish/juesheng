@@ -6,28 +6,29 @@
 //
 //
 
-#import <UIKit/UIKit.h>
+#import "Three20UI/Three20UI.h"
 #import "AnyChatPlatform.h"
 #import "AnyChatDefine.h"
 #import "AnyChatErrorCode.h"
-#import "AnyChatMaindelegete.h"
 
-@interface RoomViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, AnyChatNotifyMessageDelegate>
+@interface RoomViewController : TTViewController<UITableViewDelegate, UITableViewDataSource, AnyChatNotifyMessageDelegate>
 {
     IBOutlet UITableView *onlineUserTable;
     NSMutableArray *onlineUserList;
     AnyChatPlatform *anychat;
     int iCurrentChatUserId;
+    NSNumber *_classType;
+    NSNumber *_fId;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *onlineUserTable;
 @property (nonatomic, retain) NSMutableArray *onlineUserList;
-@property (nonatomic, retain) id<AnyChatMaindelegete> delegate;
-
+@property (nonatomic, retain) NSNumber *classType;
+@property (nonatomic, retain) NSNumber *fId;
 
 -(void) RefreshRoomUserList;
 
 - (IBAction) OnLeaveRoomBtnClicked:(id)sender;
-
+- (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query;
 @end
 

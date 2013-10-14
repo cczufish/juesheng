@@ -16,18 +16,39 @@
 @end
 
 @implementation RoomViewController
+static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 @synthesize onlineUserTable;
 @synthesize onlineUserList;
+@synthesize classType=_classType,fId=_fId;
 
+- (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query
+{
+    self = [super initWithNibName:@"RoomViewController" bundle:[NSBundle mainBundle]];
+    if (self) {
+        _classType = [[query objectForKey:@"classType"] retain];
+        _fId = [[query objectForKey:@"fId"] retain];
+    }
+    return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:@"RoomViewController" bundle:[NSBundle mainBundle]];
     if (self) {
         // Custom initialization
     }
     return self;
+}
+
+- (void)dealloc
+{
+    TT_RELEASE_SAFELY(onlineUserList);
+    TT_RELEASE_SAFELY(onlineUserTable);
+    TT_RELEASE_SAFELY(_fId);
+    TT_RELEASE_SAFELY(_classType);
+    TT_RELEASE_SAFELY(anychat);
+    [super dealloc];
 }
 
 - (void)viewDidLoad
@@ -40,13 +61,99 @@
     anychat = [[AnyChatPlatform alloc] init];
     anychat.notifyMsgDelegate = self;
     [AnyChatPlatform InitSDK:0];
-    [AnyChatPlatform Connect:@"202.91.248.244" : 8906];
-//    [AnyChatPlatform Connect:@"demo.anychat.cn" : 8906];
-    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-    [AnyChatPlatform Login:[defaults objectForKey:@"userName"] : [defaults objectForKey:@"passWord"]];
-    //[AnyChatPlatform Login:@"iPhone" : @""];
-    [AnyChatPlatform EnterRoom:1 :@""];
+    [self loginRoom];
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)loginRoom
+{
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSString *server_base = [NSString stringWithFormat:@"%@/classType!getFaceServerInfo.action", delegate.SERVER_HOST];
+    TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+    [request setHttpMethod:@"POST"];
+    request.contentType=@"application/x-www-form-urlencoded";
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true"];
+    NSLog(@"postBodyString:%@",postBodyString);
+    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    request.cachePolicy = TTURLRequestCachePolicyNoCache;
+    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+    
+    [request setHttpBody:postData];
+    [request send];
+    request.userInfo = @"loginRoom";
+    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+}
+
+- (void)requestDidStartLoad:(TTURLRequest*)request {
+    //加入请求开始的一些进度条
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)requestDidFinishLoad:(TTURLRequest*)request {
+    TTURLDataResponse* dataResponse = (TTURLDataResponse*)request.response;
+    NSError *error;
+    NSDictionary *jsonDic = [NSJSONSerialization JSONObjectWithData:dataResponse.data options:kNilOptions error:&error];
+	request.response = nil;
+    bool loginfailure = [[jsonDic objectForKey:@"loginfailure"] boolValue];
+    if (loginfailure) {
+        //创建对话框 提示用户重新输入
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        alert.tag = LOGINTAG;   //通过该标志让用户返回登陆界面
+        alert.delegate = self;
+        [alert show];
+        [alert release];
+        return;
+    }
+    bool success = [[jsonDic objectForKey:@"success"] boolValue];
+    if (!success) {
+        //创建对话框 提示用户获取请求数据失败
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:[jsonDic objectForKey:@"msg"] message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+    }
+    else{
+        static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+        if (request.userInfo != nil && [request.userInfo compare:@"loginRoom" options:comparisonOptions] == NSOrderedSame) {
+            NSDictionary *resultDict = [jsonDic objectForKey:@"faceServerInfo"];
+            NSString *fIPAdd = [resultDict objectForKey:@"fIPAdd"];
+            NSString *fIPPort = [resultDict objectForKey:@"fIPPort"];
+            if (fIPAdd == nil || fIPPort == nil) {
+                fIPAdd = @"202.91.248.244";
+                fIPPort = @"8906";
+            }
+            [AnyChatPlatform Connect:fIPAdd : [fIPPort intValue]];
+            //    [AnyChatPlatform Connect:@"demo.anychat.cn" : 8906];
+            NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+            if (_classType && _fId) {
+                [AnyChatPlatform Login: [NSString stringWithFormat:@"%@/%@",_classType,_fId] : [defaults objectForKey:@"passWord"]];
+            }
+            else{
+                [AnyChatPlatform Login:[defaults objectForKey:@"userName"] : [defaults objectForKey:@"passWord"]];
+            }
+            //[AnyChatPlatform Login:@"iPhone" : @""];
+            [AnyChatPlatform EnterRoom:1 :@""];
+        }
+    }
+}
+
+-(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(theAlert.tag == LOGINTAG){
+        TTNavigator* navigator = [TTNavigator navigator];
+        //切换至登录成功页面
+        [[TTURLCache sharedCache] removeAll:YES];
+        [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)request:(TTURLRequest*)request didFailLoadWithError:(NSError*)error {
+    //[loginButton setTitle:@"Failed to load, try again." forState:UIControlStateNormal];
+    UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"获取http请求失败!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+    //将这个UIAlerView 显示出来
+    [alert show];
+    //释放
+    [alert release];
 }
 
 - (void)didReceiveMemoryWarning
@@ -179,7 +286,8 @@
     if(iCurrentChatUserId == dwUserId) {
         //        [videoChatController FinishVideoChat];
         //        [self showRoomView];
-        [_delegate UserLeaveRoom];
+        //[_delegate UserLeaveRoom];
+        [self.navigationController popViewControllerAnimated:YES];
     }
     //    [roomViewController RefreshRoomUserList];
     [self RefreshRoomUserList];
@@ -188,7 +296,7 @@
 // 网络断开消息
 - (void) OnAnyChatLinkClose:(int) dwErrorCode
 {
-    [_delegate UserLeaveRoom];
+    //[_delegate UserLeaveRoom];
     //    [videoChatController FinishVideoChat];
     [AnyChatPlatform Logout];
     //    [self showLoginView];

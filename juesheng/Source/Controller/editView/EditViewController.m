@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "PhotoViewController.h"
 #import "LoginViewController.h"
+#import "RoomViewController.h"
 
 @interface EditViewController ()
 
@@ -450,10 +451,18 @@ static int UPLOADFINISH = -11;
     [menu showInView:self.navigationController.view];
 }
 
+//面签
 - (void)faceTable
 {
-    TTURLAction *action =  [[TTURLAction actionWithURLPath:@"tt://roomManage"] applyAnimated:YES];
-    [[TTNavigator navigator] openURLAction:action];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setObject:[NSNumber numberWithInt:_classType] forKey:@"classType"];
+    [dictionary setObject:[NSNumber numberWithInt:_fId] forKey:@"fId"];
+    RoomViewController *roomViewController = [[RoomViewController alloc] initWithURL:nil query:dictionary];
+    [self.navigationController pushViewController:roomViewController animated:YES];
+    TT_RELEASE_SAFELY(dictionary);
+    [roomViewController release];
+//    TTURLAction *action =  [[TTURLAction actionWithURLPath:@"tt://roomManage"] applyAnimated:YES];
+//    [[TTNavigator navigator] openURLAction:action];
 }
 
 - (void)setTableView

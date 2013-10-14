@@ -11,9 +11,8 @@
 #import "AnyChatPlatform.h"
 #import "AnyChatDefine.h"
 #import "AnyChatErrorCode.h"
-#import "AnyChatMaindelegete.h"
 
-@interface VideoChatController : UIViewController<AnyChatMaindelegete> {
+@interface VideoChatController : UIViewController {
     
     AVCaptureVideoPreviewLayer *localVideoSurface;
     
