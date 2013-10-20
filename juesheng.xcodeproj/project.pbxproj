@@ -185,6 +185,13 @@
 		8454BA1B17708DF700E85B4B /* UIGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1517708DF700E85B4B /* UIGridView.m */; };
 		8454BA1C17708DF700E85B4B /* UIGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1717708DF700E85B4B /* UIGridViewCell.m */; };
 		8454BA1D17708DF700E85B4B /* UIGridViewRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1A17708DF700E85B4B /* UIGridViewRow.m */; };
+		84ADE5BE1813ED4E006EDD24 /* TSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84ADE5BD1813ED4E006EDD24 /* TSAlertView.m */; };
+		84ADE5C51813EE99006EDD24 /* TSAlertViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5BF1813EE98006EDD24 /* TSAlertViewBackground.png */; };
+		84ADE5C61813EE99006EDD24 /* TSAlertViewBackground2.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C01813EE98006EDD24 /* TSAlertViewBackground2.png */; };
+		84ADE5C71813EE99006EDD24 /* TSAlertViewButtonBackground_Highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C11813EE98006EDD24 /* TSAlertViewButtonBackground_Highlighted.png */; };
+		84ADE5C81813EE99006EDD24 /* TSAlertViewButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C21813EE99006EDD24 /* TSAlertViewButtonBackground.png */; };
+		84ADE5C91813EE99006EDD24 /* TSAlertViewCancelButtonBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C31813EE99006EDD24 /* TSAlertViewCancelButtonBackground.png */; };
+		84ADE5CA1813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C41813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png */; };
 		84B6AE9B1766B5590036768C /* CFFTPSample.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B6AE9A1766B5590036768C /* CFFTPSample.c */; };
 		84B6AEA3176751610036768C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8435738F175842AF00389557 /* MobileCoreServices.framework */; };
 		84CA26D9176BFD4A004B5456 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CA26D8176BFD4A004B5456 /* Message.m */; };
@@ -623,6 +630,14 @@
 		8454BA1817708DF700E85B4B /* UIGridViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewDelegate.h; sourceTree = "<group>"; };
 		8454BA1917708DF700E85B4B /* UIGridViewRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewRow.h; sourceTree = "<group>"; };
 		8454BA1A17708DF700E85B4B /* UIGridViewRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewRow.m; sourceTree = "<group>"; };
+		84ADE5BC1813ED4E006EDD24 /* TSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAlertView.h; sourceTree = "<group>"; };
+		84ADE5BD1813ED4E006EDD24 /* TSAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAlertView.m; sourceTree = "<group>"; };
+		84ADE5BF1813EE98006EDD24 /* TSAlertViewBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewBackground.png; sourceTree = "<group>"; };
+		84ADE5C01813EE98006EDD24 /* TSAlertViewBackground2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewBackground2.png; sourceTree = "<group>"; };
+		84ADE5C11813EE98006EDD24 /* TSAlertViewButtonBackground_Highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewButtonBackground_Highlighted.png; sourceTree = "<group>"; };
+		84ADE5C21813EE99006EDD24 /* TSAlertViewButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewButtonBackground.png; sourceTree = "<group>"; };
+		84ADE5C31813EE99006EDD24 /* TSAlertViewCancelButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewCancelButtonBackground.png; sourceTree = "<group>"; };
+		84ADE5C41813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewMessageListViewShadow.png; sourceTree = "<group>"; };
 		84B6AE9A1766B5590036768C /* CFFTPSample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CFFTPSample.c; sourceTree = "<group>"; };
 		84CA26D7176BFD4A004B5456 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		84CA26D8176BFD4A004B5456 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
@@ -921,6 +936,7 @@
 		84328453174D00FB00FB7BC9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				84ADE5B41813ECAB006EDD24 /* TSAlertView */,
 				841710AC17D8B3DC006B652A /* AnyChat */,
 				8454BA1317708DF700E85B4B /* UIGridView */,
 				843B0BB01758E08A00E880F9 /* MBProgressHUD */,
@@ -1496,6 +1512,21 @@
 			path = UIGridView;
 			sourceTree = "<group>";
 		};
+		84ADE5B41813ECAB006EDD24 /* TSAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				84ADE5BF1813EE98006EDD24 /* TSAlertViewBackground.png */,
+				84ADE5C01813EE98006EDD24 /* TSAlertViewBackground2.png */,
+				84ADE5C11813EE98006EDD24 /* TSAlertViewButtonBackground_Highlighted.png */,
+				84ADE5C21813EE99006EDD24 /* TSAlertViewButtonBackground.png */,
+				84ADE5C31813EE99006EDD24 /* TSAlertViewCancelButtonBackground.png */,
+				84ADE5C41813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png */,
+				84ADE5BC1813ED4E006EDD24 /* TSAlertView.h */,
+				84ADE5BD1813ED4E006EDD24 /* TSAlertView.m */,
+			);
+			path = TSAlertView;
+			sourceTree = "<group>";
+		};
 		84CA26E1176BFEBD004B5456 /* message */ = {
 			isa = PBXGroup;
 			children = (
@@ -1655,7 +1686,7 @@
 		84328336174CFC3D00FB7BC9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = heige;
 			};
 			buildConfigurationList = 84328339174CFC3D00FB7BC9 /* Build configuration list for PBXProject "juesheng" */;
@@ -1922,6 +1953,12 @@
 				841F3FA417D951E700EFF948 /* RoomViewController.xib in Resources */,
 				841F3FA517D951E700EFF948 /* Settings.bundle in Resources */,
 				841F3FA817D951E700EFF948 /* VideoChatController.xib in Resources */,
+				84ADE5C51813EE99006EDD24 /* TSAlertViewBackground.png in Resources */,
+				84ADE5C61813EE99006EDD24 /* TSAlertViewBackground2.png in Resources */,
+				84ADE5C71813EE99006EDD24 /* TSAlertViewButtonBackground_Highlighted.png in Resources */,
+				84ADE5C81813EE99006EDD24 /* TSAlertViewButtonBackground.png in Resources */,
+				84ADE5C91813EE99006EDD24 /* TSAlertViewCancelButtonBackground.png in Resources */,
+				84ADE5CA1813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1991,6 +2028,7 @@
 				841F3FA317D951E700EFF948 /* RoomViewController.m in Sources */,
 				841F3FA617D951E700EFF948 /* test.mm in Sources */,
 				841F3FA717D951E700EFF948 /* VideoChatController.m in Sources */,
+				84ADE5BE1813ED4E006EDD24 /* TSAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2057,8 +2095,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2073,8 +2111,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2090,8 +2128,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: runes cn (YU3M5DJXJD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: runes cn (YU3M5DJXJD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2099,8 +2137,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "6134C230-D784-4890-8F64-7ED9723F48E3";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6134C230-D784-4890-8F64-7ED9723F48E3";
+				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2109,7 +2147,6 @@
 		84328361174CFC3D00FB7BC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_CONSTANT_CONVERSION = NO;
@@ -2141,7 +2178,6 @@
 		84328362174CFC3D00FB7BC9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_CONSTANT_CONVERSION = NO;

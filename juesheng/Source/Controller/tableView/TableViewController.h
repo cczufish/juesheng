@@ -9,11 +9,12 @@
 #import "Three20/Three20.h"
 #import "EditViewController.h"
 
+@class TSAlertView;
 @interface TableViewController : TTTableViewController<UISearchDisplayDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, EditViewDelegate>
 
 @property (nonatomic, assign) NSInteger classType;
 @property (nonatomic, assign) NSInteger menuItemId;
-@property (nonatomic, retain) UIAlertView *dataAlertView;
+@property (nonatomic, retain) TSAlertView *dataAlertView;
 @property (nonatomic, retain) NSMutableArray *dataListContent;
 @property (nonatomic, retain) UITableView *dataTableView;
 @property (nonatomic, retain) NSString *searchId;

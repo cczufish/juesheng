@@ -13,6 +13,7 @@
 #import "EditViewDelegate.h"
 #import "ATPagingView.h"
 #import <CoreLocation/CoreLocation.h>
+@class TSAlertView;
 @interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate>
 {
     CLLocationManager *_locationManage;
@@ -27,7 +28,7 @@
 @property (nonatomic, retain) AutoAdaptedView *myFieldView;
 @property (nonatomic, retain) AutoAdaptedView *autoAdaptedView;      //临时中间字段,作为区分操作字段
 @property (nonatomic, retain) UITableView *alertTableView;
-@property (nonatomic, retain) UIAlertView *dataAlertView;
+@property (nonatomic, retain) TSAlertView *dataAlertView;
 @property (nonatomic, retain) NSMutableArray *alertListContent;
 @property (nonatomic, retain) UIImage *imageToSave;
 @property (nonatomic, assign) id<EditViewDelegate> delegate;

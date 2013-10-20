@@ -16,6 +16,7 @@
 #import "EditViewController.h"
 #import "LoginViewController.h"
 #import "RequestData.h"
+#import "TSAlertView.h"
 
 @interface TableViewController ()
 
@@ -69,7 +70,7 @@ static NSInteger DATATABLETAG = -5;
     _searchController.searchBar.delegate = self;
     _searchController.delegate = self;
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
-    _dataAlertView = [[UIAlertView alloc] initWithTitle: @"请选择"
+    _dataAlertView = [[TSAlertView alloc] initWithTitle: @"请选择"
                                                 message: @"\n\n\n\n\n\n\n\n\n\n\n"
                                                delegate: nil
                                       cancelButtonTitle: @"取消"

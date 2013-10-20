@@ -13,6 +13,7 @@
 #import "PhotoViewController.h"
 #import "LoginViewController.h"
 #import "RoomViewController.h"
+#import "TSAlertView.h"
 
 @interface EditViewController ()
 
@@ -223,7 +224,7 @@ static int UPLOADFINISH = -11;
     _alertTableView = [[UITableView alloc] initWithFrame: CGRectMake(15, 50, 255, 225)];
     _alertTableView.delegate = self;
     _alertTableView.dataSource = self;
-    _dataAlertView = [[UIAlertView alloc] initWithTitle: @"请选择"
+    _dataAlertView = [[TSAlertView alloc] initWithTitle: @"请选择"
                                                message: @"\n\n\n\n\n\n\n\n\n\n\n"
                                               delegate: nil
                                      cancelButtonTitle: @"取消"

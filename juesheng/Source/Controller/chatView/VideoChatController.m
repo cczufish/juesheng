@@ -118,7 +118,7 @@
     self->iRemoteUserId = -1;
 }
 
-- (void) OnSwitchCameraBtnClicked
+- (void) OnSwitchCameraBtnClicked:(id)sender
 {
     static int CurrentCameraDevice = 0;
     NSMutableArray* cameraDeviceArray = [AnyChatPlatform EnumVideoCapture];

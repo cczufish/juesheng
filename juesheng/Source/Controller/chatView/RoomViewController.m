@@ -208,6 +208,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     videoChatController.iRemoteUserId = userid;
     
     [self.navigationController pushViewController:videoChatController animated:YES];
+    [videoChatController release];
 }
 
 -(void) RefreshRoomUserList
@@ -217,7 +218,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 - (IBAction) OnLeaveRoomBtnClicked:(id)sender
 {
-    [AnyChatPlatform LeaveRoom:-1];
+    [AnyChatPlatform LeaveRoom:1];
     //[[AppDelegate GetApp].viewController showHallView];
 }
 
@@ -226,7 +227,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
         // in the navigation stack.
-        [AnyChatPlatform LeaveRoom:-1];
+        [AnyChatPlatform LeaveRoom:1];
+        [AnyChatPlatform Logout];
     }
     [super viewWillDisappear:animated];
 }
