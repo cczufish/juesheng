@@ -53,7 +53,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 - (void)viewDidLoad
 {
-    _fRoomId = 1;
+    _fRoomId = [NSNumber numberWithInt:1];
     [super viewDidLoad];
     self.title = @"在线用户";
     //anyChat
@@ -342,15 +342,15 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     else
     {
         int iWidth, iHeight;
-        if (iVideoSolution < 3) {
-            AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
-            if (delegate.isWifi) {
-                iVideoSolution = 3; //直接设置低分辨率视频参数
-            }
-            else{
-                iVideoSolution = 4; //直接设置低分辨率视频参数
-            }
-        }
+//        if (iVideoSolution < 3) {
+//            AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+//            if (delegate.isWifi) {
+//                iVideoSolution = 3; //直接设置低分辨率视频参数
+//            }
+//            else{
+//                iVideoSolution = 4; //直接设置低分辨率视频参数
+//            }
+//        }
         switch (iVideoSolution) {
             case 0:     iWidth = 1280;  iHeight = 720;  break;
             case 1:     iWidth = 640;   iHeight = 480;  break;

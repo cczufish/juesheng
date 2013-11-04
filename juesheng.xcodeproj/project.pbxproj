@@ -195,6 +195,7 @@
 		84ADE5CA1813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C41813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png */; };
 		84B6AE9B1766B5590036768C /* CFFTPSample.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B6AE9A1766B5590036768C /* CFFTPSample.c */; };
 		84B6AEA3176751610036768C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8435738F175842AF00389557 /* MobileCoreServices.framework */; };
+		84B715581828154C00D0C55E /* configViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B715571828154C00D0C55E /* configViewController.m */; };
 		84CA26D9176BFD4A004B5456 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CA26D8176BFD4A004B5456 /* Message.m */; };
 		84CA26E4176BFEDF004B5456 /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CA26E3176BFEDF004B5456 /* MessageViewController.m */; };
 		84CA26E7176BFF0D004B5456 /* MessageDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CA26E6176BFF0D004B5456 /* MessageDataSource.m */; };
@@ -642,6 +643,8 @@
 		84ADE5C31813EE99006EDD24 /* TSAlertViewCancelButtonBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewCancelButtonBackground.png; sourceTree = "<group>"; };
 		84ADE5C41813EE99006EDD24 /* TSAlertViewMessageListViewShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewMessageListViewShadow.png; sourceTree = "<group>"; };
 		84B6AE9A1766B5590036768C /* CFFTPSample.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CFFTPSample.c; sourceTree = "<group>"; };
+		84B715561828154C00D0C55E /* configViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = configViewController.h; sourceTree = "<group>"; };
+		84B715571828154C00D0C55E /* configViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = configViewController.m; sourceTree = "<group>"; };
 		84CA26D7176BFD4A004B5456 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		84CA26D8176BFD4A004B5456 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		84CA26E2176BFEDF004B5456 /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
@@ -1409,6 +1412,8 @@
 				8404A79B176CAA6B000A5414 /* MainViewController.m */,
 				84810D5C1826EEBD00541FDE /* SystemConfigSetViewController.h */,
 				84810D5D1826EEBD00541FDE /* SystemConfigSetViewController.m */,
+				84B715561828154C00D0C55E /* configViewController.h */,
+				84B715571828154C00D0C55E /* configViewController.m */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -2008,6 +2013,7 @@
 				84DD67AF175A4A78006068E2 /* TableDataSource.m in Sources */,
 				84DD67B2175A4A98006068E2 /* TableModel.m in Sources */,
 				84DD67B5175A4FF2006068E2 /* TableField.m in Sources */,
+				84B715581828154C00D0C55E /* configViewController.m in Sources */,
 				84DD67C1175A6E18006068E2 /* NameValue.m in Sources */,
 				84DD67C5175AF013006068E2 /* TableCustomSubtitleItem.m in Sources */,
 				84E4BAD7175B29AD00BA2D9A /* EditViewController.m in Sources */,

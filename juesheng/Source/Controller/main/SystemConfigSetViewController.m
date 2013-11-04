@@ -27,11 +27,14 @@ NSString* const kVideoQuality = @"videoquality";
 NSString* const kUploadTime = @"uploadTime";
 static NSInteger DATATABLETAG = -5;
 
+static NSInteger WHtag = 1;
+static NSInteger Matag = 2;
+static NSInteger Zhentag = 3;
+
 @synthesize dataAlertView=_dataAlertView,dataListContent=_dataListContent,dataTableView=_dataTableView;
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        self.title = @"系统设置";
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return self;
@@ -39,6 +42,7 @@ static NSInteger DATATABLETAG = -5;
 
 - (void)viewDidLoad
 {
+    self.title = @"系统设置";
     self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     [super viewDidLoad];
     
@@ -73,6 +77,7 @@ static NSInteger DATATABLETAG = -5;
 -(void)viewWillAppear:(BOOL)animated
 {
     self.title = @"系统设置";
+    [self createModel];
     [super viewWillAppear:animated];
 }
 
@@ -86,12 +91,14 @@ static NSInteger DATATABLETAG = -5;
 
 - (void)createModel {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults synchronize];
     UISwitch* p2pSwitchy = [[[UISwitch alloc] init] autorelease];
     if ([defaults objectForKey:kUseP2P]) {
         p2pSwitchy.on = [[defaults objectForKey:kUseP2P] boolValue];
     }
     else{
         p2pSwitchy.on = YES;
+        [defaults setObject:[NSNumber numberWithBool:YES] forKey:kUseP2P];
     }
     [p2pSwitchy addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     TTTableControlItem* switchP2PItem = [TTTableControlItem itemWithCaption:@"优先P2P" control:p2pSwitchy];
@@ -100,17 +107,42 @@ static NSInteger DATATABLETAG = -5;
     if ([defaults objectForKey:kUseServerParam] && [[defaults objectForKey:kUseServerParam] boolValue]) {
         serverSwitch.on = YES;
     }
+    else{
+        [defaults setObject:[NSNumber numberWithBool:NO] forKey:kUseServerParam];
+    }
     [serverSwitch addTarget:self action:@selector(switchWifiAction:) forControlEvents:UIControlEventValueChanged];
     TTTableControlItem* switchServerItem = [TTTableControlItem itemWithCaption:@"使用服务器视频参数" control:serverSwitch];
+    NSString *videoSolution = @"352*288(默认)";
+    if ([defaults objectForKey:kVideoSolution]) {
+        if ([((NSNumber*)[defaults objectForKey:kVideoSolution]) intValue] == 0) {
+            videoSolution = @"1280*720";
+        }
+        else if ([(NSNumber*)[defaults objectForKey:kVideoSolution] intValue] == 1) {
+            videoSolution = @"640*480";
+        }
+        else if ([(NSNumber*)[defaults objectForKey:kVideoSolution] intValue] == 2) {
+            videoSolution = @"480*360";
+        }
+        else if ([(NSNumber*)[defaults objectForKey:kVideoSolution] intValue] == 3) {
+            videoSolution = @"352*288(默认)";
+        }
+        else if ([(NSNumber*)[defaults objectForKey:kVideoSolution] intValue] == 4) {
+            videoSolution = @"192*144";
+        }
+    }
+    else{
+        [defaults setObject:[NSNumber numberWithInt:3] forKey:kVideoSolution];
+    }
     self.dataSource = [TTSectionedDataSource dataSourceWithObjects:
                        @"网络参数设置",
                        switchP2PItem,
                        @"视频参数设置",
                        switchServerItem,
                        @"本地参数设置",
-                       [TTTableTextItem itemWithText:@"视频分辨率" delegate:self selector:@selector(videoWHSet:)],
-                       [TTTableTextItem itemWithText:@"视频码率" delegate:self selector:@selector(videoMaSet:)],
-                       [TTTableTextItem itemWithText:@"视频帧率" delegate:self selector:@selector(videoZhenSet:)],
+                       [TTTableSettingsItem itemWithText:videoSolution caption:@"视频分辨率" URL:@"tt://systemParamConfig"],
+                       //[TTTableTextItem itemWithText:@"视频分辨率" delegate:self selector:@selector(videoWHSet:)],
+                       //[TTTableTextItem itemWithText:@"视频码率" delegate:self selector:@selector(videoMaSet:)],
+                       //[TTTableTextItem itemWithText:@"视频帧率" delegate:self selector:@selector(videoZhenSet:)],
                        
                        @"安全设置",
                        [TTTableTextItem itemWithText:@"退出当前账号" delegate:self selector:@selector(logOut)],
@@ -122,17 +154,26 @@ static NSInteger DATATABLETAG = -5;
     _dataListContent = [[NameValue alloc] initNameValue:@"1280*720,640*480,480*360,352*288(默认),192*144;0,1,2,3,4"];
     [_dataTableView reloadData];
     [_dataAlertView addSubview: _dataTableView];
+    _dataAlertView.tag = WHtag;
     [_dataAlertView show];
 }
 
 - (void)videoMaSet:(id)sender
 {
-    
+    _dataListContent = [[NameValue alloc] initNameValue:@"1280*720,640*480,480*360,352*288(默认),192*144;0,1,2,3,4"];
+    [_dataTableView reloadData];
+    [_dataAlertView addSubview: _dataTableView];
+    _dataAlertView.tag = Matag;
+    [_dataAlertView show];
 }
 
 - (void)videoZhenSet:(id)sender
 {
-    
+    _dataListContent = [[NameValue alloc] initNameValue:@"1280*720,640*480,480*360,352*288(默认),192*144;0,1,2,3,4"];
+    [_dataTableView reloadData];
+    [_dataAlertView addSubview: _dataTableView];
+    _dataAlertView.tag = Zhentag;
+    [_dataAlertView show];
 }
 
 - (void)switchAction:(id)sender
