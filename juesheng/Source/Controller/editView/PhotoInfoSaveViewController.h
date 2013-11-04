@@ -39,8 +39,10 @@ enum {
 @property (nonatomic, retain) NSString *ftpUserName;
 @property (nonatomic, retain) NSString *ftpPassword;
 @property (nonatomic, assign) BOOL      isDictionary;
+@property (nonatomic,retain) NSNumber *lonNumber;
+@property (nonatomic,retain) NSNumber *latNumber;
 @property (nonatomic, retain) ATMHud *hud;
-- (id)initWithImage:(UIImage *)image imageName:(NSString*)imageName classType:(NSInteger)classType itemId:(NSInteger)fItemId billNo:(NSString*)fBillNo;
+- (id)initWithImage:(UIImage *)image imageName:(NSString*)imageName classType:(NSInteger)classType itemId:(NSInteger)fItemId billNo:(NSString*)fBillNo lon:(NSNumber*)lon lat:(NSNumber*)lat;
 @end
 @protocol PhotoUploadDelegate <NSObject>
 

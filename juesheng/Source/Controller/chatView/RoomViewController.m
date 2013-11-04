@@ -53,6 +53,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 - (void)viewDidLoad
 {
+    _fRoomId = 1;
     [super viewDidLoad];
     self.title = @"在线用户";
     //anyChat
@@ -118,6 +119,9 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
             NSDictionary *resultDict = [jsonDic objectForKey:@"faceServerInfo"];
             NSString *fIPAdd = [resultDict objectForKey:@"fIPAdd"];
             NSString *fIPPort = [resultDict objectForKey:@"fIPPort"];
+            if ([resultDict objectForKey:@"fRoomId"]&&![[resultDict objectForKey:@"fRoomId"] isEqual:[NSNull null]]) {
+                _fRoomId = [NSNumber numberWithInteger:[[resultDict objectForKey:@"fRoomId"] intValue]];
+            }
             if (fIPAdd == nil || fIPPort == nil) {
                 fIPAdd = @"202.91.248.244";
                 fIPPort = @"8906";
@@ -132,7 +136,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
                 [AnyChatPlatform Login:[defaults objectForKey:@"userName"] : [defaults objectForKey:@"passWord"]];
             }
             //[AnyChatPlatform Login:@"iPhone" : @""];
-            [AnyChatPlatform EnterRoom:1 :@""];
+            [AnyChatPlatform EnterRoom:[_fRoomId intValue] :@""];
         }
     }
 }
@@ -218,7 +222,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 - (IBAction) OnLeaveRoomBtnClicked:(id)sender
 {
-    [AnyChatPlatform LeaveRoom:1];
+    [AnyChatPlatform LeaveRoom:[_fRoomId intValue]];
     //[[AppDelegate GetApp].viewController showHallView];
 }
 
@@ -227,7 +231,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
         // back button was pressed.  We know this is true because self is no longer
         // in the navigation stack.
-        [AnyChatPlatform LeaveRoom:1];
+        [AnyChatPlatform LeaveRoom:[_fRoomId intValue]];
         [AnyChatPlatform Logout];
     }
     [super viewWillDisappear:animated];

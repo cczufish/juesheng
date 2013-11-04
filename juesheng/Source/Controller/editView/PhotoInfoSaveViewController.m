@@ -29,9 +29,11 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 @synthesize ftpPassword = _ftpPassword;
 @synthesize statusString = _statusString;
 @synthesize isDictionary = _isDictionary;
+@synthesize lonNumber=_lonNumber;
+@synthesize latNumber=_latNumber;
 @synthesize hud=_hud;
 
-- (id)initWithImage:(UIImage *)image imageName:(NSString*)imageName classType:(NSInteger)classType itemId:(NSInteger)fItemId billNo:(NSString*)fBillNo
+- (id)initWithImage:(UIImage *)image imageName:(NSString*)imageName classType:(NSInteger)classType itemId:(NSInteger)fItemId billNo:(NSString*)fBillNo lon:(NSNumber*)lon lat:(NSNumber*)lat
 {
     self = [super init];
     if (self) {
@@ -40,6 +42,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         _classType = classType;
         _fItemId = fItemId;
         _fBillNo = [fBillNo retain];
+        _lonNumber = lon;
+        _latNumber = lat;
         
         //获取FTP服务器信息
         NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
@@ -49,6 +53,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     }
     return self;
 }
+
 
 - (void)viewDidLoad
 {
@@ -60,14 +65,14 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         [alert release];
     }
     [super viewDidLoad];
-    self.title = @"照片上传";
+    self.title = @"照片或视频上传";
     UIImageView *imageView = [[UIImageView alloc] initWithImage:_saveImage];
     imageView.frame = CGRectMake(10, 40, 300, 300);
     [self.view addSubview:imageView];
     [imageView release];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 150, 30)];
-    label.text = @"现在上传照片";
+    label.text = @"现在上传照片或视频";
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:label];
@@ -94,6 +99,13 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 
 - (void) savePhotoInfo
 {
+    if (_lonNumber == 0 || _latNumber == 0) {
+        //创建对话框 提示用户重新输入
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"未获取到定位信息,请确认已经开启GPS定位" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+        return;
+    }
     AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *server_base = [NSString stringWithFormat:@"%@/slave!saveClassSlave.action", delegate.SERVER_HOST];
     
@@ -101,7 +113,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [request setHttpMethod:@"POST"];
     
     request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fItemId=%i&fBillNo=%@&fileName=%@&fileSize=%i",_classType,_fItemId,_fBillNo,_imageName,UIImageJPEGRepresentation(_saveImage,0.50f).length];
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&classType=%i&fItemId=%i&fBillNo=%@&fileName=%@&fileSize=%i&fx=%f&fy=%f",_classType,_fItemId,_fBillNo,_imageName,UIImageJPEGRepresentation(_saveImage,0.50f).length,_lonNumber.floatValue,_latNumber.floatValue];
     request.cachePolicy = TTURLRequestCachePolicyNoCache;
     NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
     
@@ -177,8 +189,10 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    [_mySwitch release];
+    _lonNumber = 0;
+    _latNumber = 0;
     NSLog(@"PhotoInfoSaveViewMemoryWarning");
-    // Dispose of any resources that can be recreated.
 }
 
 -(void)alertView:(UIAlertView *)theAlert clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -232,6 +246,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [_mySwitch release];
     [_fBillNo release];
     [_delegate release];
+    _lonNumber = 0;
+    _latNumber = 0;
 }
 
 
@@ -367,7 +383,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         // Open a stream for the file we're going to send.  We do not open this stream;
         // NSURLConnection will do it for us.
         
-        self.fileStream = [NSInputStream inputStreamWithData:UIImageJPEGRepresentation(_saveImage,0.50f)];
+        //self.fileStream = [NSInputStream inputStreamWithData:UIImageJPEGRepresentation(_saveImage,0.50f)];
+        self.fileStream = [NSInputStream inputStreamWithFileAtPath:filePath];
         assert(self.fileStream != nil);
         
         [self.fileStream open];

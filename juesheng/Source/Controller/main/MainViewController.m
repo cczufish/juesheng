@@ -236,6 +236,10 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [_launcherView endEditing];
     [_launcherView addItem:menuItem animated:YES];
     
+    menuItem = [[[TTLauncherItem alloc] initWithTitle:@"系统设置" image:@"bundle://custemer.png" URL:@"fb://navigate103" canDelete:NO] autorelease];
+    [_launcherView endEditing];
+    [_launcherView addItem:menuItem animated:YES];
+    
     [self.view addSubview:_launcherView];
     [self setLauncherBadgeValue];
 }
@@ -257,6 +261,10 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 //        [AnyChatPlatform Login:[defaults objectForKey:@"userName"] : [defaults objectForKey:@"passWord"]];
 //        action =  [[TTURLAction actionWithURLPath:@"tt://anychat"] applyAnimated:YES];
         action =  [[TTURLAction actionWithURLPath:@"tt://roomManage"] applyAnimated:YES];
+        [[TTNavigator navigator] openURLAction:action];
+    }
+    else if ([item.URL isEqualToString:@"fb://navigate103"]) {
+        action =  [[TTURLAction actionWithURLPath:@"tt://systemConfig"] applyAnimated:YES];
         [[TTNavigator navigator] openURLAction:action];
     }
     else{

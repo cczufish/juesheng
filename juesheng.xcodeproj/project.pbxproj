@@ -185,6 +185,7 @@
 		8454BA1B17708DF700E85B4B /* UIGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1517708DF700E85B4B /* UIGridView.m */; };
 		8454BA1C17708DF700E85B4B /* UIGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1717708DF700E85B4B /* UIGridViewCell.m */; };
 		8454BA1D17708DF700E85B4B /* UIGridViewRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8454BA1A17708DF700E85B4B /* UIGridViewRow.m */; };
+		84810D5E1826EEBD00541FDE /* SystemConfigSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84810D5D1826EEBD00541FDE /* SystemConfigSetViewController.m */; };
 		84ADE5BE1813ED4E006EDD24 /* TSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84ADE5BD1813ED4E006EDD24 /* TSAlertView.m */; };
 		84ADE5C51813EE99006EDD24 /* TSAlertViewBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5BF1813EE98006EDD24 /* TSAlertViewBackground.png */; };
 		84ADE5C61813EE99006EDD24 /* TSAlertViewBackground2.png in Resources */ = {isa = PBXBuildFile; fileRef = 84ADE5C01813EE98006EDD24 /* TSAlertViewBackground2.png */; };
@@ -630,6 +631,8 @@
 		8454BA1817708DF700E85B4B /* UIGridViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewDelegate.h; sourceTree = "<group>"; };
 		8454BA1917708DF700E85B4B /* UIGridViewRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIGridViewRow.h; sourceTree = "<group>"; };
 		8454BA1A17708DF700E85B4B /* UIGridViewRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIGridViewRow.m; sourceTree = "<group>"; };
+		84810D5C1826EEBD00541FDE /* SystemConfigSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemConfigSetViewController.h; sourceTree = "<group>"; };
+		84810D5D1826EEBD00541FDE /* SystemConfigSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemConfigSetViewController.m; sourceTree = "<group>"; };
 		84ADE5BC1813ED4E006EDD24 /* TSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAlertView.h; sourceTree = "<group>"; };
 		84ADE5BD1813ED4E006EDD24 /* TSAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAlertView.m; sourceTree = "<group>"; };
 		84ADE5BF1813EE98006EDD24 /* TSAlertViewBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TSAlertViewBackground.png; sourceTree = "<group>"; };
@@ -1404,6 +1407,8 @@
 				84E4BB58175B922400BA2D9A /* MyTableTextItem.m */,
 				8404A79A176CAA6B000A5414 /* MainViewController.h */,
 				8404A79B176CAA6B000A5414 /* MainViewController.m */,
+				84810D5C1826EEBD00541FDE /* SystemConfigSetViewController.h */,
+				84810D5D1826EEBD00541FDE /* SystemConfigSetViewController.m */,
 			);
 			path = main;
 			sourceTree = "<group>";
@@ -2029,6 +2034,7 @@
 				841F3FA617D951E700EFF948 /* test.mm in Sources */,
 				841F3FA717D951E700EFF948 /* VideoChatController.m in Sources */,
 				84ADE5BE1813ED4E006EDD24 /* TSAlertView.m in Sources */,
+				84810D5E1826EEBD00541FDE /* SystemConfigSetViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2095,8 +2101,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
+				CODE_SIGN_IDENTITY = "iPhone Developer: zheng jun (JP7P57DW2Z)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: zheng jun (JP7P57DW2Z)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2109,10 +2115,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				PROVISIONING_PROFILE = "543550E4-58B6-4F08-961A-23A8CEB9E7CE";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "543550E4-58B6-4F08-961A-23A8CEB9E7CE";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2128,17 +2134,17 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: zheng jun";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: zheng jun";
+				CODE_SIGN_IDENTITY = "iPhone Developer: zheng jun (JP7P57DW2Z)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: zheng jun (JP7P57DW2Z)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "81A282B4-5DB8-4DE5-8063-F3F2C6FB01E4";
+				PROVISIONING_PROFILE = "543550E4-58B6-4F08-961A-23A8CEB9E7CE";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "543550E4-58B6-4F08-961A-23A8CEB9E7CE";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

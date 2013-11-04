@@ -19,6 +19,7 @@
     int iCurrentChatUserId;
     NSNumber *_classType;
     NSNumber *_fId;
+    NSNumber *_fRoomId;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *onlineUserTable;

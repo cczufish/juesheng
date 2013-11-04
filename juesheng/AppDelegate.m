@@ -17,6 +17,7 @@
 #import "PhotoConfigViewController.h"
 #import "MessageViewController.h"
 #import "RoomViewController.h"
+#import "SystemConfigSetViewController.h"
 
 @implementation AppDelegate
 
@@ -79,6 +80,8 @@
     [map from:@"tt://messageManage?url=(initWithURL:)" toViewController:[MessageViewController class]];
     //视频聊天
     [map from:@"tt://roomManage?url=(initWithNibName:)" toViewController:[RoomViewController class]];
+    //系统设置
+    [map from:@"tt://systemConfig?url=(init:)" toViewController:[SystemConfigSetViewController class]];
 //    [map from:@"tt://anychat?url=(init)" toViewController:[AnyChatViewController class]];
     
     // Before opening the tab bar, we see if the controller history was persisted the last time

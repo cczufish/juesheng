@@ -46,7 +46,7 @@
 - (void)viewDidLoad
 {
     self.title = @"视频对话";
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"摄像头切换" style:UIBarButtonItemStyleBordered target:self action:@selector(OnSwitchCameraBtnClicked)] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"摄像头切换" style:UIBarButtonItemStyleBordered target:self action:@selector(OnSwitchCameraBtnClicked:)] autorelease];
     [self StartVideoChat:iRemoteUserId];
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.

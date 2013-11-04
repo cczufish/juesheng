@@ -13,6 +13,8 @@
 #import "EditViewDelegate.h"
 #import "ATPagingView.h"
 #import <CoreLocation/CoreLocation.h>
+#import <AVFoundation/AVFoundation.h>
+
 @class TSAlertView;
 @interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate>
 {

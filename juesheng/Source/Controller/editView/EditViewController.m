@@ -46,6 +46,8 @@ static int UPLOADFINISH = -11;
 {
     self = [super init];
     if (self) {
+        _lonNumber = 0;
+        _latNumber = 0;
         _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
         _isEdit = [((NSNumber*)[query objectForKey:@"isEdit"]) boolValue];
         [self queryTableField];
@@ -57,6 +59,8 @@ static int UPLOADFINISH = -11;
 {
     self = [super init];
     if (self) {
+        _lonNumber = 0;
+        _latNumber = 0;
         _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
         _isEdit = [((NSNumber*)[query objectForKey:@"isEdit"]) boolValue];
         _fId = [((NSNumber*)[query objectForKey:@"fId"]) intValue];
@@ -102,6 +106,7 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_alertTableView);
     TT_RELEASE_SAFELY(_dataAlertView);
+    TT_RELEASE_SAFELY(_locationManage);
     // Dispose of any resources that can be recreated.
 }
 
@@ -111,6 +116,7 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_alertTableView);
     TT_RELEASE_SAFELY(_dataAlertView);
+    TT_RELEASE_SAFELY(_locationManage);
 }
 
 - (void)queryTableField
@@ -443,11 +449,11 @@ static int UPLOADFINISH = -11;
 - (void)menuTable
 {
     UIActionSheet *menu = [[UIActionSheet alloc]
-                           initWithTitle: @"照片操作"
+                           initWithTitle: @"附件操作"
                            delegate:self
                            cancelButtonTitle:@"取消"
                            destructiveButtonTitle:nil
-                           otherButtonTitles:@"拍照",@"从相册上传",@"查看附件照片",nil];
+                           otherButtonTitles:@"拍照录像",@"从相册上传",@"查看附件",nil];
     menu.actionSheetStyle =UIActionSheetStyleBlackTranslucent;
     [menu showInView:self.navigationController.view];
 }
@@ -1135,17 +1141,34 @@ static int UPLOADFINISH = -11;
 
 - (void) pickImage
 {
+    if (_lonNumber == 0 || _latNumber == 0) {
+        //创建对话框 提示用户重新输入
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"未获取到定位信息,请确认已经开启GPS定位" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+        return;
+    }
     UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
-    ipc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    ipc.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    ipc.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage, nil];
     ipc.delegate =self;
     ipc.allowsEditing =NO;
-    [self presentViewController:ipc animated:YES completion:nil];
+    [self presentModalViewController:ipc animated:YES];
+    //[self presentViewController:ipc animated:YES completion:nil];
 }
 
 - (void) snapImage
 {
+    if (_lonNumber == 0 || _latNumber == 0) {
+        //创建对话框 提示用户重新输入
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"未获取到定位信息,请确认已经开启GPS定位" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+        return;
+    }
     UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
     ipc.sourceType = UIImagePickerControllerSourceTypeCamera;
+    ipc.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage, nil];
     ipc.delegate =self;
     ipc.allowsEditing =NO;
     [self presentViewController:ipc animated:YES completion:nil];
@@ -1164,7 +1187,7 @@ static int UPLOADFINISH = -11;
     //Source type:  这个参数是用来确定是调用摄像头还是调用图片库.如果是 UIImagePickerControllerSourceTypeCamera 就是调用摄像头,如果是UIImagePickerControllerSourceTypePhotoLibrary 就是调用图片库,如果是UIImagePickerControllerSourceTypeSavedPhotosAlbum 则调用iOS设备中的胶卷相机的图片
     cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
     //在拍照时,用来指定是拍静态的图片还是录像.kUTTypeImage 表示静态图片, kUTTypeMovie表示录像.
-    cameraUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    cameraUI.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage, nil];
     //设置为不可编辑,用来指定是否可编辑.将allowsEditing 属性设置为YES表示可编辑,NO表示不可编辑.
     cameraUI.allowsEditing = NO;
     cameraUI.delegate = delegate;
@@ -1206,7 +1229,7 @@ static int UPLOADFINISH = -11;
         [date release];
         [self saveImage:self.imageToSave WithName:imageName];
         //打开备注信息填写窗口,填写备注
-        PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:self.imageToSave imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo];
+        PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:self.imageToSave imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
         photoInfoSaveViewController.delegate = self;
         [[self navigationController] pushViewController:photoInfoSaveViewController animated:YES];
     }
@@ -1215,7 +1238,30 @@ static int UPLOADFINISH = -11;
         NSString *moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (moviePath)) {
             //存储视频
-            UISaveVideoAtPathToSavedPhotosAlbum (moviePath, nil, nil, nil);
+            //UISaveVideoAtPathToSavedPhotosAlbum (moviePath, nil, nil, nil);
+            
+            NSURL *videoURl = [NSURL fileURLWithPath:moviePath];
+            AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURl options:nil];
+            AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+            generate.appliesPreferredTrackTransform = YES;
+            NSError *err = NULL;
+            CMTime time = CMTimeMake(1, 60);
+            CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+            
+            UIImage *img = [[UIImage alloc] initWithCGImage:imgRef];
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"yyyyMMddHHmmss";
+            NSDate *date = [[NSDate alloc] init];
+            NSString *imageName = [NSString stringWithFormat:@"%@.mov",[formatter stringFromDate:date]];
+            [formatter release];
+            [date release];
+            [self saveData:videoURl WithName:imageName];
+            //[self saveImage:img WithName:imageName];
+            //打开备注信息填写窗口,填写备注
+            PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:img imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
+            photoInfoSaveViewController.delegate = self;
+            [[self navigationController] pushViewController:photoInfoSaveViewController animated:YES];
         }
     }
     
@@ -1232,6 +1278,17 @@ static int UPLOADFINISH = -11;
     NSString* documentsDirectory = [paths objectAtIndex:0];
     // Now we get the full path to the file
     NSString* fullPathToFile = [documentsDirectory stringByAppendingPathComponent:imageName];
+    // and then we write it out
+    [imageData writeToFile:fullPathToFile atomically:NO];
+}
+
+- (void)saveData:(NSURL *)dateURL WithName:(NSString *)dataName
+{
+    NSData* imageData = [NSData dataWithContentsOfURL:dateURL];
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsDirectory = [paths objectAtIndex:0];
+    // Now we get the full path to the file
+    NSString* fullPathToFile = [documentsDirectory stringByAppendingPathComponent:dataName];
     // and then we write it out
     [imageData writeToFile:fullPathToFile atomically:NO];
 }
