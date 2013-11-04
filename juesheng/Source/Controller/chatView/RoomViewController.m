@@ -56,6 +56,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     _fRoomId = [NSNumber numberWithInt:1];
     [super viewDidLoad];
     self.title = @"在线用户";
+    [self.navigationItem setHidesBackButton:YES];
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStyleBordered target:self action:@selector(OnLeaveRoomBtnClicked:)]];
     //anyChat
     iCurrentChatUserId = -1;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(AnyChatNotifyHandler:) name:@"ANYCHATNOTIFY" object:nil];
@@ -220,20 +222,16 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [self.onlineUserTable reloadData];
 }
 
-- (IBAction) OnLeaveRoomBtnClicked:(id)sender
+- (void) OnLeaveRoomBtnClicked:(id)sender
 {
-    [AnyChatPlatform LeaveRoom:[_fRoomId intValue]];
+    [AnyChatPlatform LeaveRoom:-1];
+    [AnyChatPlatform Logout];
+    [self.navigationController popViewControllerAnimated:YES];
     //[[AppDelegate GetApp].viewController showHallView];
 }
 
 
 -(void) viewWillDisappear:(BOOL)animated {
-    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
-        // back button was pressed.  We know this is true because self is no longer
-        // in the navigation stack.
-        [AnyChatPlatform LeaveRoom:[_fRoomId intValue]];
-        [AnyChatPlatform Logout];
-    }
     [super viewWillDisappear:animated];
 }
 

@@ -29,7 +29,7 @@
 
 -(void) RefreshRoomUserList;
 
-- (IBAction) OnLeaveRoomBtnClicked:(id)sender;
+- (void) OnLeaveRoomBtnClicked:(id)sender;
 - (id)initWithURL:(NSURL *)URL query:(NSDictionary *)query;
 @end
 
