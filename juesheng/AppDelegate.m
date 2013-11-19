@@ -28,6 +28,7 @@
     [_managedObjectContext release];
     [_managedObjectModel release];
     [_persistentStoreCoordinator release];
+    [_locationManage release];
     [super dealloc];
 }
 
@@ -35,7 +36,7 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize networkingCount = _networkingCount;
-@synthesize SERVER_HOST,JSESSIONID,isWifi;
+@synthesize SERVER_HOST,JSESSIONID,isWifi,myLocation;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -58,6 +59,25 @@
     self.window = [[[UIWindow alloc] initWithFrame:TTScreenBounds()] autorelease];
     self.window.backgroundColor = [UIColor whiteColor];
     navigator.window = self.window;
+    
+    if ([CLLocationManager locationServicesEnabled]) {
+        _locationManage = [[CLLocationManager alloc] init];
+        [_locationManage setDelegate:self];
+        [_locationManage setDistanceFilter:kCLDistanceFilterNone];
+        [_locationManage setDesiredAccuracy:kCLLocationAccuracyBest];
+        [_locationManage startUpdatingLocation];
+    }
+    else{
+        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"位置服务必须开启,请先开启位置服务!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        [alert release];
+    }
+    
+    long fTimes = 5*60;
+    if ([defaults objectForKey:@"fTimes"]) {
+        fTimes = [[defaults objectForKey:@"fTimes"] longValue];
+    }
+    [NSTimer scheduledTimerWithTimeInterval:fTimes target:self selector:@selector(uploadSelfLocation) userInfo:nil repeats:YES];
     
     TTURLMap* map = navigator.URLMap;
     
@@ -294,6 +314,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [AnyChatPlatform SetSDKOptionInt:BRAC_SO_CORESDK_ACTIVESTATE :0];
+    //[_locationManage startMonitoringSignificantLocationChanges];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -306,6 +327,38 @@
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [AnyChatPlatform SetSDKOptionInt:BRAC_SO_CORESDK_ACTIVESTATE :0];
+    //[_locationManage stopMonitoringSignificantLocationChanges];
+    //[_locationManage startUpdatingLocation];
+}
+
+-(void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    myLocation = [newLocation retain];
+}
+
+-(void)uploadSelfLocation
+{
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (myLocation && myLocation.coordinate.longitude && myLocation.coordinate.longitude > 0
+         && myLocation.coordinate.latitude && myLocation.coordinate.latitude > 0) {
+        NSString *server_base = [NSString stringWithFormat:@"%@/classType!signLocationInfo.action", delegate.SERVER_HOST];
+        TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+        [request setHttpMethod:@"POST"];
+        
+        request.contentType=@"application/x-www-form-urlencoded";
+        NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fx=%f&fy=%f",myLocation.coordinate.longitude,myLocation.coordinate.latitude];
+        postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        request.cachePolicy = TTURLRequestCachePolicyNoCache;
+        NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+        
+        [request setHttpBody:postData];
+        
+        request.userInfo = @"uploadSelfLocation";
+        
+        [request send];
+        
+        request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

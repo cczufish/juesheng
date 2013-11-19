@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "Three20/Three20.h"
+#import <CoreLocation/CoreLocation.h>
 
 @class Reachability;
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,CLLocationManagerDelegate>
 {
     NSInteger               _networkingCount;
     Reachability  *hostReach;   //对手机网络状况的检测
+    CLLocationManager *_locationManage;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -25,6 +27,7 @@
 @property (nonatomic,retain) NSString *SERVER_HOST;
 @property (nonatomic,retain) NSString *JSESSIONID;
 @property (nonatomic, assign) BOOL isWifi;
+@property (nonatomic,retain) CLLocation *myLocation;
 
 + (AppDelegate *)sharedAppDelegate;
 - (void)saveContext;

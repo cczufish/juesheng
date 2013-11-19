@@ -61,10 +61,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     request.response = [[[TTURLDataResponse alloc] init] autorelease];
     request.userInfo = @"navigate";
     
-    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"fFtpAdd"] == nil) {
-        [self setFTPServerInfo];
-    }
+    [self setFTPServerInfo];
 }
 
 - (void)didReceiveMemoryWarning

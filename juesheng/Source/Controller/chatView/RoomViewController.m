@@ -214,7 +214,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     videoChatController.iRemoteUserId = userid;
     
     [self.navigationController pushViewController:videoChatController animated:YES];
-    [videoChatController release];
+    //[videoChatController release];
 }
 
 -(void) RefreshRoomUserList
@@ -229,7 +229,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [self.navigationController popViewControllerAnimated:YES];
     //[[AppDelegate GetApp].viewController showHallView];
 }
-
 
 -(void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];

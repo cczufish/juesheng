@@ -366,6 +366,7 @@
             NSString *server_base = [NSString stringWithFormat:@"%@/login!login.action", SERVER_HOST];
             
             TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
+            server_base = nil;
             [request setHttpMethod:@"POST"];
             
             request.contentType=@"application/x-www-form-urlencoded";
@@ -431,6 +432,13 @@
     else{
         NSString *jsessionid = [resultJSON objectForKey:@"jsessionid"];
         ((AppDelegate*)[[UIApplication sharedApplication] delegate]).JSESSIONID = [NSString stringWithFormat:@"jsessionid=%@",jsessionid];
+        long fTimes = 5*60*1000;
+        if ([resultJSON objectForKey:@"fTimes"]) {
+            fTimes = [[resultJSON objectForKey:@"fTimes"] longValue]/1000;
+        }
+        NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+        [defaults setObject:[NSNumber numberWithLong:fTimes] forKey:@"fTimes"];
+        [defaults synchronize];
         [self LoginSuccess];
     }
 }

@@ -1243,13 +1243,14 @@ static int UPLOADFINISH = -11;
             NSURL *videoURl = [NSURL fileURLWithPath:moviePath];
             AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURl options:nil];
             AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+            [asset release];
             generate.appliesPreferredTrackTransform = YES;
             NSError *err = NULL;
             CMTime time = CMTimeMake(1, 60);
             CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
-            
+            [generate release];
             UIImage *img = [[UIImage alloc] initWithCGImage:imgRef];
-            
+            imgRef = nil;
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateFormat = @"yyyyMMddHHmmss";
             NSDate *date = [[NSDate alloc] init];
@@ -1260,6 +1261,7 @@ static int UPLOADFINISH = -11;
             //[self saveImage:img WithName:imageName];
             //打开备注信息填写窗口,填写备注
             PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:img imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
+            [img release];
             photoInfoSaveViewController.delegate = self;
             [[self navigationController] pushViewController:photoInfoSaveViewController animated:YES];
         }
