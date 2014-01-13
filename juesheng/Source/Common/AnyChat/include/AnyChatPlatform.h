@@ -65,6 +65,17 @@ typedef struct tagWAVEFORMATEX{
 @end
 
 /**
+ *	AnyChat 用户好友事件协议
+ */
+@protocol AnyChatUserInfoDelegate <NSObject>
+// 用户信息更新通知，wParam（INT）表示用户ID号，lParam（INT）表示更新类别
+- (void) OnAnyChatUserInfoUpdate:(int) dwUserId : (int) dwType;
+// 好友在线状态变化，wParam（INT）表示好友用户ID号，lParam（INT）表示用户的当前活动状态：0 离线， 1 上线
+- (void) OnAnyChatFriendStatus:(int) dwUserId : (int) dwStatus;
+@end
+
+
+/**
  *	AnyChat 状态改变事件协议
  */
 @protocol AnyChatStateChangeDelegate <NSObject>
@@ -137,6 +148,13 @@ typedef struct tagWAVEFORMATEX{
 - (void) OnAnyChatAudioDataExCallBack:(int) dwUserid : (NSData*) lpBuf : (WAVEFORMATEX) waveFormatEx : (int) dwTimeStamp;
 @end
 
+/**
+ *	视频呼叫回调事件协议
+ */
+@protocol AnyChatVideoCallDelegate <NSObject>
+- (void) OnAnyChatVideoCallEventCallBack:(int) dwEventType : (int) dwUserId : (int) dwErrorCode : (int) dwFlags : (int) dwParam : (NSString*) lpUserStr;
+@end
+
 
 /**
  *	AnyChat for iOS API方法定义
@@ -150,6 +168,8 @@ typedef struct tagWAVEFORMATEX{
 	id<AnyChatTextMsgDelegate>			textMsgDelegate;
 	id<AnyChatRecordSnapShotDelegate>	recordSnapShotDelegate;
     id<AnyChatMediaDataDelegate>        mediaDataDelegate;
+	id<AnyChatVideoCallDelegate>		videoCallDelegate;
+    id<AnyChatUserInfoDelegate>         userInfoDelegate;
 }
 
 @property (nonatomic, assign) id<AnyChatNotifyMessageDelegate>  	notifyMsgDelegate;
@@ -159,6 +179,8 @@ typedef struct tagWAVEFORMATEX{
 @property (nonatomic, assign) id<AnyChatTextMsgDelegate>			textMsgDelegate;
 @property (nonatomic, assign) id<AnyChatRecordSnapShotDelegate>		recordSnapShotDelegate;
 @property (nonatomic, assign) id<AnyChatMediaDataDelegate>          mediaDataDelegate;
+@property (nonatomic, assign) id<AnyChatVideoCallDelegate>          videoCallDelegate;
+@property (nonatomic, assign) id<AnyChatUserInfoDelegate>           userInfoDelegate;
 
 - (void) OnRecvAnyChatNotify:(NSDictionary*) dict;
 
@@ -299,6 +321,25 @@ typedef struct tagWAVEFORMATEX{
 + (int) SetInputAudioFormat: (int) dwChannels : (int) dwSamplesPerSec : (int) dwBitsPerSample : (int) dwFlags;
 // 外部音频数据输入
 + (int) InputAudioData: (NSData*) lpSamples : (int) dwTimeStamp;
+
+// 视频呼叫事件控制（请求、回复、挂断等）
++ (int) VideoCallControl: (int) dwEventType : (int) dwUserId : (int) dwErrorCode : (int) dwFlags : (int) dwParam : (NSString*) lpUserStr;
+
+
+// 获取用户好友ID列表
++ (NSMutableArray*) GetUserFriends;
+// 获取好友在线状态
++ (int) GetFriendStatus: (int) dwFriendUserId;
+// 获取用户分组ID列表
++ (NSMutableArray*) GetUserGroups;
+// 获取分组下面的好友列表
++ (NSMutableArray*) GetGroupFriends: (int) dwGroupId;
+// 获取用户信息
++ (NSString*) GetUserInfo: (int) dwUserId : (int) dwInfoId;
+// 获取用户分组名称
++ (NSString*) GetGroupName: (int) dwGroupId;
+// 用户信息控制
++ (int) UserInfoControl: (int) dwUserId : (int) dwCtrlCode : (int) wParam : (int) lParam : (NSString*) lpStrValue;
 
 
 

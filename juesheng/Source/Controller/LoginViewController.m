@@ -365,6 +365,7 @@
             
             NSString *server_base = [NSString stringWithFormat:@"%@/login!login.action", SERVER_HOST];
             
+            [SERVER_HOST release];
             TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
             server_base = nil;
             [request setHttpMethod:@"POST"];

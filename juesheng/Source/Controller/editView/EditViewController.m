@@ -938,18 +938,21 @@ static int UPLOADFINISH = -11;
     NSString *server_base = [NSString stringWithFormat:@"%@/classType!getItemClass.action", delegate.SERVER_HOST];
     TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
     [request setHttpMethod:@"POST"];
-    
     request.contentType=@"application/x-www-form-urlencoded";
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i",autoAdaptedView.tableField.fItemClassId,autoAdaptedView.tableField.fDataField,_classType];
-    NSLog(@"postBodyString:%@",postBodyString);
-    postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    request.cachePolicy = TTURLRequestCachePolicyNoCache;
-    NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
     
-    [request setHttpBody:postData];
-    [request send];
-    request.userInfo = @"itemClass";
-    request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    NSString *submitString = [self getSubmitString:false];
+    if (submitString) {
+        NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i&jsonTableData={%@}",autoAdaptedView.tableField.fItemClassId,autoAdaptedView.tableField.fDataField,_classType,submitString];
+        postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        request.cachePolicy = TTURLRequestCachePolicyNoCache;
+        NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
+        
+        [request setHttpBody:postData];
+        [request send];
+        request.userInfo = @"itemClass";
+        request.response = [[[TTURLDataResponse alloc] init] autorelease];
+    }
+    
 }
 
 - (void)requestDidStartLoad:(TTURLRequest*)request {
@@ -1214,9 +1217,19 @@ static int UPLOADFINISH = -11;
         editedImage = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
         originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
         if (editedImage) {
-            _imageToSave = editedImage;
+            //设置image的尺寸
+            CGSize imagesize = editedImage.size;
+            imagesize.height =1024;
+            imagesize.width =768;
+            //对图片大小进行压缩--
+            _imageToSave = [UIImage imageWithData:UIImageJPEGRepresentation([self imageWithImage:editedImage scaledToSize:imagesize],0.1f)];
         } else {
-            _imageToSave = originalImage;
+            //设置image的尺寸
+            CGSize imagesize = originalImage.size;
+            imagesize.height =1024;
+            imagesize.width =768;
+            //对图片大小进行压缩--
+            _imageToSave = [UIImage imageWithData:UIImageJPEGRepresentation([self imageWithImage:originalImage scaledToSize:imagesize],0.1f)];
         }
         //存储照片到胶卷
         //UIImageWriteToSavedPhotosAlbum (self.imageToSave, nil, nil , nil);
@@ -1227,9 +1240,9 @@ static int UPLOADFINISH = -11;
         NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[formatter stringFromDate:date]];
         [formatter release];
         [date release];
-        [self saveImage:self.imageToSave WithName:imageName];
+        [self saveImage:_imageToSave WithName:imageName];
         //打开备注信息填写窗口,填写备注
-        PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:self.imageToSave imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
+        PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:_imageToSave imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
         photoInfoSaveViewController.delegate = self;
         [[self navigationController] pushViewController:photoInfoSaveViewController animated:YES];
     }
@@ -1272,10 +1285,30 @@ static int UPLOADFINISH = -11;
     [picker release];
 }
 
+//对图片尺寸进行压缩--
+-(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize
+{
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
+}
+
 #pragma mark 保存图片到document
 - (void)saveImage:(UIImage *)tempImage WithName:(NSString *)imageName
 {
-    NSData* imageData = UIImageJPEGRepresentation(tempImage,0.75f);
+    NSData* imageData = UIImageJPEGRepresentation(tempImage,1.0f);
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* documentsDirectory = [paths objectAtIndex:0];
     // Now we get the full path to the file
