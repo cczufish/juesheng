@@ -74,7 +74,7 @@
     }
     
     long fTimes = 5*60;
-    if ([defaults objectForKey:@"fTimes"]) {
+    if ([defaults objectForKey:@"fTimes"] && [[defaults objectForKey:@"fTimes"] longValue] > 0) {
         fTimes = [[defaults objectForKey:@"fTimes"] longValue];
     }
     [NSTimer scheduledTimerWithTimeInterval:fTimes target:self selector:@selector(uploadSelfLocation) userInfo:nil repeats:YES];
