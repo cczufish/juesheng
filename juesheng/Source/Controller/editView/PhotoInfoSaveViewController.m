@@ -189,7 +189,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    [_mySwitch release];
     _lonNumber = 0;
     _latNumber = 0;
     NSLog(@"PhotoInfoSaveViewMemoryWarning");

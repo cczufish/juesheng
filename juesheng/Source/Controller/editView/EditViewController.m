@@ -14,6 +14,7 @@
 #import "LoginViewController.h"
 #import "RoomViewController.h"
 #import "TSAlertView.h"
+#import "CateViewController.h"
 
 @interface EditViewController ()
 
@@ -87,13 +88,15 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_viewArray);
     TT_RELEASE_SAFELY(_locationManage);
-    _lonNumber = 0;
-    _latNumber = 0;
+    TT_RELEASE_SAFELY(_lonNumber);
+    TT_RELEASE_SAFELY(_latNumber);
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
+    [_lonNumber release];
     _lonNumber = [[NSNumber numberWithFloat:[newLocation coordinate].longitude] retain];
+    [_latNumber release];
     _latNumber = [[NSNumber numberWithFloat:[newLocation coordinate].latitude] retain];
     //NSLog(@"位置信息正在获取");
 }
@@ -102,11 +105,11 @@ static int UPLOADFINISH = -11;
 {
     [super didReceiveMemoryWarning];
     NSLog(@"EditViewMemoryWarning");
-    TT_RELEASE_SAFELY(_pageControl);
-    TT_RELEASE_SAFELY(_myPV);
-    TT_RELEASE_SAFELY(_alertTableView);
-    TT_RELEASE_SAFELY(_dataAlertView);
-    TT_RELEASE_SAFELY(_locationManage);
+//    TT_RELEASE_SAFELY(_pageControl);
+//    TT_RELEASE_SAFELY(_myPV);
+//    TT_RELEASE_SAFELY(_alertTableView);
+//    TT_RELEASE_SAFELY(_dataAlertView);
+//    TT_RELEASE_SAFELY(_locationManage);
     // Dispose of any resources that can be recreated.
 }
 
@@ -595,8 +598,18 @@ static int UPLOADFINISH = -11;
         [textField resignFirstResponder];
     }
     else if (_autoAdaptedView.tableField.fDataType == 5) {
-        [self dropdown:_autoAdaptedView];
         [textField resignFirstResponder];
+        if (_autoAdaptedView.tableField.fItemClassId && _autoAdaptedView.tableField.fItemClassId == 10380) {    //指定车型品牌特殊处理
+//            SelectTableViewController *selectTableViewController = [[SelectTableViewController alloc] initWIthClassType:_classType itemClassTypeId:10378 selectFieldName:_autoAdaptedView.tableField.fDataField];
+//            selectTableViewController.delegate = self;
+            CateViewController *cateViewController = [[CateViewController alloc] initWIthClassType:_classType itemClassTypeId:10378 selectFieldName:_autoAdaptedView.tableField.fDataField];
+            cateViewController.delegate = self;
+            [self.navigationController pushViewController:cateViewController animated:YES];
+            [cateViewController release];
+        }
+        else{
+            [self dropdown:_autoAdaptedView];
+        }
     }
     else {
         CGRect frame = textField.superview.frame;
@@ -612,6 +625,25 @@ static int UPLOADFINISH = -11;
             self.view.frame = rect;
         }
         [UIView commitAnimations];
+    }
+}
+
+-(void)setSelectValue:(NameValue *)selectValue
+{
+    for (UIScrollView *view in _viewArray){
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            for (AutoAdaptedView *subView in view.subviews){
+                if ([subView isKindOfClass:[AutoAdaptedView class]]) {
+                    if (subView.tag == _autoAdaptedView.tag) {
+                        subView.textValue = [selectValue.idValue retain];
+                        subView.textField.text = [selectValue.idName retain];
+                        if (subView.tableField.fShouldUpdate == 1) {
+                            [self requestShouldUpdate];
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

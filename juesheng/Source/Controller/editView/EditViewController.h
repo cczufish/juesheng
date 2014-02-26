@@ -14,9 +14,10 @@
 #import "ATPagingView.h"
 #import <CoreLocation/CoreLocation.h>
 #import <AVFoundation/AVFoundation.h>
+#import "SelectTableViewController.h"
 
 @class TSAlertView;
-@interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate>
+@interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate,SelectTableViewDelegate>
 {
     CLLocationManager *_locationManage;
     
