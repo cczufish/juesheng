@@ -87,21 +87,21 @@ static NSInteger DATATABLETAG = -5;
 {
     [super didReceiveMemoryWarning];
     NSLog(@"TableViewMemoryWarning");
-    if ([[UIDevice currentDevice].systemVersion floatValue] >= 6.0) {
-        if (self.isViewLoaded && !self.view.window)// 是否是正在使用的视图
-        {
-            _dataAlertView = nil;
-            _dataListContent = nil;
-            _dataTableView = nil;
-            _searchId = nil;
-            _searchString = nil;
-            _tableFieldArray = nil;
-            _selectFieldArray = nil;
-            self.dataSource = nil;
-            self.tableView = nil;// 目的是再次进入时能够重新加载调用viewDidLoad函数。
-            self.view = nil;
-        }
-    }
+//    if ([[UIDevice currentDevice].systemVersion floatValue] >= 6.0) {
+//        if (self.isViewLoaded && !self.view.window)// 是否是正在使用的视图
+//        {
+//            _dataAlertView = nil;
+//            _dataListContent = nil;
+//            _dataTableView = nil;
+//            _searchId = nil;
+//            _searchString = nil;
+//            _tableFieldArray = nil;
+//            _selectFieldArray = nil;
+//            self.dataSource = nil;
+//            self.tableView = nil;// 目的是再次进入时能够重新加载调用viewDidLoad函数。
+//            self.view = nil;
+//        }
+//    }
 }
 
 - (void)viewDidUnload{
