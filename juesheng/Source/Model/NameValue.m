@@ -9,7 +9,7 @@
 #import "NameValue.h"
 
 @implementation NameValue
-@synthesize idName,idValue;
+@synthesize idName,idValue,idImageUrl;
 //格式:业务员未审核,已审核,区域经理未审核,区域经理未复议,值班经理未审核;0,1,2,3,4
 -(NSMutableArray*) initNameValue:(NSString*)nameValue
 {
@@ -43,7 +43,10 @@
             }
             if ([dics objectForKey:@"FName"]&&![[dics objectForKey:@"FName"] isEqual:[NSNull null]]) {
                 self.idName = [dics objectForKey:@"FName"];
-            }            
+            }
+            if ([dics objectForKey:@"FImageUrl"]&&![[dics objectForKey:@"FImageUrl"] isEqual:[NSNull null]]) {
+                self.idImageUrl = [dics objectForKey:@"FImageUrl"];
+            }
             [nameValueArray addObject:self];
         }
     }

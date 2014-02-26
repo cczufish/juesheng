@@ -12,6 +12,7 @@
 
 @property (nonatomic, retain) NSString *idValue;
 @property (nonatomic, retain) NSString *idName;
+@property (nonatomic, retain) NSString *idImageUrl;
 -(NSMutableArray*) initNameValue:(NSString*)nameValue;
 -(NSMutableArray*)initNameValueWithDictionay:(NSDictionary*)dic;
 @end
