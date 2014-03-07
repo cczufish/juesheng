@@ -15,6 +15,7 @@
 #import "RoomViewController.h"
 #import "TSAlertView.h"
 #import "CateViewController.h"
+#import "IQKeyBoardManager.h"
 
 @interface EditViewController ()
 
@@ -490,7 +491,7 @@ static int UPLOADFINISH = -11;
                 scrollView = [[[UIScrollView alloc] initWithFrame:self.view.frame] autorelease];
                 [scrollView setScrollEnabled:YES];
                 scrollView.showsVerticalScrollIndicator = NO;
-                if (i == 0) {
+                if (i == 0) {   //第一页
                     for (int m=0; m<_tableFieldArray.count; m++) {
                         TableField *tableField = [_tableFieldArray objectAtIndex:m];
                         if (tableField.fKeywords) {
@@ -510,6 +511,7 @@ static int UPLOADFINISH = -11;
                         _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                         _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                         _myFieldView.tag = tableField.fIndex;
+                        [_myFieldView.textField addPreviousNextDoneOnKeyboardWithTarget:self previousAction:@selector(previousClicked:) nextAction:@selector(nextClicked:) doneAction:@selector(doneClicked:)];
                         _myFieldView.textField.delegate = self;
                         _myFieldView.textView.delegate = self;
                         [scrollView addSubview:_myFieldView];
@@ -544,6 +546,7 @@ static int UPLOADFINISH = -11;
                     _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                     _myFieldView.tag = tableField.fIndex;
+                    [_myFieldView.textField addPreviousNextDoneOnKeyboardWithTarget:self previousAction:@selector(previousClicked:) nextAction:@selector(nextClicked:) doneAction:@selector(doneClicked:)];
                     _myFieldView.textField.delegate = self;
                     _myFieldView.textView.delegate = self;
                     [scrollView addSubview:_myFieldView];
@@ -574,24 +577,38 @@ static int UPLOADFINISH = -11;
         }
     }
 }
+-(void)previousClicked:(UISegmentedControl*)segmentedControl
+{
+    [((AutoAdaptedView*)[self.view viewWithTag:_autoAdaptedView.tag-1]).textField becomeFirstResponder];
+}
+
+-(void)nextClicked:(UISegmentedControl*)segmentedControl
+{
+    [((AutoAdaptedView*)[self.view viewWithTag:_autoAdaptedView.tag+1]).textField becomeFirstResponder];
+}
+
+-(void)doneClicked:(UIBarButtonItem*)barButton
+{
+    [self.view endEditing:YES];
+}
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     _autoAdaptedView = (AutoAdaptedView*)textField.superview;
     if (_autoAdaptedView.tableField.fDataType == 1) {
-        CGRect frame = textField.superview.frame;
-        int offset = frame.origin.y- (textField.superview.superview.frame.size.height - 216.0)+30-textField.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
-        NSTimeInterval animationDuration = 0.30f;
-        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
-        [UIView setAnimationDuration:animationDuration];
-        float width = self.view.frame.size.width;
-        float height = self.view.frame.size.height;
-        if(offset > 0)
-        {
-            CGRect rect = CGRectMake(0.0f, -offset,width,height);
-            self.view.frame = rect;
-        }
-        [UIView commitAnimations];
+//        CGRect frame = textField.superview.frame;
+//        int offset = frame.origin.y- (textField.superview.superview.frame.size.height - 216.0)+30-textField.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
+//        NSTimeInterval animationDuration = 0.30f;
+//        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+//        [UIView setAnimationDuration:animationDuration];
+//        float width = self.view.frame.size.width;
+//        float height = self.view.frame.size.height;
+//        if(offset > 0)
+//        {
+//            CGRect rect = CGRectMake(0.0f, -offset,width,height);
+//            self.view.frame = rect;
+//        }
+//        [UIView commitAnimations];
     }
     else if (_autoAdaptedView.tableField.fDataType == 4) {
         [self dropdown:_autoAdaptedView];
@@ -612,19 +629,19 @@ static int UPLOADFINISH = -11;
         }
     }
     else {
-        CGRect frame = textField.superview.frame;
-        int offset = frame.origin.y- (textField.superview.superview.frame.size.height - 216.0)+30-textField.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
-        NSTimeInterval animationDuration = 0.30f;
-        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
-        [UIView setAnimationDuration:animationDuration];
-        float width = self.view.frame.size.width;
-        float height = self.view.frame.size.height;
-        if(offset > 0)
-        {
-            CGRect rect = CGRectMake(0.0f, -offset,width,height);
-            self.view.frame = rect;
-        }
-        [UIView commitAnimations];
+//        CGRect frame = textField.superview.frame;
+//        int offset = frame.origin.y- (textField.superview.superview.frame.size.height - 216.0)+30-textField.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
+//        NSTimeInterval animationDuration = 0.30f;
+//        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+//        [UIView setAnimationDuration:animationDuration];
+//        float width = self.view.frame.size.width;
+//        float height = self.view.frame.size.height;
+//        if(offset > 0)
+//        {
+//            CGRect rect = CGRectMake(0.0f, -offset,width,height);
+//            self.view.frame = rect;
+//        }
+//        [UIView commitAnimations];
     }
 }
 
@@ -652,19 +669,19 @@ static int UPLOADFINISH = -11;
     _autoAdaptedView = (AutoAdaptedView*)textView.superview;
     NSLog(@"字段类型:%i",_autoAdaptedView.tableField.fDataType);
     if (_autoAdaptedView.tableField.fDataType == 1) {
-        CGRect frame = textView.superview.frame;
-        int offset = frame.origin.y- (textView.superview.superview.frame.size.height - 216.0)+30-textView.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
-        NSTimeInterval animationDuration = 0.30f;
-        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
-        [UIView setAnimationDuration:animationDuration];
-        float width = self.view.frame.size.width;
-        float height = self.view.frame.size.height;
-        if(offset > 0)
-        {
-            CGRect rect = CGRectMake(0.0f, -offset,width,height);
-            self.view.frame = rect;
-        }
-        [UIView commitAnimations];
+//        CGRect frame = textView.superview.frame;
+//        int offset = frame.origin.y- (textView.superview.superview.frame.size.height - 216.0)+30-textView.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
+//        NSTimeInterval animationDuration = 0.30f;
+//        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+//        [UIView setAnimationDuration:animationDuration];
+//        float width = self.view.frame.size.width;
+//        float height = self.view.frame.size.height;
+//        if(offset > 0)
+//        {
+//            CGRect rect = CGRectMake(0.0f, -offset,width,height);
+//            self.view.frame = rect;
+//        }
+//        [UIView commitAnimations];
     }
     else if (_autoAdaptedView.tableField.fDataType == 4) {
         [self dropdown:_autoAdaptedView];
@@ -675,19 +692,19 @@ static int UPLOADFINISH = -11;
         [textView resignFirstResponder];
     }
     else {
-        CGRect frame = textView.superview.frame;
-        int offset = frame.origin.y- (textView.superview.superview.frame.size.height - 216.0)+30-textView.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
-        NSTimeInterval animationDuration = 0.30f;
-        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
-        [UIView setAnimationDuration:animationDuration];
-        float width = self.view.frame.size.width;
-        float height = self.view.frame.size.height;
-        if(offset > 0)
-        {
-            CGRect rect = CGRectMake(0.0f, -offset,width,height);
-            self.view.frame = rect;
-        }
-        [UIView commitAnimations];
+//        CGRect frame = textView.superview.frame;
+//        int offset = frame.origin.y- (textView.superview.superview.frame.size.height - 216.0)+30-textView.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
+//        NSTimeInterval animationDuration = 0.30f;
+//        [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+//        [UIView setAnimationDuration:animationDuration];
+//        float width = self.view.frame.size.width;
+//        float height = self.view.frame.size.height;
+//        if(offset > 0)
+//        {
+//            CGRect rect = CGRectMake(0.0f, -offset,width,height);
+//            self.view.frame = rect;
+//        }
+//        [UIView commitAnimations];
     }
 }
 
@@ -702,12 +719,12 @@ static int UPLOADFINISH = -11;
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     // When the user presses return, take focus away from the text field so that the keyboard is dismissed.
-    NSTimeInterval animationDuration = 0.30f;
-    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-    [UIView setAnimationDuration:animationDuration];
-    CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
-    self.view.frame = rect;
-    [UIView commitAnimations];
+//    NSTimeInterval animationDuration = 0.30f;
+//    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+//    [UIView setAnimationDuration:animationDuration];
+//    CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+//    self.view.frame = rect;
+//    [UIView commitAnimations];
     [textField resignFirstResponder];
     return YES;
 }
@@ -715,12 +732,12 @@ static int UPLOADFINISH = -11;
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]) {
-        NSTimeInterval animationDuration = 0.30f;
-        [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-        [UIView setAnimationDuration:animationDuration];
-        CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
-        self.view.frame = rect;
-        [UIView commitAnimations];
+//        NSTimeInterval animationDuration = 0.30f;
+//        [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+//        [UIView setAnimationDuration:animationDuration];
+//        CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+//        self.view.frame = rect;
+//        [UIView commitAnimations];
         [textView resignFirstResponder];
         return NO;
     }
@@ -873,24 +890,25 @@ static int UPLOADFINISH = -11;
 -(void)backgroundTap:(id)sender
 {
     // When the user presses return, take focus away from the text field so that the keyboard is dismissed.
-    NSTimeInterval animationDuration = 0.30f;
-    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
-    [UIView setAnimationDuration:animationDuration];
-    CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
-    self.view.frame = rect;
-    [UIView commitAnimations];
+//    NSTimeInterval animationDuration = 0.30f;
+//    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+//    [UIView setAnimationDuration:animationDuration];
+//    CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+//    self.view.frame = rect;
+//    [UIView commitAnimations];
+    [self.view endEditing:true];
     
-    for (UIScrollView *view in _viewArray){
-        if ([view isKindOfClass:[UIScrollView class]]) {
-            for (UIView *subView in view.subviews){
-                if ([subView isKindOfClass:[AutoAdaptedView class]]) {
-                    AutoAdaptedView *aav = (AutoAdaptedView*)subView;
-                    [aav.textField resignFirstResponder];
-                    [aav.textView resignFirstResponder];
-                }
-            }
-        }
-    }
+//    for (UIScrollView *view in _viewArray){
+//        if ([view isKindOfClass:[UIScrollView class]]) {
+//            for (UIView *subView in view.subviews){
+//                if ([subView isKindOfClass:[AutoAdaptedView class]]) {
+//                    AutoAdaptedView *aav = (AutoAdaptedView*)subView;
+//                    [aav.textField resignFirstResponder];
+//                    [aav.textView resignFirstResponder];
+//                }
+//            }
+//        }
+//    }
 }
 
 - (void)dropdown:(id)sender

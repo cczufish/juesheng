@@ -19,6 +19,7 @@
 #import "RoomViewController.h"
 #import "SystemConfigSetViewController.h"
 #import "configViewController.h"
+#import "IQKeyBoardManager.h"
 
 @implementation AppDelegate
 
@@ -40,6 +41,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [IQKeyBoardManager installKeyboardManager];
     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
     if ([defaults objectForKey:@"systemIp"]) {
         SERVER_HOST = [[NSString stringWithFormat:@"http://%@:%@/%@",[defaults objectForKey:@"systemIp"],[defaults objectForKey:@"systemPort"],[defaults objectForKey:@"systemService"]] retain];

@@ -35,8 +35,8 @@ static int titleLabelWidth = 100;
         if (tableValueDictionary &&
             [tableValueDictionary objectForKey:[NSString stringWithFormat:@"%@_value",[_tableField fDataField]]]) {
             _textValue = [[tableValueDictionary objectForKey:[NSString stringWithFormat:@"%@_value",[_tableField fDataField]]] copy];
-        }
-        if (_tableField.fDataType && _tableField.fDataType == 4) {
+        }   
+        if (_tableField.fDataType && _tableField.fDataType == 4) {  //select
             _textField = [[UITextField alloc] initWithFrame:CGRectMake(titleLabelWidth+3, 0, frame.size.width-titleLabelWidth-35, _viewHeight)];
             if (tableValueDictionary &&
                 [tableValueDictionary objectForKey:[_tableField fDataField]] &&
@@ -66,7 +66,7 @@ static int titleLabelWidth = 100;
             [delegate setTextStyle:_textField isTextViewBkFlag:FALSE textViewEditable:FALSE];//设置样式
             [self addSubview:_textField];
         }
-        else if (_tableField.fDataType && _tableField.fDataType == 3) {
+        else if (_tableField.fDataType && _tableField.fDataType == 3) { //radio
             int i=0,radioheight = 25;
             _viewHeight = _viewHeight + radioheight*i;
             _radioButton = [[RadioButton alloc] initWithGroupId:tableField.fDataField index:i value:[[NSString stringWithFormat:@"%i",i] retain]];
@@ -191,7 +191,7 @@ static int titleLabelWidth = 100;
             }
             [self addSubview:_textView];
         }
-        else if (_tableField.fDataType && _tableField.fDataType == 1) {
+        else if (_tableField.fDataType && _tableField.fDataType == 1) { //datetime
             _textField = [[UITextField alloc] initWithFrame:CGRectMake(titleLabelWidth+3, 0, frame.size.width-titleLabelWidth-35, _viewHeight)];
             if (tableValueDictionary && [tableValueDictionary objectForKey:[_tableField fDataField ]] && ![[tableValueDictionary objectForKey:[_tableField fDataField ]] isEqual:[NSNull null]]) {
                 _textField.text = [NSString stringWithFormat:@"%@",[tableValueDictionary objectForKey:[_tableField fDataField ]]];

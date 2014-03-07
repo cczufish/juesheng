@@ -199,6 +199,8 @@
 		845A3D85187690D800DE7998 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A3D82187690D800DE7998 /* Default-568h@2x.png */; };
 		845A3D86187690D800DE7998 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A3D83187690D800DE7998 /* Default.png */; };
 		845A3D87187690D800DE7998 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A3D84187690D800DE7998 /* Default@2x.png */; };
+		8461439F18C8CA1000E4EE8F /* IQKeyBoardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8461439C18C8CA1000E4EE8F /* IQKeyBoardManager.m */; };
+		846143A018C8CA1000E4EE8F /* IQSegmentedNextPrevious.m in Sources */ = {isa = PBXBuildFile; fileRef = 8461439E18C8CA1000E4EE8F /* IQSegmentedNextPrevious.m */; };
 		84810D5E1826EEBD00541FDE /* SystemConfigSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84810D5D1826EEBD00541FDE /* SystemConfigSetViewController.m */; };
 		84A6C4F418B9A20100720107 /* EGOCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A6C4E818B9A20100720107 /* EGOCache.m */; };
 		84A6C4F518B9A20100720107 /* EGOImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A6C4EB18B9A20100720107 /* EGOImageButton.m */; };
@@ -671,6 +673,10 @@
 		845A3D82187690D800DE7998 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		845A3D83187690D800DE7998 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		845A3D84187690D800DE7998 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8461439B18C8CA1000E4EE8F /* IQKeyBoardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyBoardManager.h; sourceTree = "<group>"; };
+		8461439C18C8CA1000E4EE8F /* IQKeyBoardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQKeyBoardManager.m; sourceTree = "<group>"; };
+		8461439D18C8CA1000E4EE8F /* IQSegmentedNextPrevious.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQSegmentedNextPrevious.h; sourceTree = "<group>"; };
+		8461439E18C8CA1000E4EE8F /* IQSegmentedNextPrevious.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQSegmentedNextPrevious.m; sourceTree = "<group>"; };
 		84810D5C1826EEBD00541FDE /* SystemConfigSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemConfigSetViewController.h; sourceTree = "<group>"; };
 		84810D5D1826EEBD00541FDE /* SystemConfigSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemConfigSetViewController.m; sourceTree = "<group>"; };
 		84A6C4E718B9A20100720107 /* EGOCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGOCache.h; sourceTree = "<group>"; };
@@ -1015,6 +1021,7 @@
 		84328453174D00FB00FB7BC9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				8461439A18C8CA1000E4EE8F /* IQKeyBoardManager */,
 				841903E018BCCCD700B0A120 /* Floder */,
 				84A6C4E518B9A20100720107 /* EGOImage */,
 				84ADE5B41813ECAB006EDD24 /* TSAlertView */,
@@ -1600,6 +1607,17 @@
 				8454BA1A17708DF700E85B4B /* UIGridViewRow.m */,
 			);
 			path = UIGridView;
+			sourceTree = "<group>";
+		};
+		8461439A18C8CA1000E4EE8F /* IQKeyBoardManager */ = {
+			isa = PBXGroup;
+			children = (
+				8461439B18C8CA1000E4EE8F /* IQKeyBoardManager.h */,
+				8461439C18C8CA1000E4EE8F /* IQKeyBoardManager.m */,
+				8461439D18C8CA1000E4EE8F /* IQSegmentedNextPrevious.h */,
+				8461439E18C8CA1000E4EE8F /* IQSegmentedNextPrevious.m */,
+			);
+			path = IQKeyBoardManager;
 			sourceTree = "<group>";
 		};
 		84A6C4E518B9A20100720107 /* EGOImage */ = {
@@ -2195,6 +2213,8 @@
 				841903F318BCCCD700B0A120 /* UIFolderTableView.m in Sources */,
 				841903F418BCCCD700B0A120 /* UIView+screenshot.m in Sources */,
 				841903FF18BCCCE600B0A120 /* CateViewController.m in Sources */,
+				8461439F18C8CA1000E4EE8F /* IQKeyBoardManager.m in Sources */,
+				846143A018C8CA1000E4EE8F /* IQSegmentedNextPrevious.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
