@@ -31,6 +31,9 @@
             if ([dics objectForKey:@"navigateParentId"]&&![[dics objectForKey:@"navigateParentId"] isEqual:[NSNull null]]) {
                 navigate.navigateParentId = [dics objectForKey:@"navigateParentId"];
             }
+            if ([dics objectForKey:@"navigateRunType"]&&![[dics objectForKey:@"navigateRunType"] isEqual:[NSNull null]]) {
+                navigate.navigateRunType = [dics objectForKey:@"navigateRunType"];
+            }
             
             [navigateDic addObject:navigate];
         }

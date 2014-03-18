@@ -20,7 +20,9 @@
 @interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate,SelectTableViewDelegate>
 {
     CLLocationManager *_locationManage;
-    NSInteger selectedTextFieldTag;
+    NSInteger firstTextFieldTag;
+    NSMutableArray *_indexArray;
+    BOOL _isAppear;
 }
 @property (nonatomic, assign) NSInteger classType;
 @property (nonatomic, assign) NSInteger fItemId;

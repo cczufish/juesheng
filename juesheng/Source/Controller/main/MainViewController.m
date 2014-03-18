@@ -39,7 +39,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = NO;
     //    self.title = @"黑格移动信息化软件";
-    self.title = @"决盛信贷";
+    self.title = @"艾卡汽车";
     [self.navigationItem setHidesBackButton:YES];
     _menuArray = [[NSMutableArray alloc] init];
     self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];

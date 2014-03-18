@@ -54,15 +54,36 @@
         for (int i = 0; i < count; i++)
         {
             NSDictionary *tableValueDictionary = [_tableValueArray objectAtIndex:i];
-            TableField *tableField1 = [_tableFieldArray objectAtIndex:0];
-            TableField *tableField2 = [_tableFieldArray objectAtIndex:1];
-            TableField *tableField3 = [_tableFieldArray objectAtIndex:2];
             TTTableSubtitleItem * item;
-            if (_moduleType == 1) {
-                item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@  %@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField],tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField3.fName,[tableValueDictionary objectForKey:tableField3.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+            if (_tableFieldArray.count == 1) {
+                TableField *tableField1 = [_tableFieldArray objectAtIndex:0];
+                if (_moduleType == 1) {
+                    item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:@"" imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                }
+                else {
+                    item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:@"" imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                }
             }
-            else {
-                item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+            else if (_tableFieldArray.count == 2) {
+                TableField *tableField1 = [_tableFieldArray objectAtIndex:0];
+                TableField *tableField2 = [_tableFieldArray objectAtIndex:1];
+                if (_moduleType == 1) {
+                    item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                }
+                else {
+                    item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                }
+            }
+            else{
+                TableField *tableField1 = [_tableFieldArray objectAtIndex:0];
+                TableField *tableField2 = [_tableFieldArray objectAtIndex:1];
+                TableField *tableField3 = [_tableFieldArray objectAtIndex:2];
+                if (_moduleType == 1) {
+                    item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@  %@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField],tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField3.fName,[tableValueDictionary objectForKey:tableField3.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                }
+                else {
+                    item = [TTTableSubtitleItem itemWithText:[NSString stringWithFormat:@"%@:%@",tableField1.fName,[tableValueDictionary objectForKey:tableField1.fDataField]] subtitle:[NSString stringWithFormat:@"%@:%@",tableField2.fName,[tableValueDictionary objectForKey:tableField2.fDataField]] imageURL:nil defaultImage:defaultPerson URL:nil accessoryURL:nil];
+                }
             }
             //item.userInfo = tableValueDictionary;
             item.userInfo = ((NSNumber*)[tableValueDictionary objectForKey:@"FID"]);

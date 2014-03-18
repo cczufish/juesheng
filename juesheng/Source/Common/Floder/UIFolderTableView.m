@@ -107,7 +107,6 @@
     [self.bottom addTarget:self action:@selector(performClose:) forControlEvents:UIControlEventTouchUpInside];
     [self.top.cover addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)] autorelease]];
     [self.bottom.cover addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)] autorelease]];
-    
     [self addSubview:subClassContentView];
     [self addSubview:self.top];
     [self addSubview:self.bottom];
@@ -118,8 +117,8 @@
     } else {
         viewFrame.origin.y = position.y;
     }
-    subClassContentView.frame = viewFrame;
     
+    subClassContentView.frame = viewFrame;
     // 配置打开动画
     CGFloat contentHeight = subClassContentView.frame.size.height;
     CFTimeInterval duration = 0.4f;

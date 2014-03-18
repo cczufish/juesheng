@@ -48,6 +48,7 @@ static int UPLOADFINISH = -11;
 {
     self = [super init];
     if (self) {
+        _isAppear = false;
         _lonNumber = 0;
         _latNumber = 0;
         _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
@@ -61,6 +62,7 @@ static int UPLOADFINISH = -11;
 {
     self = [super init];
     if (self) {
+        _isAppear = false;
         _lonNumber = 0;
         _latNumber = 0;
         _classType = [((NSNumber*)[query objectForKey:@"classType"]) intValue];
@@ -91,6 +93,7 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_locationManage);
     TT_RELEASE_SAFELY(_lonNumber);
     TT_RELEASE_SAFELY(_latNumber);
+    TT_RELEASE_SAFELY(_indexArray);
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
@@ -204,6 +207,7 @@ static int UPLOADFINISH = -11;
         [alert release];
     }
     [super viewDidLoad];
+    _indexArray = [[NSMutableArray alloc] init];
 //    self.title = @"";
     _pageControl = [[TTPageControl alloc] initWithFrame:CGRectMake(0,0, self.view.frame.size.width, 20)];
     _pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -479,6 +483,7 @@ static int UPLOADFINISH = -11;
 - (void)setTableView
 {
     if (_tableFieldArray) {
+        BOOL isFirst = true;
         _viewArray = [[NSMutableArray alloc] init];
         UIScrollView *scrollView;
         int _X = 5,_P = 10,_height = 30,y = 30;
@@ -498,6 +503,7 @@ static int UPLOADFINISH = -11;
                             _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                             _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                             _myFieldView.tag = tableField.fIndex;
+                            [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                             _myFieldView.hidden = true;
                             [scrollView addSubview:_myFieldView];
                             //y = y + _myFieldView.frame.size.height + 2*_P;
@@ -511,6 +517,11 @@ static int UPLOADFINISH = -11;
                         _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                         _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                         _myFieldView.tag = tableField.fIndex;
+                        if (isFirst) {
+                            isFirst = false;
+                            firstTextFieldTag = tableField.fIndex;
+                        }
+                        [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                         [_myFieldView.textField addPreviousNextDoneOnKeyboardWithTarget:self previousAction:@selector(previousClicked:) nextAction:@selector(nextClicked:) doneAction:@selector(doneClicked:)];
                         _myFieldView.textField.delegate = self;
                         _myFieldView.textView.delegate = self;
@@ -546,6 +557,11 @@ static int UPLOADFINISH = -11;
                     _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                     _myFieldView.tag = tableField.fIndex;
+                    if (isFirst) {
+                        isFirst = false;
+                        firstTextFieldTag = tableField.fIndex;
+                    }
+                    [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                     [_myFieldView.textField addPreviousNextDoneOnKeyboardWithTarget:self previousAction:@selector(previousClicked:) nextAction:@selector(nextClicked:) doneAction:@selector(doneClicked:)];
                     _myFieldView.textField.delegate = self;
                     _myFieldView.textView.delegate = self;
@@ -568,6 +584,7 @@ static int UPLOADFINISH = -11;
                     _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                     _myFieldView.tag = tableField.fIndex;
+                    [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                     _myFieldView.hidden = true;
                     [scrollView addSubview:_myFieldView];
                     //y = y + _myFieldView.frame.size.height + 2*_P;
@@ -577,14 +594,59 @@ static int UPLOADFINISH = -11;
         }
     }
 }
+
+-(NSNumber*)getProIndex:(int)thisIndex
+{
+    int index = 0;
+    for (int i=_indexArray.count-1;i>=0;i--){
+        if ([((NSNumber*)[_indexArray objectAtIndex:i]) intValue] == thisIndex) {
+            if (i>0) {
+                return [((NSNumber*)[_indexArray objectAtIndex:i-1]) intValue];
+            }
+            else{
+                return [((NSNumber*)[_indexArray objectAtIndex:i]) intValue];
+            }
+        }
+    }
+    return index;
+}
+
+-(NSNumber*)getNextIndex:(int)thisIndex
+{
+    int index = 0;
+    for (int i=0;i<_indexArray.count;i++){
+        if ([((NSNumber*)[_indexArray objectAtIndex:i]) intValue] == thisIndex) {
+            if (i<_indexArray.count-1) {
+                return [((NSNumber*)[_indexArray objectAtIndex:i+1]) intValue];
+            }
+            else{
+                return [((NSNumber*)[_indexArray objectAtIndex:i]) intValue];
+            }
+        }
+    }
+    return index;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    if (firstTextFieldTag && !_isAppear) {
+        _isAppear = true;
+        AutoAdaptedView* aav = (AutoAdaptedView*)[self.view viewWithTag:firstTextFieldTag];
+        [aav.textField becomeFirstResponder];
+    }
+    [super viewDidAppear:animated];
+}
+
 -(void)previousClicked:(UISegmentedControl*)segmentedControl
 {
-    [((AutoAdaptedView*)[self.view viewWithTag:_autoAdaptedView.tag-1]).textField becomeFirstResponder];
+    [self.view endEditing:YES];
+    [((AutoAdaptedView*)[self.view viewWithTag:[self getProIndex:_autoAdaptedView.tag]]).textField becomeFirstResponder];
 }
 
 -(void)nextClicked:(UISegmentedControl*)segmentedControl
 {
-    [((AutoAdaptedView*)[self.view viewWithTag:_autoAdaptedView.tag+1]).textField becomeFirstResponder];
+    [self.view endEditing:YES];
+    [((AutoAdaptedView*)[self.view viewWithTag:[self getNextIndex:_autoAdaptedView.tag]]).textField becomeFirstResponder];
 }
 
 -(void)doneClicked:(UIBarButtonItem*)barButton
@@ -594,7 +656,11 @@ static int UPLOADFINISH = -11;
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    if (_autoAdaptedView) {
+        [_autoAdaptedView.textField resignFirstResponder];
+    }
     _autoAdaptedView = (AutoAdaptedView*)textField.superview;
+    
     if (_autoAdaptedView.tableField.fDataType == 1) {
 //        CGRect frame = textField.superview.frame;
 //        int offset = frame.origin.y- (textField.superview.superview.frame.size.height - 216.0)+30-textField.superview.superview.bounds.origin.y;//键盘高度216+header30-滚动偏移
@@ -619,7 +685,7 @@ static int UPLOADFINISH = -11;
         if (_autoAdaptedView.tableField.fItemClassId && _autoAdaptedView.tableField.fItemClassId == 10380) {    //指定车型品牌特殊处理
 //            SelectTableViewController *selectTableViewController = [[SelectTableViewController alloc] initWIthClassType:_classType itemClassTypeId:10378 selectFieldName:_autoAdaptedView.tableField.fDataField];
 //            selectTableViewController.delegate = self;
-            CateViewController *cateViewController = [[CateViewController alloc] initWIthClassType:_classType itemClassTypeId:10378 selectFieldName:_autoAdaptedView.tableField.fDataField];
+            CateViewController *cateViewController = [[CateViewController alloc] initWIthClassType:_classType itemClassTypeId:10378 selectFieldName:@"FBrand"];
             cateViewController.delegate = self;
             [self.navigationController pushViewController:cateViewController animated:YES];
             [cateViewController release];

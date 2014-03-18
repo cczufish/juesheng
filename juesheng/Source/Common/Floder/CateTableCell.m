@@ -28,8 +28,9 @@
     if (self) {
         // Initialization code
         self.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tmall_bg_main"]];
-        self.logo = [[[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 70, 70)] autorelease];
+        self.logo = [[[EGOImageView alloc] initWithFrame:CGRectMake(5, 5, 70, 70)] autorelease];
         self.logo.backgroundColor = [UIColor clearColor];
+        self.logo.placeholderImage = [UIImage imageNamed:@"logo.png"];
         [self.contentView addSubview:self.logo];
         
         self.title = [[[UILabel alloc] initWithFrame:CGRectMake(80, 20, 230, 20)] autorelease];

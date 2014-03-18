@@ -8,8 +8,9 @@
 
 #import "Three20/Three20.h"
 #import "Navigate.h"
+#import "EditViewDelegate.h"
 
-@interface NavigateViewController : TTTableViewController
+@interface NavigateViewController : TTTableViewController<EditViewDelegate>
 
 @property (nonatomic, retain) NSMutableArray *navigateArray;
 @property (nonatomic, retain) Navigate *parentNavigate;

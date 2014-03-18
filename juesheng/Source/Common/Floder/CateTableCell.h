@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EGOImageView.h"
 
 @interface CateTableCell : UITableViewCell
 
-@property (strong, nonatomic) UIImageView *logo;
+@property (strong, nonatomic) EGOImageView *logo;
 @property (strong, nonatomic) UILabel *title, *subTtile;
 
 @end

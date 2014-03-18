@@ -166,14 +166,12 @@ static int TAG_MAIN_VIEW = 1;
         }
         nameValue = [_mainViewArray objectAtIndex:indexPath.row];
         if (nameValue.idImageUrl) {
-            NSURL *url = [NSURL URLWithString: nameValue.idImageUrl];
-            EGOImageView *iv = [[EGOImageView alloc] init];
-            iv.imageURL = url;
-            cell.logo.image = iv.image;
-            [iv release];
+            //[cell.logo performSelectorOnMainThread:@selector(setImageURL:) withObject:[NSURL URLWithString: nameValue.idImageUrl] waitUntilDone:NO];
+            cell.logo.imageURL = [NSURL URLWithString: nameValue.idImageUrl];
+            //cell.logo.imageURL = [NSURL URLWithString:@"http://d.hiphotos.baidu.com/image/w%3D2048/sign=c3e0b36e2ff5e0feee188e01685835a8/c8177f3e6709c93d4330b2809d3df8dcd0005482.jpg"];
         }
         else{
-            cell.logo.image = [UIImage imageNamed:@"logo.png"];
+            [cell.logo setImage:[UIImage imageNamed:@"logo.png"]];
         }
         cell.title.text = nameValue.idName;
         return cell;
@@ -183,35 +181,33 @@ static int TAG_MAIN_VIEW = 1;
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
         if (cell == nil) {
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                          reuseIdentifier:CellIdentifier] autorelease];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
         }
         nameValue = [_rightViewArray objectAtIndex:indexPath.row];
-        cell.contentView.backgroundColor = [UIColor clearColor];
-        UIButton* backBtn=  [[UIButton alloc]initWithFrame:CGRectMake(20, 0, 150, 44)];
-        backBtn.tag = 20000;
-        //        [backBtn setBackgroundImage:[UIImage imageNamed:@"btn_on"] forState:UIControlStateHighlighted];
-        backBtn.userInteractionEnabled = NO;
-        [backBtn setTitle:nameValue.idName forState:UIButtonTypeCustom];
-        [backBtn setTitleColor:[UIColor blackColor] forState:UIButtonTypeCustom];
-        [cell.contentView addSubview:backBtn];
-        [backBtn release];
+        cell.textLabel.text = nameValue.idName;
         
-        if (nameValue.idImageUrl) {
-            NSURL *url = [NSURL URLWithString: nameValue.idImageUrl];
-            EGOImageView *iv = [[EGOImageView alloc] initWithFrame:CGRectMake(5, 2, 40, 40)];
-            iv.imageURL = url;
-            [cell.contentView addSubview:iv];
-            [iv release];
-        }
-        else{
-            UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(5, 2, 40, 40)];
-            iv.image = [UIImage imageNamed:@"logo.png"];
-            [cell.contentView addSubview:iv];
-            [iv release];
-        }
+//        cell.contentView.backgroundColor = [UIColor clearColor];
+//        UIButton* backBtn=  [[UIButton alloc]initWithFrame:CGRectMake(20, 0, 150, 44)];
+//        backBtn.tag = 20000;
+//        //        [backBtn setBackgroundImage:[UIImage imageNamed:@"btn_on"] forState:UIControlStateHighlighted];
+//        backBtn.userInteractionEnabled = NO;
+//        [backBtn setTitle:nameValue.idName forState:UIButtonTypeCustom];
+//        [backBtn setTitleColor:[UIColor blackColor] forState:UIButtonTypeCustom];
+//        [cell.contentView addSubview:backBtn];
+//        [backBtn release];
+//        
+//        if (nameValue.idImageUrl) {
+//            EGOImageView *iv = [[EGOImageView alloc] initWithFrame:CGRectMake(5, 2, 40, 40)];
+//            [iv performSelectorOnMainThread:@selector(setImageURL:) withObject:[NSURL URLWithString: nameValue.idImageUrl] waitUntilDone:NO];
+//            //iv.imageURL = [NSURL URLWithString: nameValue.idImageUrl];
+//            iv.placeholderImage = [UIImage imageNamed:@"logo.png"];
+//            [cell.contentView addSubview:iv];
+//            [iv release];
+//        }
+        
         return cell;
     }
     return nil;
@@ -287,9 +283,8 @@ static int TAG_MAIN_VIEW = 1;
 
 -(void)subCateBtnAction:(UIButton *)btn
 {
-    NameValue *nameValue = [_subViewArray objectAtIndex:btn.tag];
-    [_rightViewArray release];
-    _rightViewArray = [[NSMutableArray alloc] init];
+    _rightView.frame = CGRectMake(100, self.view.bounds.origin.y,210,460);
+    NameValue *nameValue = [_subVc.subCates objectAtIndex:btn.tag];
     [self sendRequestDataListSub2:nameValue.idValue];
     //_tableView.transform = CGAffineTransformMakeTranslation(-220, 0);
     [_rightView setHidden:false];
@@ -333,7 +328,7 @@ static int TAG_MAIN_VIEW = 1;
     [request setHttpMethod:@"POST"];
     request.contentType=@"application/x-www-form-urlencoded";
     
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i&jsonTableData={FBrand:'%@'}",10379,@"FCarClass",_classType,selectItem];
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i&jsonTableData={isEdit:'0',FBrand:'%@'}",10379,@"FCarClass",_classType,selectItem];
     postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     request.cachePolicy = TTURLRequestCachePolicyNoCache;
     NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
@@ -353,7 +348,7 @@ static int TAG_MAIN_VIEW = 1;
     [request setHttpMethod:@"POST"];
     request.contentType=@"application/x-www-form-urlencoded";
     
-    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i&jsonTableData={FCarClass:'%@'}",10380,@"FCarClass",_classType,selectItem];
+    NSString* postBodyString = [NSString stringWithFormat:@"isMobile=true&fItemClassId=%i&selectFieldName=%@&classType=%i&jsonTableData={isEdit:'0',FCarClass:'%@'}",10380,@"FModel",_classType,selectItem];
     postBodyString = [postBodyString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     request.cachePolicy = TTURLRequestCachePolicyNoCache;
     NSData* postData = [NSData dataWithBytes:[postBodyString UTF8String] length:[postBodyString length]];
@@ -405,6 +400,8 @@ static int TAG_MAIN_VIEW = 1;
             [_subVc reloadCateData];
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"itemClass2" options:comparisonOptions] == NSOrderedSame) {
+            [_rightViewArray release];
+            _rightViewArray = nil;
             _rightViewArray = [[NameValue alloc] initNameValueWithDictionay:[jsonDic objectForKey:@"itemClassList"]];
             [_rightView reloadData];
         }

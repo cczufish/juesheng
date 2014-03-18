@@ -9,7 +9,8 @@
 #import "SubCateViewController.h"
 #import "NameValue.h"
 #import "EGOImageView.h"
-#define COLUMN 4
+#import "EGOImageButton.h"
+#define COLUMN 1
 
 @interface SubCateViewController ()
 
@@ -41,7 +42,7 @@
 - (void)reloadCateData
 {
     int total = self.subCates.count;
-#define ROWHEIHT 70
+#define ROWHEIHT 170
     int rows = (total / COLUMN) + ((total % COLUMN) > 0 ? 1 : 0);
     
     for (int i=0; i<total; i++) {
@@ -49,19 +50,24 @@
         int column = i % COLUMN;
         NameValue *data = [self.subCates objectAtIndex:i];
         
-        UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(80*column, ROWHEIHT*row, 80, ROWHEIHT)] autorelease];
+        UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(80*column, ROWHEIHT*row, 290, ROWHEIHT)] autorelease];
         view.backgroundColor = [UIColor clearColor];
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(15, 15, 50, 50);
+        EGOImageButton *btn = [[EGOImageButton alloc] initWithFrame:CGRectMake(15, 15, 290, 150)];
+//        btn.frame = CGRectMake(15, 15, 50, 50);
         btn.tag = i;
+        
         [btn addTarget:self.cateVC action:@selector(subCateBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         
         if (data.idImageUrl) {
-            NSURL *url = [NSURL URLWithString: data.idImageUrl];
-            EGOImageView *iv = [[EGOImageView alloc] init];
-            iv.imageURL = url;
-            [btn setBackgroundImage:iv.image forState:UIControlStateNormal];
-            [iv release];
+//            [btn performSelectorOnMainThread:@selector(setImageURL:) withObject:[NSURL URLWithString: data.idImageUrl] waitUntilDone:NO];
+//            //[btn setImageURL:data.idImageUrl];
+//            btn.placeholderImage = [UIImage imageNamed:@"logo.png"];
+            EGOImageView *imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(15, 15, 290, 150)];
+            [imageView performSelectorOnMainThread:@selector(setImageURL:) withObject:[NSURL URLWithString: data.idImageUrl] waitUntilDone:NO];
+            //[imageView setImageURL:[NSURL URLWithString: data.idImageUrl]];
+            imageView.placeholderImage = [UIImage imageNamed:@"logo.png"];
+            [view addSubview:imageView];
+            [imageView release];
         }
         else{
             [btn setBackgroundImage:[UIImage imageNamed:@"logo.png"] forState:UIControlStateNormal];
@@ -69,8 +75,9 @@
         
         
         [view addSubview:btn];
+        [btn release];
         
-        UILabel *lbl = [[[UILabel alloc] initWithFrame:CGRectMake(0, 65, 80, 14)] autorelease];
+        UILabel *lbl = [[[UILabel alloc] initWithFrame:CGRectMake(0, 165, 290, 14)] autorelease];
         lbl.textAlignment = UITextAlignmentCenter;
         lbl.textColor = [UIColor colorWithRed:204/255.0
                                         green:204/255.0
@@ -84,9 +91,11 @@
         [self.view addSubview:view];
     }
     
-    CGRect viewFrame = self.view.frame;
-    viewFrame.size.height = ROWHEIHT * rows + 19;
-    self.view.frame = viewFrame;
+    //CGRect viewFrame = self.view.frame;
+    //viewFrame.size.height = ROWHEIHT * rows + 19;
+    //NSLog(@"高度:%f",viewFrame.size.height);
+    //self.view.frame = viewFrame;
+    [(UIScrollView *)self.view setContentSize:CGSizeMake(self.view.frame.size.width, ROWHEIHT * rows + 19)];
 }
 
 @end

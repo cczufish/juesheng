@@ -86,10 +86,30 @@
 //                             applyQuery:[NSDictionary dictionaryWithObject:myTableTextItem.myDistObject forKey:@"navigate"]]
 //                            applyAnimated:YES];
 //    [[TTNavigator navigator] openURLAction:action];
+    Navigate *navigate = (Navigate*)myTableTextItem.myDistObject;
+    NSString *runType = navigate.navigateRunType;
+    static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+    if (runType && [runType compare:@"B" options:comparisonOptions] == NSOrderedSame){
+        NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+        [dictionary setObject:navigate.navigateClassType forKey:@"classType"];
+        [dictionary setObject:[NSNumber numberWithBool:NO] forKey:@"isEdit"];
+        //[dictionary setObject:[_tableFieldArray retain] forKey:@"tableFieldArray"];
+        EditViewController *editViewController = [[EditViewController alloc] initWithURL:nil query:dictionary];
+        editViewController.delegate = self;
+        [self.navigationController pushViewController:editViewController animated:YES];
+        TT_RELEASE_SAFELY(dictionary);
+        [editViewController release];
+    }
+    else{
+        TableViewController *tableViewController = [[TableViewController alloc] initWithURL:[NSDictionary dictionaryWithObject:myTableTextItem.myDistObject forKey:@"navigate"]];
+        [[self navigationController] pushViewController:tableViewController animated:YES];
+        [tableViewController release];
+    }
+}
+
+- (void)refreshListView
+{
     
-    TableViewController *tableViewController = [[TableViewController alloc] initWithURL:[NSDictionary dictionaryWithObject:myTableTextItem.myDistObject forKey:@"navigate"]];
-    [[self navigationController] pushViewController:tableViewController animated:YES];
-    [tableViewController release];
 }
 
 @end

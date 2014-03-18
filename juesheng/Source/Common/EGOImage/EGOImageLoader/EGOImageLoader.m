@@ -249,7 +249,10 @@ inline static NSString* keyForURL(NSURL* url, NSString* style) {
 		[self handleCompletionsForConnection:connection image:nil error:error];
 		#endif
 	} else {
-		[[EGOCache globalCache] setData:connection.responseData forKey:keyForURL(connection.imageURL,nil) withTimeoutInterval:604800];
+		//[[EGOCache globalCache] setData:connection.responseData forKey:keyForURL(connection.imageURL,nil) withTimeoutInterval:604800];
+        
+        //[[EGOCache globalCache] setObject:connection.responseData forKey:keyForURL(connection.imageURL, nil) withTimeoutInterval:604800];
+        [[EGOCache globalCache] setImage:anImage forKey:keyForURL(connection.imageURL, nil) withTimeoutInterval:604800];
 		
 		[currentConnections removeObjectForKey:connection.imageURL];
 		self.currentConnections = [[currentConnections copy] autorelease];
