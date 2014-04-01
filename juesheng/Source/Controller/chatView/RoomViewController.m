@@ -210,7 +210,7 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
 //    [[AppDelegate GetApp].viewController showVideoChatView:userid];
 //    AnyChatViewController *anychatViewController = [[AnyChatViewController alloc] init];
 //    [anychatViewController.videoChatController StartVideoChat:userid];
-    VideoChatController *videoChatController = [[VideoChatController alloc] initWithNibName:@"VideoChatController" bundle:[NSBundle mainBundle]];
+    VideoChatController *videoChatController = [[[VideoChatController alloc] initWithNibName:@"VideoChatController" bundle:[NSBundle mainBundle]] autorelease];
     videoChatController.iRemoteUserId = userid;
     
     [self.navigationController pushViewController:videoChatController animated:YES];

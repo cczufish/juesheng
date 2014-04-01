@@ -39,10 +39,16 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = NO;
     //    self.title = @"黑格移动信息化软件";
-    self.title = @"艾卡汽车";
+    //self.title = @"艾卡汽车";
+    self.title = @"决盛信贷";
     [self.navigationItem setHidesBackButton:YES];
     _menuArray = [[NSMutableArray alloc] init];
     self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
+    
+//    if ([Three20 systemMajorVersion] >= 7) {
+//            self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 20, self.view.frame.size.width, self.view.frame.size.height);
+//    }
+    
     //地址的方法
     AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
     NSString *server_base = [NSString stringWithFormat:@"%@/navigate!getNavigateList.action", delegate.SERVER_HOST];

@@ -88,13 +88,19 @@ static int TAG_MAIN_VIEW = 1;
     _rightView.tag = TAG_RIGHT_VIEW;
     _rightView.delegate = self;
     _rightView.dataSource = self;
-    _rightView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if ([Three20 systemMajorVersion] >= 7) {
+        _rightView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+    }
+    else{
+        _rightView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
     _rightView.hidden = true;
     
-    UIControl *_back = [[UIControl alloc] initWithFrame:_rightView.frame];
-    [(UIControl *)_back addTarget:self action:@selector(backgroundTap) forControlEvents:UIControlEventTouchDown];
-    [_rightView addSubview:_back];
-    [_back release];
+//    UIControl *_back = [[UIControl alloc] initWithFrame:_rightView.frame];
+//    [(UIControl *)_back addTarget:self action:@selector(backgroundTap) forControlEvents:UIControlEventTouchDown];
+//    [_rightView addSubview:_back];
+//    [_back release];
     
     [self.view addSubview:_rightView];
     
@@ -396,7 +402,7 @@ static int TAG_MAIN_VIEW = 1;
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"itemClass1" options:comparisonOptions] == NSOrderedSame) {
             //_subViewArray = [[NameValue alloc] initNameValueWithDictionay:[jsonDic objectForKey:@"itemClassList"]];
-            _subVc.subCates = [[NameValue alloc] initNameValueWithDictionay:[jsonDic objectForKey:@"itemClassList"]];
+            _subVc.subCates = [[[NameValue alloc] initNameValueWithDictionay:[jsonDic objectForKey:@"itemClassList"]] autorelease];
             [_subVc reloadCateData];
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"itemClass2" options:comparisonOptions] == NSOrderedSame) {

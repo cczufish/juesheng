@@ -69,7 +69,7 @@ static int titleLabelWidth = 100;
         else if (_tableField.fDataType && _tableField.fDataType == 3) { //radio
             int i=0,radioheight = 25;
             _viewHeight = _viewHeight + radioheight*i;
-            _radioButton = [[RadioButton alloc] initWithGroupId:tableField.fDataField index:i value:[[NSString stringWithFormat:@"%i",i] retain]];
+            _radioButton = [[RadioButton alloc] initWithGroupId:tableField.fDataField index:i value:[NSString stringWithFormat:@"%i",i]];
             _radioButton.frame = CGRectMake(titleLabelWidth+3,i*radioheight+8*(1+i),22,_viewHeight);
             _radioButton.tag = i;
             if (tableField.fRights == 1) {
@@ -103,7 +103,7 @@ static int titleLabelWidth = 100;
             
             i++;
             _viewHeight = _viewHeight + radioheight*i;
-            _radioButton = [[RadioButton alloc] initWithGroupId:tableField.fDataField index:i value:[[NSString stringWithFormat:@"%i",i] retain]];
+            _radioButton = [[RadioButton alloc] initWithGroupId:tableField.fDataField index:i value:[NSString stringWithFormat:@"%i",i]];
             _radioButton.frame = CGRectMake(titleLabelWidth+3,i*radioheight+8*(1+i),22,_viewHeight);
             _radioButton.tag = i;
             if (tableField.fRights == 1) {

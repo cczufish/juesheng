@@ -34,7 +34,6 @@ static int UPLOADFINISH = -11;
 @synthesize alertListContent=_alertListContent;
 @synthesize dataAlertView=_dataAlertView;
 @synthesize alertTableView=_alertTableView;
-@synthesize imageToSave=_imageToSave;
 @synthesize fItemId=_fItemId;
 @synthesize fBillNo=_fBillNo;
 @synthesize delegate=_delegate;
@@ -86,23 +85,13 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_alertTableView);
     TT_RELEASE_SAFELY(_dataAlertView);
     TT_RELEASE_SAFELY(_alertListContent);
-//    TT_RELEASE_SAFELY(_imageToSave);
+//    TT_RELEASE_SAFELY(_delegate);
     TT_RELEASE_SAFELY(_pageControl);
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_viewArray);
-    TT_RELEASE_SAFELY(_locationManage);
     TT_RELEASE_SAFELY(_lonNumber);
     TT_RELEASE_SAFELY(_latNumber);
     TT_RELEASE_SAFELY(_indexArray);
-}
-
--(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
-    [_lonNumber release];
-    _lonNumber = [[NSNumber numberWithFloat:[newLocation coordinate].longitude] retain];
-    [_latNumber release];
-    _latNumber = [[NSNumber numberWithFloat:[newLocation coordinate].latitude] retain];
-    //NSLog(@"位置信息正在获取");
 }
 
 - (void)didReceiveMemoryWarning
@@ -123,7 +112,6 @@ static int UPLOADFINISH = -11;
     TT_RELEASE_SAFELY(_myPV);
     TT_RELEASE_SAFELY(_alertTableView);
     TT_RELEASE_SAFELY(_dataAlertView);
-    TT_RELEASE_SAFELY(_locationManage);
 }
 
 - (void)queryTableField
@@ -170,6 +158,10 @@ static int UPLOADFINISH = -11;
 -(void)uploadSelfLocation
 {
     AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [_lonNumber release];
+    _lonNumber = [[NSNumber numberWithFloat:[delegate.myLocation coordinate].longitude] retain];
+    [_latNumber release];
+    _latNumber = [[NSNumber numberWithFloat:[delegate.myLocation coordinate].latitude] retain];
     if (_lonNumber && _lonNumber.floatValue > 0) {
         NSString *server_base = [NSString stringWithFormat:@"%@/classType!saveLocationInfo.action", delegate.SERVER_HOST];
         TTURLRequest* request = [TTURLRequest requestWithURL: server_base delegate: self];
@@ -193,19 +185,6 @@ static int UPLOADFINISH = -11;
 
 - (void)viewDidLoad
 {
-    _locationManage = [[CLLocationManager alloc] init];
-    if ([CLLocationManager locationServicesEnabled]) {
-        _locationManage = [[CLLocationManager alloc] init];
-        [_locationManage setDelegate:self];
-        [_locationManage setDistanceFilter:kCLDistanceFilterNone];
-        [_locationManage setDesiredAccuracy:kCLLocationAccuracyBest];
-        [_locationManage startUpdatingLocation];
-    }
-    else{
-        UIAlertView * alert= [[UIAlertView alloc] initWithTitle:@"位置服务必须开启,请先开启位置服务!" message:nil delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
-        [alert show];
-        [alert release];
-    }
     [super viewDidLoad];
     _indexArray = [[NSMutableArray alloc] init];
 //    self.title = @"";
@@ -231,7 +210,7 @@ static int UPLOADFINISH = -11;
     }
     [self.view addSubview:_myPV];
     
-    [self setTable];
+    //[self setTable];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     
@@ -281,6 +260,11 @@ static int UPLOADFINISH = -11;
     }
     else {
         [self setkeyWordFieldValue];
+    }
+    if (firstTextFieldTag && !_isAppear) {
+        _isAppear = true;
+        AutoAdaptedView* aav = (AutoAdaptedView*)[self.view viewWithTag:firstTextFieldTag];
+        [aav.textField becomeFirstResponder];
     }
 }
 
@@ -500,6 +484,7 @@ static int UPLOADFINISH = -11;
                     for (int m=0; m<_tableFieldArray.count; m++) {
                         TableField *tableField = [_tableFieldArray objectAtIndex:m];
                         if (tableField.fKeywords) {
+                            [_myFieldView release];
                             _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                             _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                             _myFieldView.tag = tableField.fIndex;
@@ -514,6 +499,7 @@ static int UPLOADFINISH = -11;
                     TableField *tableField = [_tableFieldArray objectAtIndex:j];
                     if (tableField.fRights > 0 && tableField.fEntryId == i+1) {
                         isShow = true;
+                        [_myFieldView release];
                         _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                         _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                         _myFieldView.tag = tableField.fIndex;
@@ -550,10 +536,24 @@ static int UPLOADFINISH = -11;
             scrollView = [[[UIScrollView alloc] initWithFrame:self.view.frame] autorelease];
             [scrollView setScrollEnabled:YES];
             scrollView.showsVerticalScrollIndicator = NO;
+            for (int m=0; m<_tableFieldArray.count; m++) {
+                TableField *tableField = [_tableFieldArray objectAtIndex:m];
+                if (tableField.fKeywords) {
+                    [_myFieldView release];
+                    _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                    _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
+                    _myFieldView.tag = tableField.fIndex;
+                    [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
+                    _myFieldView.hidden = true;
+                    [scrollView addSubview:_myFieldView];
+                    //y = y + _myFieldView.frame.size.height + 2*_P;
+                }
+            }
             scrollView.tag = entryNums-1;
             for (int i=0; i<_tableFieldArray.count; i++) {
                 TableField *tableField = [_tableFieldArray objectAtIndex:i];
                 if (tableField.fRights > 0 && tableField.fEntryId == entryNums) {
+                    [_myFieldView release];
                     _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                     _myFieldView.tag = tableField.fIndex;
@@ -581,6 +581,7 @@ static int UPLOADFINISH = -11;
             for (int i=0; i<_tableFieldArray.count; i++) {
                 TableField *tableField = [_tableFieldArray objectAtIndex:i];
                 if (tableField.fKeywords) {
+                    [_myFieldView release];
                     _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                     _myFieldView.tag = tableField.fIndex;
@@ -629,11 +630,6 @@ static int UPLOADFINISH = -11;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if (firstTextFieldTag && !_isAppear) {
-        _isAppear = true;
-        AutoAdaptedView* aav = (AutoAdaptedView*)[self.view viewWithTag:firstTextFieldTag];
-        [aav.textField becomeFirstResponder];
-    }
     [super viewDidAppear:animated];
 }
 
@@ -656,7 +652,7 @@ static int UPLOADFINISH = -11;
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if (_autoAdaptedView) {
+    if (_autoAdaptedView && ![_autoAdaptedView.tableField isEqual:((AutoAdaptedView*)textField.superview).tableField]) {
         [_autoAdaptedView.textField resignFirstResponder];
     }
     _autoAdaptedView = (AutoAdaptedView*)textField.superview;
@@ -838,9 +834,12 @@ static int UPLOADFINISH = -11;
 {
     NSMutableString *submitString = [[[NSMutableString alloc] init] autorelease];
     for (TableField *tableField in _tableFieldArray){
-        if (tableField.fKeywords == 1 && _tableValueDict) {
-            if ([_tableValueDict objectForKey:tableField.fDataField] && ![[_tableValueDict objectForKey:tableField.fDataField] isEqual:[NSNull null]]) {
+        if (tableField.fKeywords == 1) {
+            if (_tableValueDict && [_tableValueDict objectForKey:tableField.fDataField] && ![[_tableValueDict objectForKey:tableField.fDataField] isEqual:[NSNull null]]) {
                 [submitString appendFormat:@"%@:'%@'",tableField.fSaveField,[_tableValueDict objectForKey:tableField.fDataField]];
+            }
+            else{
+                
             }
         }
     }
@@ -1226,6 +1225,11 @@ static int UPLOADFINISH = -11;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication] delegate];
+    [_lonNumber release];
+    _lonNumber = [[NSNumber numberWithFloat:[delegate.myLocation coordinate].longitude] retain];
+    [_latNumber release];
+    _latNumber = [[NSNumber numberWithFloat:[delegate.myLocation coordinate].latitude] retain];
     if(buttonIndex == 0){
         [self snapImage];
     }else if(buttonIndex ==1){
@@ -1327,25 +1331,25 @@ static int UPLOADFINISH = -11;
     
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     UIImage *originalImage, *editedImage;
-    
     //照片操作
     if (CFStringCompare ((CFStringRef) mediaType, kUTTypeImage, 0) == kCFCompareEqualTo) {
         editedImage = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
         originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
+        UIImage *imageToSave = nil;
         if (editedImage) {
             //设置image的尺寸
             CGSize imagesize = editedImage.size;
-            imagesize.height =1024;
-            imagesize.width =768;
+            imagesize.height =768;
+            imagesize.width =1024;
             //对图片大小进行压缩--
-            _imageToSave = [UIImage imageWithData:UIImageJPEGRepresentation([self imageWithImage:editedImage scaledToSize:imagesize],0.1f)];
+            imageToSave = [UIImage imageWithData:UIImageJPEGRepresentation([self imageWithImage:editedImage scaledToSize:imagesize],0.1f)];
         } else {
             //设置image的尺寸
             CGSize imagesize = originalImage.size;
-            imagesize.height =1024;
-            imagesize.width =768;
+            imagesize.height =768;
+            imagesize.width =1024;
             //对图片大小进行压缩--
-            _imageToSave = [UIImage imageWithData:UIImageJPEGRepresentation([self imageWithImage:originalImage scaledToSize:imagesize],0.1f)];
+            imageToSave = [UIImage imageWithData:UIImageJPEGRepresentation([self imageWithImage:originalImage scaledToSize:imagesize],0.1f)];
         }
         //存储照片到胶卷
         //UIImageWriteToSavedPhotosAlbum (self.imageToSave, nil, nil , nil);
@@ -1356,9 +1360,9 @@ static int UPLOADFINISH = -11;
         NSString *imageName = [NSString stringWithFormat:@"%@.jpg",[formatter stringFromDate:date]];
         [formatter release];
         [date release];
-        [self saveImage:_imageToSave WithName:imageName];
+        [self saveImage:imageToSave WithName:imageName];
         //打开备注信息填写窗口,填写备注
-        PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:_imageToSave imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
+        PhotoInfoSaveViewController *photoInfoSaveViewController = [[PhotoInfoSaveViewController alloc] initWithImage:imageToSave imageName:imageName classType:_classType itemId:_fItemId billNo:_fBillNo lon:_lonNumber lat:_latNumber];
         photoInfoSaveViewController.delegate = self;
         [[self navigationController] pushViewController:photoInfoSaveViewController animated:YES];
     }

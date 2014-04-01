@@ -335,6 +335,7 @@
 
 -(void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
+    [myLocation release];
     myLocation = [newLocation retain];
 }
 

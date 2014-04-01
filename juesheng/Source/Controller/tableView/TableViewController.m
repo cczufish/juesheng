@@ -52,7 +52,12 @@ static NSInteger DATATABLETAG = -5;
 
 - (void)viewDidLoad
 {
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if ([Three20 systemMajorVersion] >= 7) {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    }
+    else{
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
     self.tableView.backgroundView.alpha = 0;
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     //设置查询框及临时查询列表

@@ -12,14 +12,12 @@
 #import "PhotoInfoSaveViewController.h"
 #import "EditViewDelegate.h"
 #import "ATPagingView.h"
-#import <CoreLocation/CoreLocation.h>
 #import <AVFoundation/AVFoundation.h>
 #import "SelectTableViewController.h"
 
 @class TSAlertView;
-@interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,CLLocationManagerDelegate,SelectTableViewDelegate>
+@interface EditViewController : TTViewController<UIAlertViewDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PhotoUploadDelegate,ATPagingViewDelegate,UITextViewDelegate,SelectTableViewDelegate>
 {
-    CLLocationManager *_locationManage;
     NSInteger firstTextFieldTag;
     NSMutableArray *_indexArray;
     BOOL _isAppear;
@@ -35,7 +33,6 @@
 @property (nonatomic, retain) UITableView *alertTableView;
 @property (nonatomic, retain) TSAlertView *dataAlertView;
 @property (nonatomic, retain) NSMutableArray *alertListContent;
-@property (nonatomic, retain) UIImage *imageToSave;
 @property (nonatomic, assign) id<EditViewDelegate> delegate;
 @property (nonatomic, retain) TTPageControl* pageControl;
 @property (nonatomic, retain) ATPagingView* myPV;

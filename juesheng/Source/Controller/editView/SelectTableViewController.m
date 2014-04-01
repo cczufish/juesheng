@@ -388,7 +388,7 @@ static int TAG_MAIN_VIEW = 1;
     else{
         //static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
         if (request.userInfo != nil && [request.userInfo compare:@"itemClass" options:comparisonOptions] == NSOrderedSame) {
-            NSMutableArray *nameValues = [[NameValue alloc] initNameValueWithDictionay:[jsonDic objectForKey:@"itemClassList"]];
+            NSMutableArray *nameValues = [[[NameValue alloc] initNameValueWithDictionay:[jsonDic objectForKey:@"itemClassList"]] autorelease];
             for(int i = 0;i<[nameValues count];i++) {
                 NameValue *nameValue = (NameValue*)[nameValues objectAtIndex:i];
                 HeadView* headview = [[HeadView alloc] init];

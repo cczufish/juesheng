@@ -21,8 +21,8 @@
 {
     self = [self init];
     if (self) {
-        _navigateArray = [[query objectForKey:@"navigateList"] copy];
-        _parentNavigate = [query objectForKey:@"parentNavigate"];
+        _navigateArray = [[query objectForKey:@"navigateList"] retain];
+        _parentNavigate = [[query objectForKey:@"parentNavigate"] retain];
         self.title = _parentNavigate.navigateName;
     }
     return self;
@@ -31,7 +31,12 @@
 - (id)init
 {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        if ([Three20 systemMajorVersion] >= 7) {
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        }
+        else{
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        }
         self.tableView.backgroundView.alpha = 0;
         self.tableView.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     }
@@ -77,6 +82,13 @@
     [items release];
     [sections release];
     [localPool drain];
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+    TT_RELEASE_SAFELY(_navigateArray);
+    TT_RELEASE_SAFELY(_parentNavigate);
 }
 
 - (void) selectItem:(id)sender

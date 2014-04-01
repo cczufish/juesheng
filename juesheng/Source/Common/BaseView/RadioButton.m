@@ -84,7 +84,7 @@ static NSMutableDictionary *rb_observers=nil;
     if (self) {
         _groupId = groupId;
         _index = index;
-        _groupValue = value;
+        _groupValue = [value retain];
         _isEdit = true;
     }
     return  self;

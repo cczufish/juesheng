@@ -35,7 +35,14 @@ static NSInteger Zhentag = 3;
 
 - (id)init {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        if ([Three20 systemMajorVersion] >= 7) {
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        }
+        else{
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        }
+        self.tableView.backgroundView.alpha = 0;
+        self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     }
     return self;
 }
@@ -43,7 +50,6 @@ static NSInteger Zhentag = 3;
 - (void)viewDidLoad
 {
     self.title = @"系统设置";
-    self.view.backgroundColor = [UIColor colorWithPatternImage:TTIMAGE(@"bundle://middle_bk.jpg")];
     [super viewDidLoad];
     
     _dataAlertView = [[TSAlertView alloc] initWithTitle: @"请选择"
