@@ -305,14 +305,14 @@ static NSInteger DATATABLETAG = -5;
     for (TableField *tableField in _selectFieldArray){
         if([[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]] isEqualToString:tableField.fName])
         {
-            if (tableField.fDataType == 4) {
-                _dataListContent = [[NameValue alloc] initNameValue:tableField.fList];
-                [_dataTableView reloadData];
-                [_dataAlertView addSubview: _dataTableView];
-                [_dataAlertView show];
-            }
-            else if (tableField.fDataType == 5) {
-                [self sendRequestDataList:tableField];
+            if (tableField.fDataType == 4 || tableField.fDataType == 5) {
+//                _dataListContent = [[NameValue alloc] initNameValue:tableField.fList];
+//                [_dataTableView reloadData];
+//                [_dataAlertView addSubview: _dataTableView];
+//                [_dataAlertView show];
+//            }
+//            else if (tableField.fDataType == 5) {
+//                [self sendRequestDataList:tableField];
             }
             else{
                 [self filterContentForSearchText:searchString scope:

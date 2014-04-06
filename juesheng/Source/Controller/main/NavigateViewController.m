@@ -9,6 +9,7 @@
 #import "NavigateViewController.h"
 #import "MyTableTextItem.h"
 #import "TableViewController.h"
+#import "LoginViewController.h"
 
 @interface NavigateViewController ()
 
@@ -22,7 +23,7 @@
     self = [self init];
     if (self) {
         _navigateArray = [[query objectForKey:@"navigateList"] retain];
-        _parentNavigate = [[query objectForKey:@"parentNavigate"] retain];
+        _parentNavigate = [query objectForKey:@"parentNavigate"];
         self.title = _parentNavigate.navigateName;
     }
     return self;
@@ -57,38 +58,33 @@
 }
 
 - (void)createModel {
-    NSAutoreleasePool* localPool = [[NSAutoreleasePool alloc] init];
-    NSMutableArray* items = [[NSMutableArray alloc] init];
-    NSMutableArray* sections = [[NSMutableArray alloc] init];
+    if (_navigateArray&&_parentNavigate) {
+        NSMutableArray* items = [[NSMutableArray alloc] init];
+        NSMutableArray* sections = [[NSMutableArray alloc] init];
     
-    // Styles Section
-    [sections addObject:NSLocalizedString(_parentNavigate.navigateName, _parentNavigate.navigateName)];
-    NSMutableArray* itemsRow = [[NSMutableArray alloc] init];
-    if (_navigateArray) {
+        // Styles Section
+        [sections addObject:NSLocalizedString(_parentNavigate.navigateName, _parentNavigate.navigateName)];
+        NSMutableArray* itemsRow = [[NSMutableArray alloc] init];
         for (Navigate *navigate in _navigateArray){
             [itemsRow addObject:[MyTableTextItem itemWithText:navigate.navigateName delegate:self selector:@selector(selectItem:) withObject:navigate]];
         }
+        if ([itemsRow count] == 0) {
+            [itemsRow addObject:[TTTableTextItem itemWithText:@"建设中..."]];
+        }
+        [items addObject:itemsRow];
+        [itemsRow release];
+    
+    
+        self.dataSource = [[[TTSectionedDataSource alloc] initWithItems:items sections:sections] autorelease];
+        [items release];
+        [sections release];
     }
-    if ([itemsRow count] == 0) {
-        [itemsRow addObject:[TTTableTextItem itemWithText:@"建设中..."]];
-    }
-    [items addObject:itemsRow];
-    [itemsRow release];
-    
-    
-    self.dataSource = [[[TTSectionedDataSource alloc] initWithItems:items sections:sections] autorelease];
-    
-    // Cleanup
-    [items release];
-    [sections release];
-    [localPool drain];
 }
 
 - (void)dealloc
 {
     [super dealloc];
     TT_RELEASE_SAFELY(_navigateArray);
-    TT_RELEASE_SAFELY(_parentNavigate);
 }
 
 - (void) selectItem:(id)sender

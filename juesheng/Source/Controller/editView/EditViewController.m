@@ -29,7 +29,6 @@ static int UPLOADFINISH = -11;
 @synthesize isEdit = _isEdit;
 @synthesize tableFieldArray = _tableFieldArray;
 @synthesize tableValueDict = _tableValueDict;
-@synthesize myFieldView=_myFieldView;
 @synthesize autoAdaptedView=_autoAdaptedView;
 @synthesize alertListContent=_alertListContent;
 @synthesize dataAlertView=_dataAlertView;
@@ -80,7 +79,6 @@ static int UPLOADFINISH = -11;
 //    TT_RELEASE_SAFELY(_fBillNo);
     TT_RELEASE_SAFELY(_tableFieldArray);
     TT_RELEASE_SAFELY(_tableValueDict);
-    TT_RELEASE_SAFELY(_myFieldView);
 //    TT_RELEASE_SAFELY(_autoAdaptedView);
     TT_RELEASE_SAFELY(_alertTableView);
     TT_RELEASE_SAFELY(_dataAlertView);
@@ -187,6 +185,7 @@ static int UPLOADFINISH = -11;
 {
     [super viewDidLoad];
     _indexArray = [[NSMutableArray alloc] init];
+    _isUploadLoation = true;
 //    self.title = @"";
     _pageControl = [[TTPageControl alloc] initWithFrame:CGRectMake(0,0, self.view.frame.size.width, 20)];
     _pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -261,6 +260,11 @@ static int UPLOADFINISH = -11;
     else {
         [self setkeyWordFieldValue];
     }
+    [self performSelector:@selector(fireBlockAfterDelay) withObject:nil afterDelay:0.5];
+}
+
+- (void)fireBlockAfterDelay
+{
     if (firstTextFieldTag && !_isAppear) {
         _isAppear = true;
         AutoAdaptedView* aav = (AutoAdaptedView*)[self.view viewWithTag:firstTextFieldTag];
@@ -302,7 +306,13 @@ static int UPLOADFINISH = -11;
         static NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
         for (NSDictionary *dictionary in dict){
             if ([dictionary objectForKey:@"fName"] && [[dictionary objectForKey:@"fName"] compare:@"附件" options:comparisonOptions] == NSOrderedSame) {
-                [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+                if ([dictionary objectForKey:@"fPara"] && [[dictionary objectForKey:@"fPara"] compare:@"NoLocal" options:comparisonOptions] == NSOrderedSame) {
+                    _isUploadLoation = false;
+                    [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(menuTableNoLocationUpload)]];
+                }
+                else{
+                    [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(menuTable)]];
+                }
             }
             else if([dictionary objectForKey:@"fName"] && [[dictionary objectForKey:@"fName"] compare:@"面签" options:comparisonOptions] == NSOrderedSame) {
                 [barButtonItems addObject:[[UIBarButtonItem alloc] initWithTitle:[dictionary objectForKey:@"fName"] style:UIBarButtonItemStyleBordered target:self action:@selector(uploadSelfLocation)]];
@@ -450,6 +460,18 @@ static int UPLOADFINISH = -11;
     [menu showInView:self.navigationController.view];
 }
 
+- (void)menuTableNoLocationUpload
+{
+    UIActionSheet *menu = [[UIActionSheet alloc]
+                           initWithTitle: @"附件操作"
+                           delegate:self
+                           cancelButtonTitle:@"取消"
+                           destructiveButtonTitle:nil
+                           otherButtonTitles:@"拍照录像",@"查看附件",nil];
+    menu.actionSheetStyle =UIActionSheetStyleBlackTranslucent;
+    [menu showInView:self.navigationController.view];
+}
+
 //面签
 - (void)faceTable
 {
@@ -484,13 +506,13 @@ static int UPLOADFINISH = -11;
                     for (int m=0; m<_tableFieldArray.count; m++) {
                         TableField *tableField = [_tableFieldArray objectAtIndex:m];
                         if (tableField.fKeywords) {
-                            [_myFieldView release];
-                            _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                            AutoAdaptedView *_myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                             _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                             _myFieldView.tag = tableField.fIndex;
                             [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                             _myFieldView.hidden = true;
                             [scrollView addSubview:_myFieldView];
+                            [_myFieldView release];
                             //y = y + _myFieldView.frame.size.height + 2*_P;
                         }
                     }
@@ -499,8 +521,7 @@ static int UPLOADFINISH = -11;
                     TableField *tableField = [_tableFieldArray objectAtIndex:j];
                     if (tableField.fRights > 0 && tableField.fEntryId == i+1) {
                         isShow = true;
-                        [_myFieldView release];
-                        _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                        AutoAdaptedView *_myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                         _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                         _myFieldView.tag = tableField.fIndex;
                         if (isFirst) {
@@ -512,6 +533,7 @@ static int UPLOADFINISH = -11;
                         _myFieldView.textField.delegate = self;
                         _myFieldView.textView.delegate = self;
                         [scrollView addSubview:_myFieldView];
+                        [_myFieldView release];
                         y = y + _myFieldView.frame.size.height + 2*_P;
                     }
                 }
@@ -539,13 +561,13 @@ static int UPLOADFINISH = -11;
             for (int m=0; m<_tableFieldArray.count; m++) {
                 TableField *tableField = [_tableFieldArray objectAtIndex:m];
                 if (tableField.fKeywords) {
-                    [_myFieldView release];
-                    _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                    AutoAdaptedView *_myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                     _myFieldView.tag = tableField.fIndex;
                     [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                     _myFieldView.hidden = true;
                     [scrollView addSubview:_myFieldView];
+                    [_myFieldView release];
                     //y = y + _myFieldView.frame.size.height + 2*_P;
                 }
             }
@@ -553,8 +575,7 @@ static int UPLOADFINISH = -11;
             for (int i=0; i<_tableFieldArray.count; i++) {
                 TableField *tableField = [_tableFieldArray objectAtIndex:i];
                 if (tableField.fRights > 0 && tableField.fEntryId == entryNums) {
-                    [_myFieldView release];
-                    _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                    AutoAdaptedView *_myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, _myFieldView.viewHeight);
                     _myFieldView.tag = tableField.fIndex;
                     if (isFirst) {
@@ -566,6 +587,7 @@ static int UPLOADFINISH = -11;
                     _myFieldView.textField.delegate = self;
                     _myFieldView.textView.delegate = self;
                     [scrollView addSubview:_myFieldView];
+                    [_myFieldView release];
                     y = y + _myFieldView.frame.size.height + 2*_P;
                 }
             }
@@ -581,13 +603,13 @@ static int UPLOADFINISH = -11;
             for (int i=0; i<_tableFieldArray.count; i++) {
                 TableField *tableField = [_tableFieldArray objectAtIndex:i];
                 if (tableField.fKeywords) {
-                    [_myFieldView release];
-                    _myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
+                    AutoAdaptedView *_myFieldView = [[AutoAdaptedView alloc] initWithFrame:CGRectMake(_X, y, self.view.frame.size.width, _height) tableField:tableField tableValueDict:_tableValueDict];
                     _myFieldView.frame = CGRectMake(_X, y, self.view.frame.size.width, 0);
                     _myFieldView.tag = tableField.fIndex;
                     [_indexArray addObject:[NSNumber numberWithInt:tableField.fIndex]];
                     _myFieldView.hidden = true;
                     [scrollView addSubview:_myFieldView];
+                    [_myFieldView release];
                     //y = y + _myFieldView.frame.size.height + 2*_P;
                 }
             }
@@ -1230,14 +1252,26 @@ static int UPLOADFINISH = -11;
     _lonNumber = [[NSNumber numberWithFloat:[delegate.myLocation coordinate].longitude] retain];
     [_latNumber release];
     _latNumber = [[NSNumber numberWithFloat:[delegate.myLocation coordinate].latitude] retain];
-    if(buttonIndex == 0){
-        [self snapImage];
-    }else if(buttonIndex ==1){
-        [self pickImage];
-    }else if(buttonIndex ==2){
-        PhotoViewController *photoViewController = [[PhotoViewController alloc] initWithClassType:_classType itemId:_fItemId];
-        [[self navigationController] pushViewController:photoViewController animated:YES];
-        [photoViewController release];
+    if (_isUploadLoation) {
+        if(buttonIndex == 0){
+            [self snapImage];
+        }else if(buttonIndex ==1){
+            [self pickImage];
+        }else if(buttonIndex ==2){
+            PhotoViewController *photoViewController = [[PhotoViewController alloc] initWithClassType:_classType itemId:_fItemId];
+            [[self navigationController] pushViewController:photoViewController animated:YES];
+            [photoViewController release];
+        }
+    }
+    else{
+        if(buttonIndex == 0){
+            [self snapImage];
+        }
+        else if(buttonIndex ==1){
+            PhotoViewController *photoViewController = [[PhotoViewController alloc] initWithClassType:_classType itemId:_fItemId];
+            [[self navigationController] pushViewController:photoViewController animated:YES];
+            [photoViewController release];
+        }
     }
     [actionSheet release];
 }

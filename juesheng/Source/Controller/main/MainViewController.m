@@ -67,8 +67,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
     
     request.response = [[[TTURLDataResponse alloc] init] autorelease];
     request.userInfo = @"navigate";
-    
-    [self setFTPServerInfo];
 }
 
 - (void)didReceiveMemoryWarning
@@ -148,6 +146,8 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
             _structArray = [[Navigate alloc] initArray:_menuArray ByLevel:@"1"];
             [self setLauncherItem];
             _isFresh = YES;
+            
+            [self setFTPServerInfo];
         }
         else if (request.userInfo != nil && [request.userInfo compare:@"ftpServer" options:comparisonOptions] == NSOrderedSame){
             NSDictionary *ftpServerInfoDict = [resultJSON objectForKey:@"ftpServerInfo"];
@@ -201,9 +201,6 @@ static int LOGINTAG = -1;       //需要退回到登陆状态的TAG标志
         //切换至登录成功页面
         [[TTURLCache sharedCache] removeAll:YES]; 
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
-//        LoginViewController *loginViewComtroller = [[LoginViewController alloc] initWithNavigatorURL:nil query:nil];
-//        [self.navigationController pushViewController:loginViewComtroller animated:YES];
-//        [loginViewComtroller release];
     }
 }
 

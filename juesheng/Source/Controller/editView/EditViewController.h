@@ -21,6 +21,7 @@
     NSInteger firstTextFieldTag;
     NSMutableArray *_indexArray;
     BOOL _isAppear;
+    BOOL _isUploadLoation;
 }
 @property (nonatomic, assign) NSInteger classType;
 @property (nonatomic, assign) NSInteger fItemId;
@@ -28,7 +29,6 @@
 @property (nonatomic, assign) BOOL isEdit;
 @property (nonatomic, retain) NSMutableArray *tableFieldArray;
 @property (nonatomic, retain) NSDictionary *tableValueDict;
-@property (nonatomic, retain) AutoAdaptedView *myFieldView;
 @property (nonatomic, retain) AutoAdaptedView *autoAdaptedView;      //临时中间字段,作为区分操作字段
 @property (nonatomic, retain) UITableView *alertTableView;
 @property (nonatomic, retain) TSAlertView *dataAlertView;

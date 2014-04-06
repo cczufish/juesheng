@@ -109,7 +109,6 @@
     [map from:@"tt://systemParamConfig?url=(init:)" toViewController:[configViewController class]];
 //    [map from:@"tt://anychat?url=(init)" toViewController:[AnyChatViewController class]];
     
-    // Before opening the tab bar, we see if the controller history was persisted the last time
     if (![navigator restoreViewControllers]) {
         //进入默认登陆页面
         [navigator openURLAction:[[TTURLAction actionWithURLPath:@"tt://login"] applyAnimated:YES]];
